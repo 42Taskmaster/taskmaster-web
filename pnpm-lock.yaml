@@ -38,7 +38,7 @@ devDependencies:
   vite-plugin-pages: 0.1.8_vue@3.0.5
   vite-plugin-pwa: 0.4.2
   vite-ssg: 0.7.0_67baffff43cafb4933a0b440cee9b6c9
-lockfileVersion: 5.2
+lockfileVersion: 5.1
 packages:
   /@antfu/eslint-config-basic/0.4.3_eslint@7.19.0:
     dependencies:
@@ -5238,7 +5238,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
+    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
     dev: true
     engines:
       node: '>=0.12.0'
@@ -5268,7 +5268,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
+    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
     dev: true
     engines:
       node: '>= 6'

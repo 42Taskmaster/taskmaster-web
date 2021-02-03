@@ -27,16 +27,20 @@
       </div>
       <hr class="mb-3">
 
-      <transition-group
-        enter-active-class="transition duration-100 ease-out"
-        enter-from-class="transform -translate-y-6 opacity-25"
-        enter-to-class="transform translate-y-0 opacity-100"
-        leave-active-class="transition duration-75 ease-in"
-        leave-from-class="transform translate-y-0 opacity-100"
-        leave-to-class="transform translate-y-6 opacity-0"
-      >
-        <Program v-for="program in filteredPrograms" :key="program.id" v-bind="program" />
-      </transition-group>
+      <div class="relative">
+        <transition-group
+          tag="div"
+          enter-active-class="transition duration-200 ease-out"
+          enter-from-class="transform -translate-y-6 opacity-25"
+          enter-to-class="transform translate-y-0 opacity-100"
+          leave-active-class="absolute transition duration-200 ease-in"
+          leave-from-class="transform translate-y-0 opacity-100"
+          leave-to-class="transform translate-y-6 opacity-0"
+          move-class="transition duration-300 ease"
+        >
+          <Program v-for="program in filteredPrograms" :key="program.programId" v-bind="program" class="w-full" />
+        </transition-group>
+      </div>
     </div>
   </div>
 </template>
