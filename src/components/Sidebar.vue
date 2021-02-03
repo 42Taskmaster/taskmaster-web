@@ -7,8 +7,13 @@
         </div>
         <div class="p-3">
           <div v-for="link in links" :key="link.title">
-            <router-link :to="link.url" active-class="bg-gray-100" class="block py-2.5 pl-5 my-1 rounded-lg sidebar-link hover:bg-gray-100">
-              {{ link.title }}
+            <router-link :to="link.url" active-class="bg-gray-100" class="block py-2.5 pl-5 my-1 rounded-lg sidebar-link hover:bg-gray-100 text-gray-700 font-semibold">
+              <div class="flex items-center e">
+                <component :is="link.icon" class="text-lg" />
+                <div class="ml-4">
+                  {{ link.title }}
+                </div>
+              </div>
             </router-link>
           </div>
         </div>
@@ -32,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+import ViewListIcon from '/@vite-icons/heroicons-outline/view-list.vue'
+import CogIcon from '/@vite-icons/heroicons-outline/cog.vue'
 
 import { useI18n } from 'vue-i18n'
 import { isDark } from '/~/logics'
@@ -46,12 +53,12 @@ const toggleLocales = () => {
 
 const links = [
   {
-    icon: '',
+    icon: ViewListIcon,
     title: 'Programs',
     url: '/programs',
   },
   {
-    icon: '',
+    icon: CogIcon,
     title: 'Configuration',
     url: '/configuration',
   },

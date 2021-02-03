@@ -1,5 +1,5 @@
 <template>
-  <router-link class="flex p-10 mb-3 bg-white border border-solid shadow-sm cursor-pointer hover:bg-gray-100" :to="programUrl">
+  <router-link class="flex p-10 mb-3 bg-white border border-solid shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
     <div class="flex items-center w-full">
       <div class="flex items-center justify-between w-full">
         <div class="flex flex-col">
