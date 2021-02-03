@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/717519d6-b699-4ae2-8068-0d72847f58a3/deploy-status)](https://app.netlify.com/sites/42taskmaster/deploys)
+
 <p align='center'>
   <img src='https://repository-images.githubusercontent.com/286295150/b1b1be80-354a-11eb-87c0-5dc96cae2bd9' alt='Vitesse - Opinionated Vite Starter Template' width='600'/>
 </p>
