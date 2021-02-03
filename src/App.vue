@@ -1,6 +1,8 @@
 <template>
-  <main class="px-4 py-10 text-center text-gray-700 dark:text-gray-200">
-    <router-view />
-    <Footer />
+  <main class="flex flex-row h-full font-sans col">
+    <Sidebar />
+    <div class="w-full h-full bg-gray-100">
+      <router-view />
+    </div>
   </main>
 </template>

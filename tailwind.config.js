@@ -29,6 +29,8 @@ module.exports = {
     extend: {
       colors: {
         teal: colors.teal,
+        lightblue: colors.lightBlue,
+        coolgray: colors.coolGray,
       },
       typography: {
         DEFAULT: {
