@@ -2,7 +2,7 @@
   <div v-if="loading">
     <Loading />
   </div>
-  <div class="w-full">
+  <div class="flex flex-col w-full h-full">
     <div class="flex w-full p-6 mb-4 text-lg bg-white border-b border-solid shadow-sm">
       <heroicons-outline-search class="mr-4 text-2xl text-gray-500" />
       <input
@@ -11,8 +11,9 @@
         placeholder="Rechercher"
       >
     </div>
-    <div class="p-6">
-      <div class="flex items-center justify-between">
+
+    <div class="flex flex-col flex-grow p-6 space-y-3">
+      <div class="flex items-center justify-between border-b">
         <div class="flex items-center">
           <h1 class="mb-2 text-3xl">
             Programmes
@@ -25,9 +26,8 @@
           <heroicons-outline-plus class="text-xl" />
         </div>
       </div>
-      <hr class="mb-3">
 
-      <div class="relative">
+      <div v-if="filteredPrograms.length > 0" class="relative">
         <transition-group
           tag="div"
           enter-active-class="transition duration-200 ease-out"
@@ -40,6 +40,17 @@
         >
           <Program v-for="program in filteredPrograms" :key="program.programId" v-bind="program" class="w-full" />
         </transition-group>
+      </div>
+
+      <div v-else class="flex items-center justify-center flex-grow">
+        <p class="px-2 py-4 text-lg text-center text-gray-500">
+          <template v-if="searchQuery !== ''">
+            No programs match the query "{{ searchQuery }}".
+          </template>
+          <template v-else>
+            No programs are currently running.
+          </template>
+        </p>
       </div>
     </div>
   </div>
@@ -73,6 +84,7 @@ export default defineComponent({
     return {
       searchQuery,
       loading,
+
       filteredPrograms,
     }
   },
