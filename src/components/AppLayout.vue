@@ -12,6 +12,25 @@
       </div>
     </header>
 
-    <slot />
+    <div
+      :class="{
+        'px-4 mx-auto mt-8 max-w-7xl sm:px-6 lg:px-8': constraintWidth
+      }"
+    >
+      <slot />
+    </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  props: {
+    constraintWidth: {
+      type: Boolean,
+      default: true,
+    },
+  },
+})
+</script>
