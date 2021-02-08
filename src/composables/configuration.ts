@@ -36,3 +36,9 @@ export function useConfiguration() {
     isLoading,
   }
 }
+
+export async function putConfiguration(data: string): Promise<boolean> {
+  const result = await fetch('/configuration')
+  console.log(result)
+  return false
+}
