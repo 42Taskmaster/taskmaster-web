@@ -2,6 +2,7 @@ dependencies:
   '@vueuse/core': 4.0.12_vue@3.0.5
   '@vueuse/head': 0.2.3_vue@3.0.5
   '@xstate/vue': 0.4.0_vue@3.0.5+xstate@4.16.2
+  monaco-editor: 0.22.3
   nprogress: 0.2.0
   prism-theme-vars: 0.1.4
   swrv: 1.0.0-beta.8_vue@3.0.5
@@ -4447,6 +4448,10 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-1lM+BMLGuDfsdwf3rsgBSrxJwAZHFIrQ8YR61xIqdHo0uNKI9M52wNpHSrliZATJp51On6JD0AfRxd4YGSU0lw==
+  /monaco-editor/0.22.3:
+    dev: false
+    resolution:
+      integrity: sha512-RM559z2CJbczZ3k2b+ouacMINkAYWwRit4/vs0g2X/lkYefDiu0k2GmgWjAuiIpQi+AqASPOKvXNmYc8KUSvVQ==
   /ms/2.0.0:
     dev: true
     resolution:
@@ -6663,6 +6668,7 @@ specifiers:
   husky: ^4.3.8
   lint-staged: ^10.5.3
   markdown-it-prism: ^2.1.4
+  monaco-editor: ^0.22.3
   nprogress: ^0.2.0
   pnpm: ^5.16.0
   postcss: ^8.2.4

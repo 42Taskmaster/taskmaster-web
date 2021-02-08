@@ -8,6 +8,7 @@
     "@vueuse/core": "^4.0.12",
     "@vueuse/head": "^0.2.3",
     "@xstate/vue": "^0.4.0",
+    "monaco-editor": "^0.22.3",
     "nprogress": "^0.2.0",
     "prism-theme-vars": "^0.1.4",
     "swrv": "^1.0.0-beta.8",

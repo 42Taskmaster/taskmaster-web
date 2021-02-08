@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="flex mb-3 text-2xl justify-evenly">
+      <div class="flex mb-5 text-2xl justify-evenly">
         <a class="mx-2 icon-btn" :title="t('button.toggle_dark')" @click="isDark = !isDark">
           <carbon-moon v-if="isDark" />
           <carbon-sun v-else />
@@ -39,6 +39,7 @@
 <script setup lang="ts">
 import ViewListIcon from '/@vite-icons/heroicons-outline/view-list.vue'
 import CogIcon from '/@vite-icons/heroicons-outline/cog.vue'
+import HomeIcon from '/@vite-icons/heroicons-outline/home.vue'
 
 import { useI18n } from 'vue-i18n'
 import { isDark } from '/~/logics'
@@ -52,6 +53,11 @@ const toggleLocales = () => {
 }
 
 const links = [
+  {
+    icon: HomeIcon,
+    title: 'Dashboard',
+    url: '/',
+  },
   {
     icon: ViewListIcon,
     title: 'Programs',
