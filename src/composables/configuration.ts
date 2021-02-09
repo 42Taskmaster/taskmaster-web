@@ -20,7 +20,7 @@ interface ConfigurationResponse {
 }
 
 export function useConfiguration() {
-  const { data, error } = useSWRV('/configuration', fetcher)
+  const { data, error, mutate } = useSWRV('/configuration', fetcher)
 
   const configuration = computed<string | undefined>(() => {
     if (error.value || data.value === undefined)
@@ -31,14 +31,27 @@ export function useConfiguration() {
 
   const isLoading = computed(() => data.value === undefined)
 
+  function reload() {
+    mutate(fetcher)
+  }
+
   return {
     configuration,
+    reload,
     isLoading,
   }
 }
 
 export async function putConfiguration(data: string): Promise<boolean> {
-  const result = await fetch('/configuration')
-  console.log(result)
+  try {
+    const result = await fetch(urlcat(API_URL, '/configuration'),
+      {
+        method: 'PUT',
+        body: JSON.stringify({ data }),
+      })
+  }
+  catch (e) {
+    return false
+  }
   return false
 }

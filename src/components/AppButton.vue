@@ -69,7 +69,7 @@ export default defineComponent({
         case props.primary:
           return 'primary'
         case props.secondary:
-          return 'primary'
+          return 'secondary'
         default:
           return 'outlined'
       }
@@ -82,7 +82,7 @@ export default defineComponent({
           {
             white: 'text-white bg-white hover:bg-gray-50 focus:ring-gray-500',
             red: 'text-white bg-red-600 hover:bg-red-700 focus:ring-red-500',
-            green: 'text-white bg-green-600 hover:bg-green-700 focus:ring-green-500',
+            green: 'text-white bg-green-600 hover:bg-green-700 focus:ring-green-500 border-green-700',
           },
         ],
         [
@@ -90,7 +90,7 @@ export default defineComponent({
           {
             white: 'text-white bg-gray-50 hover:bg-gray-100 focus:ring-gray-500',
             red: 'text-red-700 bg-red-100 hover:bg-red-200 focus:ring-red-500',
-            green: 'text-green-700 bg-green-100 hover:bg-green-200 focus:ring-green-500',
+            green: 'text-green-700 bg-green-100 hover:bg-green-200 focus:ring-green-500 border-green-300',
           },
         ],
         [

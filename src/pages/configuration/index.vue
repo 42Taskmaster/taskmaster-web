@@ -2,7 +2,7 @@
   <div v-if="loading">
     <Loading />
   </div>
-  <AppLayout class="h-full">
+  <AppLayout>
     <template #title>
       Configuration
     </template>
@@ -24,7 +24,10 @@
         </AppButton>
       </div>
     </template>
-    <div id="root" ref="root" class="h-full py-1 bg-white border shadow-sm" />
+    <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
+      {{ alert.message }}
+    </AppAlert>
+    <div id="root" ref="root" class="h-full py-2 bg-white border shadow-sm" :class="{ 'disabled': !editing }" />
   </AppLayout>
 </template>
 
@@ -44,20 +47,36 @@ self.MonacoEnvironment = {
 export default defineComponent({
 
   setup() {
-    const { configuration } = useConfiguration()
+    const { configuration, reload } = useConfiguration()
     const root = ref<HTMLElement>()
     let editor: monaco.editor.IStandaloneCodeEditor
     const editing = ref(false)
     const loading = ref(true)
+    const alert = ref({
+      show: false,
+      type: 'primary',
+      message: '',
+    })
 
     onMounted(() => {
+      monaco.editor.defineTheme('disabled', {
+        base: 'vs',
+        inherit: true,
+        rules: [],
+        colors: {
+          'editor.background': '#eee',
+          'editor.foreground': '#ddd',
+        },
+      })
+      monaco.editor.setTheme('disabled')
       editor = monaco.editor.create(root.value as HTMLElement, {
         language: 'yaml',
         minimap: {
           enabled: false,
         },
-        readOnly: false,
+        readOnly: true,
         scrollBeyondLastLine: false,
+        automaticLayout: true,
       })
     })
     onUnmounted(() => {
@@ -69,22 +88,50 @@ export default defineComponent({
       loading.value = false
     })
 
-    function startEditing() {
+    function enableEditing() {
       editor.updateOptions({ readOnly: false })
+      monaco.editor.setTheme('vs')
+    }
+
+    function disableEditing() {
+      editor.updateOptions({ readOnly: true })
+      monaco.editor.setTheme('disabled')
+    }
+
+    function startEditing() {
+      enableEditing()
       editing.value = true
     }
+
     function cancelEditing() {
-      editor.updateOptions({ readOnly: true })
+      disableEditing()
       editing.value = false
+      editor.setValue(configuration.value as string)
+      reload()
     }
+
+    function closeAlertCallback() {
+      alert.value.show = false
+    }
+
+    function showAlert(type: string, message: string) {
+      alert.value.type = type
+      alert.value.show = true
+      alert.value.message = message
+    }
+
     async function saveEditing() {
       loading.value = true
-      editor.updateOptions({ readOnly: true })
-      if (await putConfiguration(editor.getValue()))
+      disableEditing()
+      if (await putConfiguration(editor.getValue())) {
         editing.value = false
-      else
-        editor.updateOptions({ readOnly: false })
-      loading.value = true
+        showAlert('success', 'La configuration a été mise à jour avec succès.')
+      }
+      else {
+        enableEditing()
+        showAlert('warning', 'Une erreur est survenue lors de la mise à jour de la configuration.')
+      }
+      loading.value = false
     }
 
     return {
@@ -95,8 +142,19 @@ export default defineComponent({
       startEditing,
       cancelEditing,
       saveEditing,
+
+      alert,
+      closeAlertCallback,
     }
   },
 })
 
 </script>
+
+<style scoped>
+.disabled {
+  background: #eee!important;
+  pointer-events: none;
+  cursor: inherit!important;
+}
+</style>
