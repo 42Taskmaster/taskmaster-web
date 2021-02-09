@@ -20,7 +20,7 @@
       </template>
 
       <h2 class="text-lg font-medium leading-6 text-gray-900">
-        Overview
+        {{ t('overview') }}
       </h2>
 
       <div class="grid grid-cols-1 gap-8 mt-2 md:grid-cols-2 lg:grid-cols-3">
@@ -50,7 +50,7 @@
       </div>
 
       <h2 class="mt-8 text-lg font-medium leading-6 text-gray-900">
-        Processus actifs
+        {{ t('active-processes') }}
       </h2>
 
       <!-- Activity list (smallest breakopoint only) -->
@@ -83,35 +83,38 @@
               <thead>
                 <tr>
                   <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                    PID
+                    {{ t('pid') }}
                   </th>
                   <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                    Identifiant
+                    {{ t('identifier') }}
                   </th>
                   <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                    Statut
+                    {{ t('status') }}
                   </th>
                   <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                    Uptime
+                    {{ t('uptime') }}
                   </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr class="bg-white">
+                <tr v-for="{ id:processId, state: processState } in processes" :key="processId" class="bg-white">
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <span class="font-medium text-gray-900">
-                      10232
+                      {{ processId }}
                     </span>
                   </td>
                   <td class="w-full px-6 py-4 text-sm text-left text-gray-500 max-w-0 whitespace-nowrap">
-                    <span class="font-medium text-gray-900">Vogsphere-2</span>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                      success
+                    <span class="font-medium text-gray-900">
+                      {{ processId }}
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
+                      {{ processState }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
+                    <!-- FIXME: use real uptime -->
                     July 11, 2020
                   </td>
                 </tr>
@@ -127,6 +130,7 @@
 <script lang="ts">
 import { defineComponent, computed, watch } from 'vue'
 import { useMachine } from '@xstate/vue'
+import { useI18n } from 'vue-i18n'
 import ChartBarIcon from '/@vite-icons/heroicons-outline/chart-bar.vue'
 import ChipIcon from '/@vite-icons/heroicons-outline/chip.vue'
 import IdentificationIcon from '/@vite-icons/heroicons-outline/identification.vue'
@@ -144,6 +148,8 @@ export default defineComponent({
   },
 
   setup(props) {
+    const { t } = useI18n()
+
     const { program, isLoading } = useProgram(props.id)
     const { state, send } = useMachine(programMachine, {
       actions: {
@@ -190,33 +196,101 @@ export default defineComponent({
     }
 
     const statistics = computed(() => {
+      if (program.value === undefined)
+        return []
+
+      const processesCount = program.value.processes.length
+
       return [
         {
-          text: 'État du programme',
-          value: 'En cours',
+          text: t('program-state'),
+          value: t(`program-status.${program.value.programState}`),
           icon: ChartBarIcon,
         },
         {
-          text: 'Processus',
-          value: '3',
+          text: t('process', processesCount),
+          value: processesCount,
           icon: ChipIcon,
         },
         {
-          text: 'Commande',
-          value: 'cat /dev/zero',
+          text: t('command'),
+          // FIXME: replace with the real command
+          value: program.value.programId,
           icon: IdentificationIcon,
         },
       ]
     })
 
+    const processes = computed(() => {
+      if (program.value === undefined)
+        return []
+
+      return program.value.processes
+    })
+
     return {
+      t,
+
       program,
       isLoading,
 
       actions,
 
       statistics,
+      processes,
     }
   },
 })
 </script>
+
+<i18n>
+{
+  "en": {
+    "overview": "Overview",
+    "program-state": "Program state",
+    "process": "Process | Processes",
+    "command": "Command",
+
+    "active-processes": "Active processes",
+    "pid": "PID",
+    "identifier": "Identifier",
+    "status": "Status",
+    "uptime": "Uptime",
+
+    "program-status": {
+      "STARTING": "Starting",
+      "BACKOFF": "Transitioning",
+      "RUNNING": "Running",
+      "STOPPING": "Stopping",
+      "STOPPED": "Stopped",
+      "EXITED": "Exited",
+      "FATAL": "Fatal",
+      "UNKNOWN": "Unknown",
+    }
+  },
+
+  "fr": {
+    "overview": "Vue d'ensemble",
+    "program-state": "État du programme",
+    "process": "Processus",
+    "command": "Commande",
+
+    "active-processes": "Processus actifs",
+    "pid": "PID",
+    "identifier": "Identifiant",
+    "status": "Statut",
+    "uptime": "Disponibilité",
+
+    "program-status": {
+      "STARTING": "Démarrage en cours",
+      "BACKOFF": "En transition",
+      "RUNNING": "En cours d'exécution",
+      "STOPPING": "En cours d'arrêt",
+      "STOPPED": "Arrêté",
+      "EXITED": "Quitté",
+      "FATAL": "État critique",
+      "UNKNOWN": "État non-défini",
+    }
+  }
+}
+</i18n>
