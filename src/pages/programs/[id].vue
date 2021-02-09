@@ -161,13 +161,11 @@ export default defineComponent({
       send({
         type: program.programState,
       })
-    },
-    )
+    })
 
     const actions = computed(() => {
-      console.log(state.value)
-
-      const { actions } = mergeMeta<ProgramMachineMeta>(state.value.meta)
+      const currentStateMeta = state.value.meta
+      const { actions } = mergeMeta<ProgramMachineMeta>(currentStateMeta)
 
       return actions.map(action => ({
         text: action,
