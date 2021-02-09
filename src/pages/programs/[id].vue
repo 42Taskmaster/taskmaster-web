@@ -167,6 +167,8 @@ export default defineComponent({
       send({
         type: program.programState,
       })
+    }, {
+      immediate: true,
     })
 
     const actions = computed(() => {
