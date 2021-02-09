@@ -78,7 +78,6 @@ export default defineComponent({
   "fr": {
     "process": "processus",
     "processes": "processus"
-    }
   }
 }
 </i18n>
