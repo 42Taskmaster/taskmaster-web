@@ -125,7 +125,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, watch } from 'vue'
 import { createMachine } from 'xstate'
 import { useMachine } from '@xstate/vue'
 import ChartBarIcon from '/@vite-icons/heroicons-outline/chart-bar.vue'
@@ -141,30 +141,100 @@ enum AvailableAction {
   modify = 'modify',
 }
 
-type ProgramMachineState = ProgramState
+enum ProgramMachineActions {
+  START = 'START',
+  STOP = 'STOP',
+  RESTART = 'RESTART',
+  MODIFY = 'MODIFY',
+}
 
-const programMachine = (initialState: ProgramMachineState) => createMachine({
+interface ProgramMachineMeta {
+  actions: AvailableAction[]
+}
+
+interface ProgramMachineContext {}
+
+type ProgramMachineState =
+  | {
+    value: 'SELECTING'
+    context: ProgramMachineContext
+  }
+  | {
+    value: ProgramState.STARTING
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.RUNNING
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.STOPPING
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.STOPPED
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.BACKOFF
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.EXITED
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.FATAL
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.UNKNOWN
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+
+type ProgramMachineEvent =
+  | {
+    type: AvailableAction.start
+  }
+  | {
+    type: AvailableAction.stop
+  }
+  | {
+    type: AvailableAction.restart
+  }
+  | {
+    type: AvailableAction.modify
+  }
+  | {
+    type: ProgramState
+  }
+
+const programMachine = createMachine<ProgramMachineContext, ProgramMachineEvent, ProgramMachineState>({
   id: 'program',
-  initial: initialState,
+  initial: ProgramState.UNKNOWN,
   states: {
     [ProgramState.STARTING]: {
       meta: {
         actions: [
-          AvailableAction.start,
+          AvailableAction.stop,
           AvailableAction.modify,
         ],
       },
 
       on: {
         [AvailableAction.stop]: {
-          actions: () => {
-            console.log('stop')
-          },
+          actions: ProgramMachineActions.STOP,
         },
         [AvailableAction.modify]: {
-          actions: () => {
-            console.log('modify')
-          },
+          actions: ProgramMachineActions.MODIFY,
         },
       },
     },
@@ -180,19 +250,13 @@ const programMachine = (initialState: ProgramMachineState) => createMachine({
 
       on: {
         [AvailableAction.restart]: {
-          actions: () => {
-            console.log('restart')
-          },
+          actions: ProgramMachineActions.RESTART,
         },
         [AvailableAction.stop]: {
-          actions: () => {
-            console.log('stop')
-          },
+          actions: ProgramMachineActions.STOP,
         },
         [AvailableAction.modify]: {
-          actions: () => {
-            console.log('modify')
-          },
+          actions: ProgramMachineActions.MODIFY,
         },
       },
     },
@@ -206,9 +270,7 @@ const programMachine = (initialState: ProgramMachineState) => createMachine({
 
       on: {
         [AvailableAction.modify]: {
-          actions: () => {
-            console.log('modify')
-          },
+          actions: ProgramMachineActions.MODIFY,
         },
       },
     },
@@ -223,14 +285,10 @@ const programMachine = (initialState: ProgramMachineState) => createMachine({
 
       on: {
         [AvailableAction.start]: {
-          actions: () => {
-            console.log('start')
-          },
+          actions: ProgramMachineActions.START,
         },
-        [AvailableAction.stop]: {
-          actions: () => {
-            console.log('stop')
-          },
+        [AvailableAction.modify]: {
+          actions: ProgramMachineActions.MODIFY,
         },
       },
     },
@@ -243,10 +301,8 @@ const programMachine = (initialState: ProgramMachineState) => createMachine({
       },
 
       on: {
-        [AvailableAction.stop]: {
-          actions: () => {
-            console.log('modify')
-          },
+        [AvailableAction.modify]: {
+          actions: ProgramMachineActions.MODIFY,
         },
       },
     },
@@ -261,19 +317,68 @@ const programMachine = (initialState: ProgramMachineState) => createMachine({
 
       on: {
         [AvailableAction.start]: {
-          actions: () => {
-            console.log('modify')
-          },
+          actions: ProgramMachineActions.START,
         },
-        [AvailableAction.stop]: {
-          actions: () => {
-            console.log('modify')
-          },
+        [AvailableAction.modify]: {
+          actions: ProgramMachineActions.MODIFY,
+        },
+      },
+    },
+
+    [ProgramState.FATAL]: {
+      meta: {
+        actions: [
+          AvailableAction.start,
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.start]: {
+          actions: ProgramMachineActions.START,
+        },
+        [AvailableAction.modify]: {
+          actions: ProgramMachineActions.MODIFY,
+        },
+      },
+    },
+
+    [ProgramState.UNKNOWN]: {
+      meta: {
+        actions: [
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.modify]: {
+          actions: ProgramMachineActions.MODIFY,
         },
       },
     },
   },
+
+  on: {
+    [ProgramState.BACKOFF]: ProgramState.BACKOFF,
+    [ProgramState.RUNNING]: ProgramState.RUNNING,
+    [ProgramState.STOPPING]: ProgramState.STOPPING,
+    [ProgramState.STOPPED]: ProgramState.STOPPED,
+    [ProgramState.EXITED]: ProgramState.EXITED,
+    [ProgramState.FATAL]: ProgramState.FATAL,
+    [ProgramState.UNKNOWN]: ProgramState.UNKNOWN,
+  },
 })
+
+function mergeMeta<T>(meta: Record<string, T>): T {
+  return Object.keys(meta).reduce((acc, key) => {
+    const value = meta[key]
+
+    // Assuming each meta value is an object
+    Object.assign(acc, value)
+
+    return acc
+  }, {} as T)
+}
 
 export default defineComponent({
   props: {
@@ -285,50 +390,34 @@ export default defineComponent({
 
   setup(props) {
     const { program, isLoading } = useProgram(props.id)
+    const { state, send } = useMachine(programMachine, {
+      actions: {
+        [ProgramMachineActions.START]: startProgram,
+        [ProgramMachineActions.STOP]: stopProgram,
+        [ProgramMachineActions.RESTART]: restartProgram,
+        [ProgramMachineActions.MODIFY]: modifyProgram,
+      },
+    })
+
+    watch(program, (program) => {
+      if (program === undefined)
+        return
+
+      send({
+        type: program.programState,
+      })
+    },
+    )
 
     const actions = computed(() => {
-      if (program.value === undefined)
-        return undefined
+      console.log(state.value)
 
-      const availableActions: Record<AvailableAction, { text: string; action: () => void }> = {
-        [AvailableAction.start]: {
-          text: 'Start',
-          action: startProgram,
-        },
-        [AvailableAction.stop]: {
-          text: 'Stop',
-          action: stopProgram,
-        },
-        [AvailableAction.restart]: {
-          text: 'Restart',
-          action: restartProgram,
-        },
-        [AvailableAction.modify]: {
-          text: 'Modify',
-          action: modifyProgram,
-        },
-      }
+      const { actions } = mergeMeta<ProgramMachineMeta>(state.value.meta)
 
-      switch (program.value.programState) {
-        case 'STARTING':
-          return [
-            availableActions.stop,
-            availableActions.modify,
-          ]
-        case 'BACKOFF':
-        case 'RUNNING':
-        case 'STOPPING':
-        case 'STOPPED':
-          return [
-            availableActions.start,
-            availableActions.modify,
-          ]
-        case 'EXITED':
-        case 'FATAL':
-        case 'UNKNOWN':
-        default:
-          throw new Error('Reached unreachable case')
-      }
+      return actions.map(action => ({
+        text: action,
+        action: () => send(action),
+      }))
     })
 
     function startProgram() {
@@ -344,7 +433,7 @@ export default defineComponent({
     }
 
     function modifyProgram() {
-      console.log('modifyProgram')
+      console.log('modify the program')
     }
 
     const statistics = computed(() => {
