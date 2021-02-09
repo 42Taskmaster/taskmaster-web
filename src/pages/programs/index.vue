@@ -49,7 +49,7 @@
         leave-to-class="transform translate-y-6 opacity-0"
         move-class="transition duration-300 ease"
       >
-        <Program v-for="program in filteredPrograms" :key="program.programId" v-bind="program" class="w-full" />
+        <Program v-for="program in filteredPrograms" :key="program.id" v-bind="program" class="w-full" />
       </transition-group>
     </div>
 
@@ -96,11 +96,11 @@ export default defineComponent({
       if (searchQuery.value === '')
         return programs.value
 
-      return programs.value.filter(({ programId }) => programId.startsWith(searchQuery.value))
+      return programs.value.filter(({ id }) => id.startsWith(searchQuery.value))
     })
 
     function allProgramsAreStopped(): boolean {
-      const found = programs.value.find(program => program.programState !== 'STOPPED' && program.programState !== 'EXITED' && program.programState !== 'FATAL')
+      const found = programs.value.find(program => program.state !== 'STOPPED' && program.state !== 'EXITED' && program.state !== 'FATAL')
       if (found)
         return false
       return true

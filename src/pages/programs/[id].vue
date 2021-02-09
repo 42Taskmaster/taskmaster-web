@@ -10,7 +10,7 @@
 
     <AppLayout v-else>
       <template #title>
-        {{ program.programId }}
+        {{ program.id }}
       </template>
 
       <template #actions>
@@ -97,20 +97,20 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="{ id:processId, state: processState } in processes" :key="processId" class="bg-white">
+                <tr v-for="process in processes" :key="process.id" class="bg-white">
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <span class="font-medium text-gray-900">
-                      {{ processId }}
+                      {{ process.pid }}
                     </span>
                   </td>
                   <td class="w-full px-6 py-4 text-sm text-left text-gray-500 max-w-0 whitespace-nowrap">
                     <span class="font-medium text-gray-900">
-                      {{ processId }}
+                      {{ process.id }}
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                      {{ processState }}
+                      {{ process.state }}
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
@@ -165,7 +165,7 @@ export default defineComponent({
         return
 
       send({
-        type: program.programState,
+        type: program.state,
       })
     }, {
       immediate: true,
@@ -206,7 +206,7 @@ export default defineComponent({
       return [
         {
           text: t('program-state'),
-          value: t(`program-status.${program.value.programState}`),
+          value: t(`program-status.${program.value.state}`),
           icon: ChartBarIcon,
         },
         {
@@ -217,7 +217,7 @@ export default defineComponent({
         {
           text: t('command'),
           // FIXME: replace with the real command
-          value: program.value.programId,
+          value: program.value.configuration.cmd,
           icon: IdentificationIcon,
         },
       ]
@@ -263,7 +263,7 @@ export default defineComponent({
       "start": "Start",
       "stop": "Stop",
       "restart": "Restart",
-      "modify": "Modify",
+      "modify": "Edit",
     },
 
     "program-status": {
@@ -275,6 +275,11 @@ export default defineComponent({
       "EXITED": "Exited",
       "FATAL": "Fatal",
       "UNKNOWN": "Unknown",
+    },
+
+    "titles": {
+      "dashboard": "Dashboard",
+      "programs": "Programs",
     }
   },
 

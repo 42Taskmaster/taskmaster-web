@@ -4,14 +4,14 @@
       <div class="flex items-center justify-between w-full">
         <div class="flex flex-col">
           <div class="text-xl">
-            {{ programId }}
+            {{ id }}
           </div>
           <div class="text-gray-500">
             3/3 processes
           </div>
         </div>
         <Badge class="text-sm" :class="stateBadgeBg">
-          {{ programState }}
+          {{ state }}
         </Badge>
       </div>
       <heroicons-outline-arrow-right class="ml-16 text-2xl text-gray-500" />
@@ -21,24 +21,27 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   props: {
-    programId: {
+    id: {
       type: String,
       required: true,
     },
 
-    programState: {
+    state: {
       type: String,
       required: true,
     },
   },
 
   setup(props) {
-    const programUrl = computed(() => `/programs/${props.programId}`)
+    const { t } = useI18n()
+
+    const programUrl = computed(() => `/programs/${props.id}`)
     const stateBadgeBg = computed(() => {
-      switch (props.programState) {
+      switch (props.state) {
         case 'STARTING':
           return 'bg-blue-500'
         case 'STOPPING':
@@ -57,9 +60,25 @@ export default defineComponent({
     })
 
     return {
+      t,
       programUrl,
       stateBadgeBg,
     }
   },
 })
 </script>
+
+<i18n>
+{
+  "en": {
+    "process": "process",
+    "processes": "processes"
+  },
+
+  "fr": {
+    "process": "processus",
+    "processes": "processus"
+    }
+  }
+}
+</i18n>

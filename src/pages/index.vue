@@ -43,16 +43,16 @@
       </div>
     </div>
     <div class="flex flex-wrap col-span-2 gap-5 pb-3 overflow-x-auto">
-      <div v-for="program in programs" :key="program.programId" v-bind="program" class="flex-grow">
+      <div v-for="program in programs" :key="program.id" v-bind="program" class="flex-grow">
         <router-link class="flex flex-col items-center justify-center bg-white border border-solid shadow-sm cursor-pointer p-7 h-60 hover:bg-gray-50" to="/">
           <div class="text-xl">
-            {{ program.programId }}
+            {{ program.id }}
           </div>
           <div class="text-gray-500">
             3/3 processes
           </div>
           <Badge class="mt-10 text-sm bg-green-500">
-            {{ program.programState }}
+            {{ program.state }}
           </Badge>
         </router-link>
       </div>

@@ -24,23 +24,40 @@ export enum ProgramState {
 
 interface Process {
   id: string
+  pid: string
   state: string
 }
 
-interface ProgramStatusResponse {
-  program_id: string
-  program_state: string
-  processes: Process[]
+interface ProgramConfiguration {
+  name: string
+  cmd: string
+  numprocs: number
+  umask: string
+  workingdir: string
+  autostart: boolean
+  autorestart: string
+  exitcodes: number[]
+  startretries: number
+  starttime: number
+  stopsignal: string
+  stoptime: number
+  stdout: string
+  stderr: string
+  env: string[]
 }
 
-interface ProgramStatus {
-  programId: string
-  programState: ProgramState
+interface Program {
+  id: string
+  state: ProgramState
+  configuration: ProgramConfiguration
   processes: Process[]
+}
+interface Programs {
+  programs: Program[]
 }
 
 interface ProgramsResponse {
-  result: ProgramStatusResponse[]
+  result: Programs
 }
 
 export function usePrograms() {
@@ -48,23 +65,13 @@ export function usePrograms() {
     refreshInterval: 1_000,
   })
 
-  const programs = computed<ProgramStatus[]>(() => {
+  const programs = computed<Program[]>(() => {
     if (error.value || data.value === undefined)
       return []
 
-    const { result: programs } = (data.value as ProgramsResponse)
+    const programsReponse = (data.value as ProgramsResponse)
 
-    const normalizedPrograms: ProgramStatus[] = programs.map(({
-      program_id,
-      program_state,
-      processes,
-    }) => ({
-      programId: program_id,
-      programState: program_state,
-      processes,
-    }))
-
-    return normalizedPrograms
+    return programsReponse.result.programs
   })
 
   const isLoading = computed(() => data.value === undefined)
@@ -80,27 +87,16 @@ export function useProgram(programId: string) {
     refreshInterval: 1_000,
   })
 
-  const program = computed<ProgramStatus | undefined>(() => {
+  const program = computed<Program | undefined>(() => {
     if (error.value || data.value === undefined)
       return undefined
 
-    const { result: programs } = (data.value as ProgramsResponse)
+    const programsReponse = (data.value as ProgramsResponse)
+    const programs = programsReponse.result.programs
 
-    const matchingProgram = programs.find(({ program_id }) => program_id === programId)
-    if (matchingProgram === undefined)
-      return undefined
+    const matchingProgram = programs.find(({ id }) => id === programId)
 
-    const {
-      processes,
-      program_id,
-      program_state,
-    } = matchingProgram
-
-    return {
-      programId: program_id,
-      programState: program_state,
-      processes,
-    }
+    return matchingProgram
   })
 
   const isLoading = computed(() => data.value === undefined)
