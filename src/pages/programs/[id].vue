@@ -174,7 +174,7 @@ export default defineComponent({
       const { actions } = mergeMeta<ProgramMachineMeta>(currentStateMeta)
 
       return actions.map(action => ({
-        text: action,
+        text: t(`actions.${action}`),
         action: () => send(action),
       }))
     })
@@ -257,6 +257,13 @@ export default defineComponent({
     "status": "Status",
     "uptime": "Uptime",
 
+    "actions": {
+      "start": "Start",
+      "stop": "Stop",
+      "restart": "Restart",
+      "modify": "Modify",
+    },
+
     "program-status": {
       "STARTING": "Starting",
       "BACKOFF": "Transitioning",
@@ -280,6 +287,13 @@ export default defineComponent({
     "identifier": "Identifiant",
     "status": "Statut",
     "uptime": "Disponibilité",
+
+    "actions": {
+      "start": "Lancer",
+      "stop": "Stopper",
+      "restart": "Redémarrer",
+      "modify": "Modifier",
+    },
 
     "program-status": {
       "STARTING": "Démarrage en cours",
