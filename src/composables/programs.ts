@@ -11,7 +11,16 @@ async function fetcher(key: string): Promise<unknown> {
   return json
 }
 
-type ProgramState = 'STARTING' |'BACKOFF' |'RUNNING' |'STOPPING' |'STOPPED' |'EXITED' |'FATAL' |'UNKNOWN'
+export enum ProgramState {
+  STARTING = 'STARTING',
+  BACKOFF = 'BACKOFF',
+  RUNNING = 'RUNNING',
+  STOPPING = 'STOPPING',
+  STOPPED = 'STOPPED',
+  EXITED = 'EXITED',
+  FATAL = 'FATAL',
+  UNKNOWN = 'UNKNOWN',
+}
 
 interface Process {
   id: string

@@ -126,11 +126,154 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
+import { createMachine } from 'xstate'
+import { useMachine } from '@xstate/vue'
 import ChartBarIcon from '/@vite-icons/heroicons-outline/chart-bar.vue'
 import ChipIcon from '/@vite-icons/heroicons-outline/chip.vue'
 import IdentificationIcon from '/@vite-icons/heroicons-outline/identification.vue'
 
-import { useProgram } from '/~/composables/programs'
+import { ProgramState, useProgram } from '/~/composables/programs'
+
+enum AvailableAction {
+  start = 'start',
+  stop = 'stop',
+  restart = 'restart',
+  modify = 'modify',
+}
+
+type ProgramMachineState = ProgramState
+
+const programMachine = (initialState: ProgramMachineState) => createMachine({
+  id: 'program',
+  initial: initialState,
+  states: {
+    [ProgramState.STARTING]: {
+      meta: {
+        actions: [
+          AvailableAction.start,
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.stop]: {
+          actions: () => {
+            console.log('stop')
+          },
+        },
+        [AvailableAction.modify]: {
+          actions: () => {
+            console.log('modify')
+          },
+        },
+      },
+    },
+
+    [ProgramState.RUNNING]: {
+      meta: {
+        actions: [
+          AvailableAction.restart,
+          AvailableAction.stop,
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.restart]: {
+          actions: () => {
+            console.log('restart')
+          },
+        },
+        [AvailableAction.stop]: {
+          actions: () => {
+            console.log('stop')
+          },
+        },
+        [AvailableAction.modify]: {
+          actions: () => {
+            console.log('modify')
+          },
+        },
+      },
+    },
+
+    [ProgramState.STOPPING]: {
+      meta: {
+        actions: [
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.modify]: {
+          actions: () => {
+            console.log('modify')
+          },
+        },
+      },
+    },
+
+    [ProgramState.STOPPED]: {
+      meta: {
+        actions: [
+          AvailableAction.start,
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.start]: {
+          actions: () => {
+            console.log('start')
+          },
+        },
+        [AvailableAction.stop]: {
+          actions: () => {
+            console.log('stop')
+          },
+        },
+      },
+    },
+
+    [ProgramState.BACKOFF]: {
+      meta: {
+        actions: [
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.stop]: {
+          actions: () => {
+            console.log('modify')
+          },
+        },
+      },
+    },
+
+    [ProgramState.EXITED]: {
+      meta: {
+        actions: [
+          AvailableAction.start,
+          AvailableAction.modify,
+        ],
+      },
+
+      on: {
+        [AvailableAction.start]: {
+          actions: () => {
+            console.log('modify')
+          },
+        },
+        [AvailableAction.stop]: {
+          actions: () => {
+            console.log('modify')
+          },
+        },
+      },
+    },
+  },
+})
 
 export default defineComponent({
   props: {
@@ -147,21 +290,44 @@ export default defineComponent({
       if (program.value === undefined)
         return undefined
 
+      const availableActions: Record<AvailableAction, { text: string; action: () => void }> = {
+        [AvailableAction.start]: {
+          text: 'Start',
+          action: startProgram,
+        },
+        [AvailableAction.stop]: {
+          text: 'Stop',
+          action: stopProgram,
+        },
+        [AvailableAction.restart]: {
+          text: 'Restart',
+          action: restartProgram,
+        },
+        [AvailableAction.modify]: {
+          text: 'Modify',
+          action: modifyProgram,
+        },
+      }
+
       switch (program.value.programState) {
+        case 'STARTING':
+          return [
+            availableActions.stop,
+            availableActions.modify,
+          ]
+        case 'BACKOFF':
+        case 'RUNNING':
+        case 'STOPPING':
         case 'STOPPED':
           return [
-            {
-              text: 'Start',
-              action: startProgram,
-            },
+            availableActions.start,
+            availableActions.modify,
           ]
+        case 'EXITED':
+        case 'FATAL':
+        case 'UNKNOWN':
         default:
-          return [
-            {
-              text: 'Stop',
-              action: stopProgram,
-            },
-          ]
+          throw new Error('Reached unreachable case')
       }
     })
 
@@ -171,6 +337,14 @@ export default defineComponent({
 
     function stopProgram() {
       console.log('stop the program')
+    }
+
+    function restartProgram() {
+      console.log('restart the program')
+    }
+
+    function modifyProgram() {
+      console.log('modifyProgram')
     }
 
     const statistics = computed(() => {
