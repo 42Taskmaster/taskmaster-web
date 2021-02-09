@@ -22,68 +22,68 @@ export interface ProgramMachineMeta {
 
 interface ProgramMachineContext {}
 
-  type ProgramMachineState =
-    | {
-      value: 'SELECTING'
-      context: ProgramMachineContext
-    }
-    | {
-      value: ProgramState.STARTING
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
-    | {
-      value: ProgramState.RUNNING
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
-    | {
-      value: ProgramState.STOPPING
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
-    | {
-      value: ProgramState.STOPPED
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
-    | {
-      value: ProgramState.BACKOFF
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
-    | {
-      value: ProgramState.EXITED
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
-    | {
-      value: ProgramState.FATAL
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
-    | {
-      value: ProgramState.UNKNOWN
-      context: ProgramMachineContext
-      meta: ProgramMachineMeta
-    }
+type ProgramMachineState =
+  | {
+    value: 'SELECTING'
+    context: ProgramMachineContext
+  }
+  | {
+    value: ProgramState.STARTING
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.RUNNING
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.STOPPING
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.STOPPED
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.BACKOFF
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.EXITED
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.FATAL
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
+  | {
+    value: ProgramState.UNKNOWN
+    context: ProgramMachineContext
+    meta: ProgramMachineMeta
+  }
 
-  type ProgramMachineEvent =
-    | {
-      type: AvailableAction.start
-    }
-    | {
-      type: AvailableAction.stop
-    }
-    | {
-      type: AvailableAction.restart
-    }
-    | {
-      type: AvailableAction.modify
-    }
-    | {
-      type: ProgramState
-    }
+type ProgramMachineEvent =
+  | {
+    type: AvailableAction.start
+  }
+  | {
+    type: AvailableAction.stop
+  }
+  | {
+    type: AvailableAction.restart
+  }
+  | {
+    type: AvailableAction.modify
+  }
+  | {
+    type: ProgramState
+  }
 
 export const programMachine = createMachine<ProgramMachineContext, ProgramMachineEvent, ProgramMachineState>({
   id: 'program',
