@@ -37,11 +37,19 @@
       <heroicons-solid-plus class="w-10 h-10 p-2 mb-5 ml-3 text-4xl text-white bg-white bg-green-500 rounded-full shadow cursor-pointer hover:bg-opacity-80" />
     </div>
 
-    <div v-if="filteredPrograms.length > 0" class="relative">
+    <div
+      v-if="filteredPrograms.length > 0"
+      class="relative"
+    >
       <transition-group
         tag="div"
-        class="grid gap-4"
-        :class="'grid-cols-' + (gridMode ? '4' : '1')"
+        :class="[
+          'grid gap-4',
+          {
+            'grid-cols-1': !gridMode,
+            'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': gridMode,
+          }
+        ]"
         enter-active-class="transition duration-200 ease-out"
         enter-from-class="transform -translate-y-6 opacity-25"
         enter-to-class="transform translate-y-0 opacity-100"
