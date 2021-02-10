@@ -33,13 +33,13 @@
         >
       </div>
 
-      <button class="w-10 h-10 p-2 mb-5 ml-3 text-4xl text-gray-500 bg-white rounded-md shadow cursor-pointer hover:text-gray-600 hover:bg-opacity-50" @click="toggleLayout">
-        <ViewGridIcon v-if="gridMode" />
-        <MenuIcon v-else />
+      <button class="flex items-center justify-center p-2 mb-5 ml-3 text-4xl text-gray-500 bg-white rounded-md shadow cursor-pointer hover:text-gray-600 hover:bg-opacity-50" @click="toggleLayout">
+        <ViewGridIcon v-if="gridMode" class="w-6 h-6 transform-none" />
+        <MenuIcon v-else class="w-6 h-6 transform-none" />
       </button>
 
-      <button class="w-10 h-10 p-2 mb-5 ml-3 text-4xl text-white bg-white bg-green-500 rounded-full shadow cursor-pointer hover:bg-opacity-80">
-        <heroicons-solid-plus />
+      <button class="flex items-center justify-center p-2 mb-5 ml-3 text-4xl text-white bg-white bg-green-500 rounded-full shadow cursor-pointer hover:bg-opacity-80">
+        <heroicons-solid-plus class="w-6 h-6 transform-none" />
       </button>
     </div>
 
