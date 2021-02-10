@@ -39,15 +39,21 @@
         class="h-full shadow"
       />
 
-      <div class="absolute top-0 right-0 p-1 mt-5 mr-8 text-sm text-gray-500 bg-gray-100 rounded shadow">
-        <div v-if="editorReadonly">
-          <heroicons-outline-lock-closed aria-label="The configuration can not be modified" class="inline text-xl" />
-          Read only
-        </div>
-        <div v-else>
-          <heroicons-outline-lock-open aria-label="The configuration can be modified" class="inline text-xl" />
-          Edit mode
-        </div>
+      <div class="absolute top-0 right-0 flex items-center p-2 mt-5 mr-8 text-gray-500 bg-gray-100 rounded shadow">
+        <template v-if="editorReadonly">
+          <heroicons-outline-lock-closed aria-label="The configuration can not be modified" class="text-xl" />
+
+          <span class="ml-1 text-sm font-medium">
+            {{ t('read-only') }}
+          </span>
+        </template>
+        <template v-else>
+          <heroicons-outline-lock-open aria-label="The configuration can be modified" class="text-xl" />
+
+          <span class="ml-1 text-sm font-medium">
+            {{ t('read-write') }}
+          </span>
+        </template>
       </div>
     </div>
   </AppLayout>
@@ -60,12 +66,15 @@ import 'ace-builds/src-noconflict/mode-yaml'
 import 'ace-builds/src-noconflict/theme-chrome'
 
 import { useConfiguration, putConfiguration } from '/~/composables/configuration'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   components: {
     VAceEditor,
   },
   setup() {
+    const { t } = useI18n()
+
     const { configuration, reload } = useConfiguration()
 
     const configurationText = ref<string>('')
@@ -134,6 +143,8 @@ export default defineComponent({
     }
 
     return {
+      t,
+
       configurationText,
       editorReadonly,
       loading,
@@ -149,3 +160,17 @@ export default defineComponent({
   },
 })
 </script>
+
+<i18n>
+{
+  "fr": {
+    "read-only": "Mode lecture",
+    "read-write": "Mode édition"
+  },
+
+  "en": {
+    "read-only": "Read only",
+    "read-write": "Edit mode"
+  }
+}
+</i18n>
