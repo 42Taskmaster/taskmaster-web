@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import CheckCircleIcon from '/@vite-icons/heroicons-solid/check-circle.vue'
 import InformationCircleIcon from '/@vite-icons/heroicons-solid/information-circle.vue'
 import ExclamationIcon from '/@vite-icons/heroicons-solid/exclamation.vue'
@@ -98,7 +98,9 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const alertType = types.find(type => type.type === props.type) || types[0]
+    const alertType = computed(() => {
+      return types.find(type => type.type === props.type) || types[0]
+    })
     return {
       alertType,
     }
