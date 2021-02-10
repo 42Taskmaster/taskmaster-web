@@ -42,16 +42,20 @@ export function useConfiguration() {
   }
 }
 
-export async function putConfiguration(data: string): Promise<boolean> {
+export async function putConfiguration(data: string): Promise<string> {
   try {
     const result = await fetch(urlcat(API_URL, '/configuration'),
       {
         method: 'PUT',
         body: JSON.stringify({ data }),
       })
+    const json = await result.json()
+    if (json.error === undefined)
+      return ''
+    else
+      return json.error
   }
   catch (e) {
-    return false
+    return e
   }
-  return false
 }

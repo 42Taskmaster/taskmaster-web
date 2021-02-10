@@ -31,17 +31,23 @@
       {{ alert.message }}
     </AppAlert>
 
-    <div class="relative h-full">
+    <div class="relative h-full pb-10 ">
       <VAceEditor
         v-model:value="configurationText"
         lang="yaml"
         :readonly="editorReadonly"
-        class="h-full"
+        class="h-full shadow"
       />
 
-      <div class="absolute top-0 right-0 p-1 mt-4 mr-4 text-xl text-gray-500 bg-gray-100 rounded shadow">
-        <heroicons-outline-lock-closed v-if="editorReadonly" aria-label="The configuration can not be modified" />
-        <heroicons-outline-lock-open v-else aria-label="The configuration can be modified" />
+      <div class="absolute top-0 right-0 p-1 mt-5 mr-8 text-sm text-gray-500 bg-gray-100 rounded shadow">
+        <div v-if="editorReadonly">
+          <heroicons-outline-lock-closed aria-label="The configuration can not be modified" class="inline text-xl" />
+          Read only
+        </div>
+        <div v-else>
+          <heroicons-outline-lock-open aria-label="The configuration can be modified" class="inline text-xl" />
+          Edit mode
+        </div>
       </div>
     </div>
   </AppLayout>
@@ -59,7 +65,6 @@ export default defineComponent({
   components: {
     VAceEditor,
   },
-
   setup() {
     const { configuration, reload } = useConfiguration()
 
@@ -115,13 +120,14 @@ export default defineComponent({
     async function saveEditing() {
       loading.value = true
       disableEditing()
-      if (await putConfiguration(configurationText.value)) {
+      const error = await putConfiguration(configurationText.value)
+      if (error === '') {
         editing.value = false
         showAlert('success', 'La configuration a été mise à jour avec succès.')
       }
       else {
         enableEditing()
-        showAlert('warning', 'Une erreur est survenue lors de la mise à jour de la configuration.')
+        showAlert('warning', `Une erreur est survenue lors de la mise à jour de la configuration : ${error}`)
       }
 
       loading.value = false
