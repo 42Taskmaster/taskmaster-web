@@ -13,7 +13,7 @@
         <heroicons-outline-arrow-circle-up class="mr-1" />
         {{ allProgramsAreStopped ? "Start all" : "Restart all" }}
       </AppButton>
-      <AppButton color="red" disabled="allProgramsAreStopped" @click="stopPrograms">
+      <AppButton color="red" :disabled="allProgramsAreStopped" @click="stopPrograms">
         <heroicons-outline-x-circle class="mr-1" />
         Stop all
       </AppButton>
