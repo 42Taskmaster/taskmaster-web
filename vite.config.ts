@@ -13,6 +13,11 @@ const config: UserConfig = {
   alias: {
     '/~/': `${path.resolve(__dirname, 'src')}/`,
   },
+  optimizeDeps: {
+    exclude: [
+      'monaco-editor',
+    ],
+  },
   plugins: [
     Vue({
       include: [/\.vue$/, /\.md$/],
