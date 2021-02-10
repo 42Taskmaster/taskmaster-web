@@ -142,13 +142,4 @@ export default defineComponent({
     }
   },
 })
-
 </script>
-
-<style scoped>
-.disabled {
-  background: #eee!important;
-  pointer-events: none;
-  cursor: inherit!important;
-}
-</style>
