@@ -9,11 +9,11 @@
     </template>
 
     <template #actions>
-      <AppButton :color="allProgramsAreStopped() ? 'green' : ''" @click="startPrograms()">
+      <AppButton :color="startLabel == 'Start all' ? 'green' : ''" @click="startPrograms">
         <heroicons-outline-arrow-circle-up class="mr-1" />
-        {{ allProgramsAreStopped() ? "Start" : "Restart" }} all
+        {{ startLabel }}
       </AppButton>
-      <AppButton color="red" disabled="allProgramsAreStopped" @click="stopPrograms()">
+      <AppButton color="red" disabled="allProgramsAreStopped" @click="stopPrograms">
         <heroicons-outline-x-circle class="mr-1" />
         Stop all
       </AppButton>
@@ -32,7 +32,8 @@
           placeholder="Rechercher"
         >
       </div>
-      <component :is="gridMode ? viewGridIcon : menuIcon" class="w-10 h-10 p-2 mb-5 ml-3 text-4xl text-gray-500 bg-white rounded-md shadow cursor-pointer hover:text-gray-600 hover:bg-opacity-50" @click="toggleLayout()" />
+      <ViewGridIcon v-if="gridMode" class="w-10 h-10 p-2 mb-5 ml-3 text-4xl text-gray-500 bg-white rounded-md shadow cursor-pointer hover:text-gray-600 hover:bg-opacity-50" @click="toggleLayout" />
+      <MenuIcon v-else class="w-10 h-10 p-2 mb-5 ml-3 text-4xl text-gray-500 bg-white rounded-md shadow cursor-pointer hover:text-gray-600 hover:bg-opacity-50" @click="toggleLayout" />
       <heroicons-solid-plus class="w-10 h-10 p-2 mb-5 ml-3 text-4xl text-white bg-white bg-green-500 rounded-full shadow cursor-pointer hover:bg-opacity-80" />
     </div>
 
@@ -73,6 +74,10 @@ import ViewGridIcon from '/@vite-icons/heroicons-outline/view-grid.vue'
 import MenuIcon from '/@vite-icons/heroicons-outline/menu.vue'
 
 export default defineComponent({
+  components: {
+    ViewGridIcon,
+    MenuIcon,
+  },
   setup() {
     const searchQuery = ref('')
     const loading = ref(true)
@@ -83,8 +88,11 @@ export default defineComponent({
       message: '',
     })
     const gridMode = ref(false)
-    const menuIcon = MenuIcon
-    const viewGridIcon = ViewGridIcon
+    const startLabel = computed(() => {
+      if (allProgramsAreStopped())
+        return 'Start all'
+      return 'Restart all'
+    })
 
     watch(isLoading, (isLoading) => {
       loading.value = isLoading
@@ -120,8 +128,7 @@ export default defineComponent({
       allProgramsAreStopped,
       gridMode,
       toggleLayout,
-      menuIcon,
-      viewGridIcon,
+      startLabel,
     }
   },
 })

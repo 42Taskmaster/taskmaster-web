@@ -2,25 +2,23 @@
   <div
     class="p-4 mb-5 "
     :class=" [
-      'bg-' + alertType.color + '-50 border-' + alertType.color + '-200 ',
-      { 'rounded-md': rounded },
-      { 'border': bordered },
-      { 'border-l-8': fatBorder },
+      alertType.alertClasses,
+      { 'rounded-md': rounded, 'border': bordered, 'border-l-8': fatBorder },
     ] "
   >
     <div class="flex">
       <div class="flex-shrink-0">
         <!-- Heroicon name: solid/check-circle -->
-        <component :is="alertType.icon" class="w-5 h-5 " :class="'text-' + alertType.color + '-400'" />
+        <component :is="alertType.icon" class="w-5 h-5 " :class="alertType.iconClasses" />
       </div>
       <div class="ml-3">
-        <p class="text-sm font-medium" :class="'text-' + alertType.color + '-800'">
+        <p class="text-sm font-medium" :class="alertType.textClasses">
           <slot />
         </p>
       </div>
       <div class="pl-3 ml-auto">
         <div class="-mx-1.5 -my-1.5">
-          <button :class="'text-' + alertType.color + '-500 bg-' + alertType.color + '-50 hover:bg-' + alertType.color + '-100 focus:ring-offset-' + alertType.color + '-50 focus:ring-' + alertType.color + '-600'" class="inline-flex  rounded-md p-1.5  focus:outline-none focus:ring-2 focus:ring-offset-2" @click="closeCallback()">
+          <button :class="alertType.buttonClasses" class="inline-flex  rounded-md p-1.5  focus:outline-none focus:ring-2 focus:ring-offset-2" @click="closeCallback">
             <span class="sr-only">Dismiss</span>
             <heroicons-solid-x class="w-5 h-5" />
           </button>
@@ -31,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch, ref, onUnmounted } from 'vue'
+import { defineComponent } from 'vue'
 import CheckCircleIcon from '/@vite-icons/heroicons-solid/check-circle.vue'
 import InformationCircleIcon from '/@vite-icons/heroicons-solid/information-circle.vue'
 import ExclamationIcon from '/@vite-icons/heroicons-solid/exclamation.vue'
@@ -42,21 +40,37 @@ const types = [
     type: 'primary',
     color: 'blue',
     icon: InformationCircleIcon,
+    alertClasses: 'bg-blue-50 border-blue-200',
+    iconClasses: 'text-blue-400',
+    textClasses: 'text-blue-800',
+    buttonClasses: 'text-blue-500 bg-blue-50 hover:bg-blue-100 focus:ring-offset-blue-50 focus:ring-blue-600',
   },
   {
     type: 'success',
     color: 'green',
     icon: CheckCircleIcon,
+    alertClasses: 'bg-green-50 border-green-200',
+    iconClasses: 'text-green-400',
+    textClasses: 'text-green-800',
+    buttonClasses: 'text-green-500 bg-green-50 hover:bg-green-100 focus:ring-offset-green-50 focus:ring-green-600',
   },
   {
     type: 'warning',
     color: 'yellow',
     icon: ExclamationIcon,
+    alertClasses: 'bg-yellow-50 border-yellow-200',
+    iconClasses: 'text-yellow-400',
+    textClasses: 'text-yellow-800',
+    buttonClasses: 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100 focus:ring-offset-yellow-50 focus:ring-yellow-600',
   },
   {
     type: 'danger',
     color: 'red',
     icon: XCircleIcon,
+    alertClasses: 'bg-red-50 border-red-200',
+    iconClasses: 'text-red-400',
+    textClasses: 'text-red-800',
+    buttonClasses: 'text-red-500 bg-red-50 hover:bg-red-100 focus:ring-offset-red-50 focus:ring-red-600',
   },
 ]
 

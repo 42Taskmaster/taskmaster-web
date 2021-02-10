@@ -7,18 +7,18 @@
       Configuration
     </template>
     <template #actions>
-      <AppButton v-if="!editing" @click="startEditing()">
+      <AppButton v-if="!editing" @click="startEditing">
         <heroicons-outline-pencil class="mr-2" />
         Modifier
       </AppButton>
       <div
         v-else
       >
-        <AppButton color="green" outlined="false" class="mr-2" @click="saveEditing()">
+        <AppButton color="green" outlined="false" class="mr-2" @click="saveEditing">
           <heroicons-outline-save class="mr-2" />
           Enregistrer
         </AppButton>
-        <AppButton color="red" @click="cancelEditing()">
+        <AppButton color="red" @click="cancelEditing">
           <heroicons-outline-x class="mr-2" />
           Annuler
         </AppButton>

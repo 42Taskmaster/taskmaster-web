@@ -16,7 +16,7 @@ interface ConfigurationData {
 }
 
 interface ConfigurationResponse {
-  result: ConfigurationData[]
+  result: ConfigurationData
 }
 
 export function useConfiguration() {
@@ -26,7 +26,7 @@ export function useConfiguration() {
     if (error.value || data.value === undefined)
       return undefined
 
-    return (data.value as ConfigurationResponse).result[0].data
+    return (data.value as ConfigurationResponse).result.data
   })
 
   const isLoading = computed(() => data.value === undefined)
