@@ -9,9 +9,9 @@
     </template>
 
     <template #actions>
-      <AppButton :color="startLabel == 'Start all' ? 'green' : ''" @click="startPrograms">
+      <AppButton :color="allProgramsAreStopped ? 'green' : ''" @click="startPrograms">
         <heroicons-outline-arrow-circle-up class="mr-1" />
-        {{ startLabel }}
+        {{ allProgramsAreStopped ? "Start all" : "Restart all" }}
       </AppButton>
       <AppButton color="red" disabled="allProgramsAreStopped" @click="stopPrograms">
         <heroicons-outline-x-circle class="mr-1" />
@@ -88,10 +88,11 @@ export default defineComponent({
       message: '',
     })
     const gridMode = ref(false)
-    const startLabel = computed(() => {
-      if (allProgramsAreStopped())
-        return 'Start all'
-      return 'Restart all'
+    const allProgramsAreStopped = computed(() => {
+      const found = programs.value.find(program => program.state !== 'STOPPED' && program.state !== 'EXITED' && program.state !== 'FATAL')
+      if (found)
+        return false
+      return true
     })
 
     watch(isLoading, (isLoading) => {
@@ -106,14 +107,6 @@ export default defineComponent({
 
       return programs.value.filter(({ id }) => id.startsWith(searchQuery.value))
     })
-
-    function allProgramsAreStopped(): boolean {
-      const found = programs.value.find(program => program.state !== 'STOPPED' && program.state !== 'EXITED' && program.state !== 'FATAL')
-      if (found)
-        return false
-      return true
-    }
-
     function toggleLayout() {
       gridMode.value = !gridMode.value
     }
@@ -128,7 +121,6 @@ export default defineComponent({
       allProgramsAreStopped,
       gridMode,
       toggleLayout,
-      startLabel,
     }
   },
 })

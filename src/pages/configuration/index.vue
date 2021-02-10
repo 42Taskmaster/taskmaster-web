@@ -13,7 +13,7 @@
         <heroicons-outline-pencil class="mr-2" />
         Modifier
       </AppButton>
-      <div
+      <template
         v-else
       >
         <AppButton color="green" outlined="false" class="mr-2" @click="saveEditing">
@@ -24,7 +24,7 @@
           <heroicons-outline-x class="mr-2" />
           Annuler
         </AppButton>
-      </div>
+      </template>
     </template>
 
     <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
