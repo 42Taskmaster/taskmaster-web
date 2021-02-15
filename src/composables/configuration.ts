@@ -1,61 +1,27 @@
-import { computed, watchEffect } from 'vue'
+import { computed } from 'vue'
 import useSWRV from 'swrv'
-import urlcat from 'urlcat'
 
-import { API_URL } from '/~/constants/env'
-
-async function fetcher(key: string): Promise<unknown> {
-  const resp = await fetch(urlcat(API_URL, key))
-  const json = await resp.json()
-
-  return json
-}
-
-interface ConfigurationData {
-  data: string
-}
-
-interface ConfigurationResponse {
-  result: ConfigurationData
-}
+import { getConfiguration } from '/~/api/configuration'
 
 export function useConfiguration() {
-  const { data, error, mutate } = useSWRV('/configuration', fetcher)
+  const { data, error, mutate } = useSWRV('/configuration', getConfiguration)
 
   const configuration = computed<string | undefined>(() => {
     if (error.value || data.value === undefined)
       return undefined
 
-    return (data.value as ConfigurationResponse).result.data
+    return data.value
   })
 
   const isLoading = computed(() => data.value === undefined)
 
   function reload() {
-    mutate(fetcher)
+    mutate(getConfiguration)
   }
 
   return {
     configuration,
     reload,
     isLoading,
-  }
-}
-
-export async function putConfiguration(data: string): Promise<string> {
-  try {
-    const result = await fetch(urlcat(API_URL, '/configuration'),
-      {
-        method: 'PUT',
-        body: JSON.stringify({ data }),
-      })
-    const json = await result.json()
-    if (json.error === undefined)
-      return ''
-    else
-      return json.error
-  }
-  catch (e) {
-    return e
   }
 }

@@ -1,6 +1,6 @@
 import { createMachine } from 'xstate'
 
-import { ProgramState } from '/~/composables/programs'
+import { ProgramState } from '/~/types/index'
 
 export enum AvailableAction {
   start = 'start',
