@@ -11,11 +11,11 @@
     <template #actions>
       <AppButton :color="allProgramsAreStopped ? 'green' : ''" @click="startPrograms">
         <heroicons-outline-arrow-circle-up class="mr-1" />
-        {{ allProgramsAreStopped ? "Start all" : "Restart all" }}
+        {{ allProgramsAreStopped ? t('start_all') : t('restart_all') }}
       </AppButton>
       <AppButton color="red" :disabled="allProgramsAreStopped" @click="stopPrograms">
         <heroicons-outline-x-circle class="mr-1" />
-        Stop all
+        {{ t('stop_all') }}
       </AppButton>
     </template>
 
@@ -29,7 +29,7 @@
         <input
           v-model="searchQuery"
           class="w-full mb-2 text-lg bg-white bg-opacity-0 outline-none"
-          placeholder="Rechercher"
+          :placeholder="t('search_program')"
         >
       </div>
 
@@ -84,6 +84,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch, computed } from 'vue'
 import { usePrograms } from '/~/composables/programs'
+import { useI18n } from 'vue-i18n'
 import ViewGridIcon from '/@vite-icons/heroicons-outline/view-grid.vue'
 import MenuIcon from '/@vite-icons/heroicons-outline/menu.vue'
 
@@ -93,6 +94,7 @@ export default defineComponent({
     MenuIcon,
   },
   setup() {
+    const { t } = useI18n()
     const searchQuery = ref('')
     const loading = ref(true)
     const { programs, isLoading } = usePrograms()
@@ -126,6 +128,8 @@ export default defineComponent({
     }
 
     return {
+      t,
+
       searchQuery,
       loading,
 
@@ -139,3 +143,21 @@ export default defineComponent({
   },
 })
 </script>
+
+<i18n>
+{
+  "en": {
+    "start_all": "Start all",
+    "stop_all": "Stop all",
+    "restart_all": "Restart all",
+    "search_program": "Search for a program",
+  },
+
+  "fr": {
+    "start_all": "Tout démarrer",
+    "stop_all": "Tout arrêter",
+    "restart_all": "Tout redémarrer",
+    "search_program": "Rechercher un programme",
+  }
+}
+</i18n>

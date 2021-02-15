@@ -1,5 +1,5 @@
 <template>
-  <router-link class="flex p-10 bg-white border border-solid shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
+  <router-link class="flex rounded-lg p-10 bg-white border border-solid shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
     <div class="flex items-center w-full">
       <div class="flex items-center justify-between w-full">
         <div class="flex flex-col">
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Process, ProgramState } from '/~/composables/programs'
+import { Process, ProgramState } from '/~/types/index'
 
 export default defineComponent({
   props: {

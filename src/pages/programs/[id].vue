@@ -10,7 +10,10 @@
 
     <AppLayout v-else>
       <template #title>
-        {{ program.id }}
+        <router-link to="/programs" :title="t('buttons.back')">
+          <heroicons-outline-arrow-left class="mr-4 text-2xl text-gray-500 inline hover:text-gray-700" />
+        </router-link>
+        {{ programTitle }}
       </template>
 
       <template #actions>
@@ -24,21 +27,67 @@
       </h2>
 
       <div class="grid grid-cols-1 gap-8 mt-2 md:grid-cols-2 lg:grid-cols-3">
-        <article v-for="({ text, value, icon }, index) in statistics" :key="index">
+        <article>
           <div class="overflow-hidden bg-white rounded-lg shadow">
             <div class="p-5">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
-                  <component :is="icon" class="text-gray-400" />
+                  <ChartBarIcon class="text-gray-400" />
                 </div>
                 <div class="flex-1 w-0 ml-5">
                   <dl>
                     <dt class="text-sm font-medium text-gray-500 truncate">
-                      {{ text }}
+                      {{ t('program-state') }}
+                    </dt>
+                    <dd>
+                      <div class="font-medium text-gray-900 inline-block">
+                        <StatusBadge :status="program.state" />
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article>
+          <div class="overflow-hidden bg-white rounded-lg shadow">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <ChipIcon class="text-gray-400" />
+                </div>
+                <div class="flex-1 w-0 ml-5">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      {{ t('process', processesCount) }}
                     </dt>
                     <dd>
                       <div class="text-lg font-medium text-gray-900">
-                        {{ value }}
+                        {{ program.processes.length }}
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article>
+          <div class="overflow-hidden bg-white rounded-lg shadow">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <IdentificationIcon class="text-gray-400" />
+                </div>
+                <div class="flex-1 w-0 ml-5">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      {{ t('command') }}
+                    </dt>
+                    <dd>
+                      <div class="text-lg font-medium text-gray-900">
+                        {{ program.configuration.cmd }}
                       </div>
                     </dd>
                   </dl>
@@ -126,7 +175,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch } from 'vue'
+import { defineComponent, computed, watch, capitalize } from 'vue'
 import { useMachine } from '@xstate/vue'
 import { useI18n } from 'vue-i18n'
 import ChartBarIcon from '/@vite-icons/heroicons-outline/chart-bar.vue'
@@ -136,8 +185,14 @@ import IdentificationIcon from '/@vite-icons/heroicons-outline/identification.vu
 import { useProgram } from '/~/composables/programs'
 import { programMachine, ProgramMachineActions, ProgramMachineMeta } from '/~/machines/program'
 import { mergeMeta } from '/~/machines/utils'
+import { Program } from '/~/types'
 
 export default defineComponent({
+  components: {
+    ChartBarIcon,
+    ChipIcon,
+    IdentificationIcon,
+  },
   props: {
     id: {
       required: true,
@@ -149,6 +204,11 @@ export default defineComponent({
     const { t } = useI18n()
 
     const { program, isLoading } = useProgram(props.id)
+    const programTitle = computed(() => {
+      if (program === undefined)
+        return 'undefined'
+      return capitalize((program.value as Program).id)
+    })
     const { state, send } = useMachine(programMachine, {
       actions: {
         [ProgramMachineActions.START]: startProgram,
@@ -232,6 +292,7 @@ export default defineComponent({
       t,
 
       program,
+      programTitle,
       isLoading,
 
       actions,
@@ -264,20 +325,13 @@ export default defineComponent({
       "modify": "Edit",
     },
 
-    "program-status": {
-      "STARTING": "Starting",
-      "BACKOFF": "Transitioning",
-      "RUNNING": "Running",
-      "STOPPING": "Stopping",
-      "STOPPED": "Stopped",
-      "EXITED": "Exited",
-      "FATAL": "Fatal",
-      "UNKNOWN": "Unknown",
-    },
-
     "titles": {
       "dashboard": "Dashboard",
       "programs": "Programs",
+    },
+
+    "buttons": {
+      "back": "Back",
     }
   },
 
@@ -300,15 +354,8 @@ export default defineComponent({
       "modify": "Modifier",
     },
 
-    "program-status": {
-      "STARTING": "Démarrage en cours",
-      "BACKOFF": "En transition",
-      "RUNNING": "En cours d'exécution",
-      "STOPPING": "En cours d'arrêt",
-      "STOPPED": "Arrêté",
-      "EXITED": "Quitté",
-      "FATAL": "État critique",
-      "UNKNOWN": "État non-défini",
+    "buttons": {
+      "back": "Retour",
     }
   }
 }

@@ -19,12 +19,7 @@
         </div>
       </div>
       <div class="flex mb-5 text-2xl justify-evenly">
-        <a class="mx-2 icon-btn" :title="t('button.toggle_dark')" @click="isDark = !isDark">
-          <carbon-moon v-if="isDark" />
-          <carbon-sun v-else />
-        </a>
-
-        <a class="mx-2 icon-btn" :title="t('button.toggle_langs')" @click="toggleLocales">
+        <a class="mx-2 icon-btn" :title="t('buttons.toggle_lang')" @click="toggleLocales">
           <carbon-language />
         </a>
 
@@ -36,43 +31,74 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { i18n } from '../modules/i18n'
+
 import ViewListIcon from '/@vite-icons/heroicons-outline/view-list.vue'
 import CogIcon from '/@vite-icons/heroicons-outline/cog.vue'
 import HomeIcon from '/@vite-icons/heroicons-outline/home.vue'
 
-import { useI18n } from 'vue-i18n'
-import { isDark } from '/~/logics'
+export default defineComponent({
+  setup() {
+    const { t, availableLocales, locale } = useI18n()
 
-const { t, availableLocales, locale } = useI18n()
+    const toggleLocales = () => {
+      const locales = availableLocales
+      locale.value = locales[(locales.indexOf(locale.value) + 1) % locales.length]
+      i18n.global.locale.value = locale.value
+    }
 
-const toggleLocales = () => {
-  // change to some real logic
-  const locales = availableLocales
-  locale.value = locales[(locales.indexOf(locale.value) + 1) % locales.length]
-}
+    const links = computed(() => {
+      return [
+        {
+          icon: HomeIcon,
+          title: t('dashboard'),
+          url: '/',
+        },
+        {
+          icon: ViewListIcon,
+          title: t('programs'),
+          url: '/programs',
+        },
+        {
+          icon: CogIcon,
+          title: t('configuration'),
+          url: '/configuration',
+        },
+      ]
+    })
 
-const links = [
-  {
-    icon: HomeIcon,
-    title: 'Dashboard',
-    url: '/',
+    return {
+      t,
+      toggleLocales,
+      links,
+    }
   },
-  {
-    icon: ViewListIcon,
-    title: 'Programs',
-    url: '/programs',
-  },
-  {
-    icon: CogIcon,
-    title: 'Configuration',
-    url: '/configuration',
-  },
-]
+})
 </script>
 
-<style>
-.sidebar-link:after {
+<i18n>
+{
+  "en": {
+    "dashboard": "Dashboard",
+    "programs": "Programs",
+    "configuration": "Configuration",
 
+    "buttons": {
+      "toggle_lang": "Toggle language",
+    },
+  },
+
+  "fr": {
+    "dashboard": "Tableau de bord",
+    "programs": "Programmes",
+    "configuration": "Configuration",
+
+    "buttons": {
+      "toggle_lang": "Changer de langue",
+    },
+  }
 }
-</style>
+</i18n>
