@@ -65,7 +65,8 @@ import { VAceEditor } from 'vue3-ace-editor'
 import 'ace-builds/src-noconflict/mode-yaml'
 import 'ace-builds/src-noconflict/theme-chrome'
 
-import { useConfiguration, putConfiguration } from '/~/composables/configuration'
+import { putConfiguration } from '/~/api/configuration'
+import { useConfiguration } from '/~/composables/configuration'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
@@ -128,18 +129,22 @@ export default defineComponent({
 
     async function saveEditing() {
       loading.value = true
-      disableEditing()
-      const error = await putConfiguration(configurationText.value)
-      if (error === '') {
+
+      try {
+        disableEditing()
+
+        await putConfiguration(configurationText.value)
+
         editing.value = false
         showAlert('success', 'La configuration a été mise à jour avec succès.')
       }
-      else {
+      catch (err) {
         enableEditing()
-        showAlert('warning', `Une erreur est survenue lors de la mise à jour de la configuration : ${error}`)
+        showAlert('warning', 'Une erreur est survenue lors de la mise à jour de la configuration')
       }
-
-      loading.value = false
+      finally {
+        loading.value = false
+      }
     }
 
     return {
