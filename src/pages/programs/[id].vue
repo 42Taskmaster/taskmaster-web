@@ -100,7 +100,7 @@
                 <tr v-for="process in processes" :key="process.id" class="bg-white">
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <span class="font-medium text-gray-900">
-                      {{ process.pid }}
+                      {{ process.pid != 0 ? process.pid : "" }}
                     </span>
                   </td>
                   <td class="w-full px-6 py-4 text-sm text-left text-gray-500 max-w-0 whitespace-nowrap">
@@ -109,9 +109,7 @@
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                      {{ process.state }}
-                    </span>
+                    <StatusBadge :status="process.state" :light="true" class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium" />
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <!-- FIXME: use real uptime -->
