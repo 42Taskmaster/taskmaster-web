@@ -119,3 +119,17 @@ export interface StartProgramResponse extends ResponseWithError {
 export function isStartProgramResponse(input: unknown): input is StartProgramResponse {
   return isResponseWithError(input)
 }
+
+export interface StopProgramResponse extends ResponseWithError {
+}
+
+export function isStopProgramResponse(input: unknown): input is StopProgramResponse {
+  return isResponseWithError(input)
+}
+
+export interface RestartProgramResponse extends ResponseWithError {
+}
+
+export function isRestartProgramResponse(input: unknown): input is RestartProgramResponse {
+  return isResponseWithError(input)
+}
