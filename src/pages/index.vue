@@ -1,83 +1,98 @@
 <template>
-  <div class="grid grid-cols-2 gap-5 p-7">
-    <div class="bg-white border border-solid shadow-sm p-7">
-      <Badge class="h-12 px-6 m-auto mt-4 text-4xl bg-green-500 w-52">
-        RUNNING
-      </Badge>
-      <div class="my-4 text-xl font-semibold text-center">
-        Overall state
-      </div>
+  <div class="flex flex-col items-center justify-center h-full bg-white">
+    <span class="px-5 py-2 mb-10 text-2xl border-b">
+      {{ t("welcome") }}
+    </span>
+    <span class="mb-10">Status :
+      <i :class="[statusClass]">
+        {{ statusLabel }}
+      </i>
+    </span>
+    <div class="flex mb-10 border-b border-solid w-96">
+      <heroicons-outline-link class="mt-0.5 ml-1 mr-2 text-xl text-gray-500" />
+      <input
+        ref="inputRef"
+        class="w-full mb-2 bg-white bg-opacity-0 outline-none"
+        :placeholder="t('taskmaster_url')"
+        :value="apiUrl"
+        required
+      >
     </div>
-    <div class="flex flex-col justify-between bg-white border border-solid shadow-sm p-7 ">
-      <div class="flex justify-between mb-2">
-        Uptime:
-        <span class="text-gray-700 ">
-          3 days 10 hours 45 minutes
-        </span>
-      </div>
-      <div class="flex justify-between mb-2">
-        Services:
-        <span class="text-gray-700 ">
-          3/3
-        </span>
-      </div>
-      <div class="flex justify-between mb-2">
-        Processes:
-        <span class="text-gray-700 ">
-          20/20
-        </span>
-      </div>
-    </div>
-    <div class="col-span-2 bg-white border border-solid shadow-sm p-7">
-      <div class="mb-1 text-2xl font-semibold">
-        Last events
-      </div>
-      <div class="p-3 font-mono text-gray-600 bg-gray-100 border">
-        <p>02/08/2021 10:14:53 Starting service 'nginx'...</p>
-        <p>02/08/2021 10:14:53 Starting service 'mysql'...</p>
-        <p>02/08/2021 10:15:27 Loading new configuration with 2 programs...</p>
-        <p>02/08/2021 10:15:28 Stopping service 'nginx'...</p>
-        <p>02/08/2021 10:15:28 Stopping service 'mysql'...</p>
-        <p>02/08/2021 10:15:29 Starting service 'nginx'...</p>
-        <p>02/08/2021 10:15:29 Starting service 'mysql'...</p>
-      </div>
-    </div>
-    <div class="flex flex-wrap col-span-2 gap-5 pb-3 overflow-x-auto">
-      <div v-for="program in programs" :key="program.id" v-bind="program" class="flex-grow">
-        <router-link class="flex flex-col items-center justify-center bg-white border border-solid shadow-sm cursor-pointer p-7 h-60 hover:bg-gray-50" to="/">
-          <div class="text-xl">
-            {{ program.id }}
-          </div>
-          <div class="text-gray-500">
-            3/3 processes
-          </div>
-          <Badge class="mt-10 text-sm bg-green-500">
-            {{ program.state }}
-          </Badge>
-        </router-link>
-      </div>
 
-      <router-link class="flex flex-col items-center justify-center bg-white border border-solid shadow-sm cursor-pointer p-7 w-80 h-60 hover:bg-gray-50" to="/programs">
-        <div class="mb-8 text-2xl text-gray-700">
-          View all
-        </div>
-        <heroicons-outline-arrow-right class="text-3xl text-gray-500" />
-      </router-link>
-    </div>
+    <AppButton ref="btnRef" @click="connect">
+      <heroicons-outline-arrow-circle-right class="mr-1" />
+      {{ t('connect') }}
+    </AppButton>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { usePrograms } from '/~/composables/programs'
+import { defineComponent, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import { useFetcherProvider, useFetcherSetValid } from '/~/composables/fetcher'
+import { getConfiguration } from '/~/api/configuration'
 
 export default defineComponent({
   setup() {
-    const { programs } = usePrograms()
+    const { t } = useI18n()
+
+    const { setFetcher } = useFetcherProvider()
+
+    const inputRef = ref<HTMLInputElement>()
+    const btnRef = ref<HTMLElement>()
+    const statusLabel = ref(t('not_connected'))
+    const statusClass = ref('text-red-500')
+    const apiUrl = ref(inputRef.value?.value as string)
+
+    const connect = function() {
+      inputRef.value?.setAttribute('disabled', 'true')
+      apiUrl.value = inputRef.value?.value as string
+      statusClass.value = 'text-blue-500'
+      statusLabel.value = `${t('connecting_to')} ${apiUrl.value}`
+
+      // const fetcher = useFetcherProvider(apiUrl.value)
+
+      const fetcher = setFetcher(apiUrl.value)
+
+      try {
+        getConfiguration(fetcher)
+        useFetcherSetValid(true)
+      }
+      catch (e) {
+        useFetcherSetValid(false)
+      }
+    }
 
     return {
-      programs,
+      t,
+      inputRef,
+      btnRef,
+      connect,
+      apiUrl,
+      statusLabel,
+      statusClass,
     }
   },
 })
 </script>
+
+<i18n>
+{
+  "en": {
+    "welcome": "Welcome to our Taskmaster's Web UI",
+    "not_connected": "currently not connected",
+    "connecting_to": "connecting to",
+    "taskmaster_url": "http://localhost:8080",
+    "connect": "Connect",
+  },
+
+  "fr": {
+    "welcome": "Bienvenue sur l'interface Web de notre Taskmaster",
+    "not_connected": "non connecté",
+    "connecting_to": "connexion à",
+    "taskmaster_url": "http://localhost:8080",
+    "connect": "Se connecter",
+  }
+}
+</i18n>

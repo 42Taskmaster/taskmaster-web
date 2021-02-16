@@ -1,3 +1,7 @@
+import type redaxios from 'redaxios'
+
+export type Fetcher = typeof redaxios
+
 export interface ResponseWithError {
   error?: string
 }

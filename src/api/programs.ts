@@ -1,7 +1,6 @@
-import { fetcher } from './index'
-import { isGetAllProgramsResponse, Program } from '/~/types/index'
+import { isGetAllProgramsResponse, Program, Fetcher } from '/~/types/index'
 
-export async function getAllPrograms(): Promise<Program[]> {
+export async function getAllPrograms(fetcher: Fetcher): Promise<Program[]> {
   const { data } = await fetcher('/status')
   if (!isGetAllProgramsResponse(data))
     throw new Error('Received invalid response for GET /status point')

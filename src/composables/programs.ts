@@ -1,11 +1,14 @@
 import { computed } from 'vue'
 import useSWRV from 'swrv'
 
+import { useFetcher } from './fetcher'
 import { getAllPrograms } from '/~/api/programs'
 import { Program } from '/~/types/index'
 
 export function usePrograms() {
-  const { data, error } = useSWRV('/status', getAllPrograms, {
+  const fetcher = useFetcher()
+
+  const { data, error } = useSWRV('/status', () => getAllPrograms(fetcher), {
     refreshInterval: 1_000,
   })
 
@@ -25,7 +28,9 @@ export function usePrograms() {
 }
 
 export function useProgram(programId: string) {
-  const { data, error } = useSWRV('/status', getAllPrograms, {
+  const fetcher = useFetcher()
+
+  const { data, error } = useSWRV('/status', () => getAllPrograms(fetcher), {
     refreshInterval: 1_000,
   })
 
