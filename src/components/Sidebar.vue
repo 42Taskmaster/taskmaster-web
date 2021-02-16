@@ -19,9 +19,9 @@
         </div>
       </div>
       <div class="flex mb-5 text-2xl justify-evenly">
-        <a class="mx-2 icon-btn" :title="t('buttons.toggle_lang')" @click="toggleLocales">
+        <button class="mx-2 icon-btn focus:outline-none" :title="t('buttons.toggle_lang')" @click="toggleLocales">
           <carbon-language />
-        </a>
+        </button>
 
         <a class="mx-2 icon-btn" rel="noreferrer" href="https://github.com/42Taskmaster" target="_blank" title="GitHub">
           <carbon-logo-github />
@@ -42,12 +42,10 @@ import HomeIcon from '/@vite-icons/heroicons-outline/home.vue'
 
 export default defineComponent({
   setup() {
-    const { t, availableLocales, locale } = useI18n()
+    const { t } = useI18n()
 
     const toggleLocales = () => {
-      const locales = availableLocales
-      locale.value = locales[(locales.indexOf(locale.value) + 1) % locales.length]
-      i18n.global.locale.value = locale.value
+      i18n.global.locale.value = i18n.global.locale.value === 'en' ? 'fr' : 'en'
     }
 
     const links = computed(() => {

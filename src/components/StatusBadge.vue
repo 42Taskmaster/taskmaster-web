@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, PropType } from 'vue'
 import { ProgramState } from '/~/types/index'
 import { useI18n } from 'vue-i18n'
 
@@ -19,8 +19,9 @@ export default defineComponent({
       default: false,
     },
     status: {
-      type: String,
-      default: '',
+      type: Object as PropType<ProgramState>,
+      default: ProgramState.UNKNOWN,
+      validator: (status: ProgramState): status is ProgramState => Reflect.has(ProgramState, status),
     },
   },
 

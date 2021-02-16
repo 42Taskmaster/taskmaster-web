@@ -1,5 +1,5 @@
 <template>
-  <router-link class="flex rounded-lg p-10 bg-white border border-solid shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
+  <router-link class="flex p-10 bg-white border border-solid rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
     <div class="flex items-center w-full">
       <div class="flex items-center justify-between w-full">
         <div class="flex flex-col">
@@ -7,7 +7,7 @@
             {{ id }}
           </div>
           <div class="text-gray-500">
-            {{ runningProcesses }}/{{ processes.length }} process{{ processes.length > 1 ? "es" : "" }}
+            {{ runningProcesses }}/{{ processes.length }} {{ t('process', processes.length) }}
           </div>
         </div>
         <StatusBadge :status="state" />
@@ -59,13 +59,11 @@ export default defineComponent({
 <i18n>
 {
   "en": {
-    "process": "process",
-    "processes": "processes"
+    "process": "process | processes",
   },
 
   "fr": {
     "process": "processus",
-    "processes": "processus"
   }
 }
 </i18n>
