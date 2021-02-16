@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full h-full">
+  <div class="flex flex-col w-full h-full min-h-screen">
     <header class="py-6 bg-white shadow">
       <div class="flex items-center justify-between px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <h1 class="text-2xl font-bold">
@@ -14,9 +14,9 @@
 
     <div
       :class="[
-        'flex-grow w-full',
+        'flex-grow w-full h-full',
         {
-          'px-4 mx-auto mt-8 max-w-7xl sm:px-6 lg:px-8': constraintWidth
+          'px-4 mx-auto my-8 max-w-7xl sm:px-6 lg:px-8': constraintWidth
         }
       ]"
     >

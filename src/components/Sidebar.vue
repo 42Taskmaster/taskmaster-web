@@ -43,6 +43,7 @@ import { i18n } from '../modules/i18n'
 import ViewListIcon from '/@vite-icons/heroicons-outline/view-list.vue'
 import CogIcon from '/@vite-icons/heroicons-outline/cog.vue'
 import HomeIcon from '/@vite-icons/heroicons-outline/home.vue'
+import ClipboardListIcon from '/@vite-icons/heroicons-outline/clipboard-list.vue'
 
 export default defineComponent({
   setup() {
@@ -69,6 +70,11 @@ export default defineComponent({
           title: t('configuration'),
           url: '/configuration',
         },
+        {
+          icon: ClipboardListIcon,
+          title: t('logs'),
+          url: '/logs',
+        },
       ]
     })
 
@@ -87,6 +93,7 @@ export default defineComponent({
     "dashboard": "Dashboard",
     "programs": "Programs",
     "configuration": "Configuration",
+    "logs": "Logs",
 
     "buttons": {
       "toggle_lang": "Toggle language",
@@ -97,6 +104,7 @@ export default defineComponent({
     "dashboard": "Tableau de bord",
     "programs": "Programmes",
     "configuration": "Configuration",
+    "logs": "Logs",
 
     "buttons": {
       "toggle_lang": "Changer de langue",
