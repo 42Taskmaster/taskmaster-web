@@ -3,7 +3,7 @@
     <Loading />
   </div>
 
-  <AppLayout>
+  <AppLayout class="max-h-full">
     <template #title>
       Configuration
     </template>
@@ -31,7 +31,7 @@
       {{ alert.message }}
     </AppAlert>
 
-    <div class="relative h-full pb-10 ">
+    <div class="relative h-full">
       <VAceEditor
         v-model:value="configurationText"
         lang="yaml"
