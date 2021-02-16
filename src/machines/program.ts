@@ -1,4 +1,4 @@
-import { createMachine } from 'xstate'
+import { Machine } from 'xstate'
 
 import { ProgramState } from '/~/types/index'
 
@@ -22,51 +22,18 @@ export interface ProgramMachineMeta {
 
 interface ProgramMachineContext {}
 
-type ProgramMachineState =
-  | {
-    value: 'SELECTING'
-    context: ProgramMachineContext
+interface ProgramMachineState {
+  states: {
+    [ProgramState.STARTING]: {}
+    [ProgramState.RUNNING]: {}
+    [ProgramState.STOPPING]: {}
+    [ProgramState.STOPPED]: {}
+    [ProgramState.BACKOFF]: {}
+    [ProgramState.EXITED]: {}
+    [ProgramState.FATAL]: {}
+    [ProgramState.UNKNOWN]: {}
   }
-  | {
-    value: ProgramState.STARTING
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
-  | {
-    value: ProgramState.RUNNING
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
-  | {
-    value: ProgramState.STOPPING
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
-  | {
-    value: ProgramState.STOPPED
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
-  | {
-    value: ProgramState.BACKOFF
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
-  | {
-    value: ProgramState.EXITED
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
-  | {
-    value: ProgramState.FATAL
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
-  | {
-    value: ProgramState.UNKNOWN
-    context: ProgramMachineContext
-    meta: ProgramMachineMeta
-  }
+}
 
 type ProgramMachineEvent =
   | {
@@ -85,7 +52,7 @@ type ProgramMachineEvent =
     type: ProgramState
   }
 
-export const programMachine = createMachine<ProgramMachineContext, ProgramMachineEvent, ProgramMachineState>({
+export const programMachine = Machine<ProgramMachineContext, ProgramMachineState, ProgramMachineEvent>({
   id: 'program',
   initial: ProgramState.UNKNOWN,
   states: {
@@ -227,6 +194,7 @@ export const programMachine = createMachine<ProgramMachineContext, ProgramMachin
   },
 
   on: {
+    [ProgramState.STARTING]: ProgramState.STARTING,
     [ProgramState.BACKOFF]: ProgramState.BACKOFF,
     [ProgramState.RUNNING]: ProgramState.RUNNING,
     [ProgramState.STOPPING]: ProgramState.STOPPING,

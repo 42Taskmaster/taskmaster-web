@@ -182,6 +182,7 @@ import ChartBarIcon from '/@vite-icons/heroicons-outline/chart-bar.vue'
 import ChipIcon from '/@vite-icons/heroicons-outline/chip.vue'
 import IdentificationIcon from '/@vite-icons/heroicons-outline/identification.vue'
 
+import { restartProgram, startProgram, stopProgram } from '/~/api/program'
 import { useProgram } from '/~/composables/programs'
 import { programMachine, ProgramMachineActions, ProgramMachineMeta } from '/~/machines/program'
 import { mergeMeta } from '/~/machines/utils'
@@ -211,10 +212,10 @@ export default defineComponent({
     })
     const { state, send } = useMachine(programMachine, {
       actions: {
-        [ProgramMachineActions.START]: startProgram,
-        [ProgramMachineActions.STOP]: stopProgram,
-        [ProgramMachineActions.RESTART]: restartProgram,
-        [ProgramMachineActions.MODIFY]: modifyProgram,
+        [ProgramMachineActions.START]: handleStartProgram,
+        [ProgramMachineActions.STOP]: handleStopProgram,
+        [ProgramMachineActions.RESTART]: handleRestartProgram,
+        [ProgramMachineActions.MODIFY]: handleModifyProgram,
       },
     })
 
@@ -239,20 +240,55 @@ export default defineComponent({
       }))
     })
 
-    function startProgram() {
-      console.log('start the program')
+    async function handleStartProgram() {
+      const programId = program.value?.id
+      if (programId === undefined)
+        return
+
+      try {
+        await startProgram(programId)
+      }
+      catch (err) {
+        console.error(err)
+        // trigger notification
+      }
     }
 
-    function stopProgram() {
-      console.log('stop the program')
+    async function handleStopProgram() {
+      const programId = program.value?.id
+      if (programId === undefined)
+        return
+
+      try {
+        await stopProgram(programId)
+      }
+      catch (err) {
+        console.error(err)
+        // trigger notification
+      }
     }
 
-    function restartProgram() {
-      console.log('restart the program')
+    async function handleRestartProgram() {
+      const programId = program.value?.id
+      if (programId === undefined)
+        return
+
+      try {
+        await restartProgram(programId)
+      }
+      catch (err) {
+        console.error(err)
+        // trigger notification
+      }
     }
 
-    function modifyProgram() {
-      console.log('modify the program')
+    function handleModifyProgram() {
+      const programId = program.value?.id
+      if (programId === undefined)
+        return
+
+      // redirect to page to modify program configuration
+      console.log('update configuration')
     }
 
     const statistics = computed(() => {
