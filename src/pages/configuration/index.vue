@@ -11,18 +11,18 @@
     <template #actions>
       <AppButton v-if="!editing" @click="startEditing">
         <heroicons-outline-pencil class="mr-2" />
-        Modifier
+        {{ t('edit') }}
       </AppButton>
       <template
         v-else
       >
         <AppButton color="green" outlined="false" class="mr-2" @click="saveEditing">
           <heroicons-outline-save class="mr-2" />
-          Enregistrer
+          {{ t('save') }}
         </AppButton>
         <AppButton color="red" @click="cancelEditing">
           <heroicons-outline-x class="mr-2" />
-          Annuler
+          {{ t('cancel') }}
         </AppButton>
       </template>
     </template>
@@ -136,11 +136,11 @@ export default defineComponent({
         await putConfiguration(configurationText.value)
 
         editing.value = false
-        showAlert('success', 'La configuration a été mise à jour avec succès.')
+        showAlert('success', t('configuration-update-succeed'))
       }
       catch (err) {
         enableEditing()
-        showAlert('warning', 'Une erreur est survenue lors de la mise à jour de la configuration')
+        showAlert('warning', t('configuration-update-failed'))
       }
       finally {
         loading.value = false
@@ -170,12 +170,22 @@ export default defineComponent({
 {
   "fr": {
     "read-only": "Mode lecture",
-    "read-write": "Mode édition"
+    "read-write": "Mode édition",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "configuration-update-succeed": "Configuration updated with success.",
+    "configuration-update-failed": "An error occured while trying to update the configuration.",
   },
 
   "en": {
     "read-only": "Read only",
-    "read-write": "Edit mode"
+    "read-write": "Edit mode",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "configuration-update-succeed": "La configuration a été mise à jour avec succès.",
+    "configuration-update-failed": "Une erreur est survenue lors de la mise à jour de la configuration.",
   }
 }
 </i18n>

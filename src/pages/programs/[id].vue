@@ -5,13 +5,13 @@
     </div>
 
     <div v-else-if="program === undefined">
-      This program does not exist
+      {{ t('program-unknown') }}
     </div>
 
     <AppLayout v-else>
       <template #title>
         <router-link to="/programs" :title="t('buttons.back')">
-          <heroicons-outline-arrow-left class="mr-4 text-2xl text-gray-500 inline hover:text-gray-700" />
+          <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
         </router-link>
         {{ programTitle }}
       </template>
@@ -40,7 +40,7 @@
                       {{ t('program-state') }}
                     </dt>
                     <dd>
-                      <div class="font-medium text-gray-900 inline-block">
+                      <div class="inline-block font-medium text-gray-900">
                         <StatusBadge :status="program.state" />
                       </div>
                     </dd>
@@ -347,6 +347,7 @@ export default defineComponent({
     "program-state": "Program state",
     "process": "Process | Processes",
     "command": "Command",
+    "program-unknown": "This program does not exists.",
 
     "active-processes": "Active processes",
     "pid": "PID",
@@ -376,6 +377,7 @@ export default defineComponent({
     "program-state": "État du programme",
     "process": "Processus",
     "command": "Commande",
+    "program-unknown": "Ce programme n'existe pas.",
 
     "active-processes": "Processus actifs",
     "pid": "PID",
