@@ -9,7 +9,7 @@
     </template>
 
     <template #actions>
-      <AppButton @click="clearLogs">
+      <AppButton color="red" @click="clearLogs">
         <heroicons-outline-trash class="mr-2" />
         {{ t('clear') }}
       </AppButton>
@@ -23,7 +23,7 @@
       <div class="flex-grow">
         <div class="h-full p-4 bg-white border rounded-lg shadow-sm">
           <div class="relative h-full">
-            <pre id="logs" class="absolute inset-0 h-full p-3 overflow-y-auto text-gray-600 whitespace-pre-wrap bg-gray-100 border">{{ logsText }}</pre>
+            <pre ref="logsPre" class="absolute inset-0 h-full p-3 overflow-y-auto text-sm text-gray-600 whitespace-pre-wrap bg-gray-100 border">{{ logsText }}</pre>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref } from 'vue'
+import { defineComponent, watch, ref, nextTick } from 'vue'
 
 import { useLogs } from '/~/composables/logs'
 import { useI18n } from 'vue-i18n'
@@ -44,6 +44,7 @@ export default defineComponent({
 
     const { logs } = useLogs()
 
+    const logsPre = ref<HTMLPreElement>()
     const logsText = ref<string>('')
     const loading = ref(false)
     const alert = ref({
@@ -52,17 +53,21 @@ export default defineComponent({
       message: '',
     })
 
-    watch(logs, (logs) => {
+    watch(logs, async(logs) => {
       if (logs === undefined)
         return
+
+      let wasAtBottomScroll = false
+      if (logsPre.value)
+        wasAtBottomScroll = logsPre.value.scrollTop >= logsPre.value.scrollHeight - logsPre.value.offsetHeight
 
       logsText.value = logs
       loading.value = false
 
-      const logsPre = document.getElementById('logs') as HTMLElement
-      setTimeout(() => {
-        logsPre.scrollTop = logsPre.scrollHeight
-      }, 100)
+      await nextTick()
+
+      if (logsPre.value && wasAtBottomScroll)
+        logsPre.value.scrollTop = logsPre.value.scrollHeight
     })
 
     function closeAlertCallback() {
@@ -76,6 +81,8 @@ export default defineComponent({
     }
 
     async function clearLogs() {
+      if (!confirm(t('confirm_clear')))
+        return
       loading.value = true
 
       try {
@@ -93,7 +100,7 @@ export default defineComponent({
 
     return {
       t,
-
+      logsPre,
       logsText,
       clearLogs,
       alert,
@@ -107,12 +114,14 @@ export default defineComponent({
 {
   "fr": {
     "clear": "Clear",
+    "confirm_clear": "Are you sure you want to clear the logs ?",
     "logs_cleared": "Logs have been successfully cleared.",
     "logs_clear_error": "An error occured while trying to clear logs."
   },
 
   "en": {
     "clear": "Effacer",
+    "confirm_clear": "Êtes-vous sûr de vouloir effacer les logs ?",
     "logs_cleared": "Les logs ont été effacés avec succès.",
     "logs_clear_error": "Une erreur est survenue lors de la suppression des logs.",
   }
