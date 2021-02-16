@@ -3,7 +3,7 @@
     <Loading />
   </div>
 
-  <AppLayout class="max-h-full">
+  <AppLayout>
     <template #title>
       Configuration
     </template>
@@ -27,33 +27,35 @@
       </template>
     </template>
 
-    <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
-      {{ alert.message }}
-    </AppAlert>
+    <div class="flex flex-col h-full">
+      <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
+        {{ alert.message }}
+      </AppAlert>
 
-    <div class="relative h-full">
-      <VAceEditor
-        v-model:value="configurationText"
-        lang="yaml"
-        :readonly="editorReadonly"
-        class="h-full shadow"
-      />
+      <div class="relative flex-grow">
+        <VAceEditor
+          v-model:value="configurationText"
+          lang="yaml"
+          :readonly="editorReadonly"
+          class="h-full shadow"
+        />
 
-      <div class="absolute top-0 right-0 flex items-center p-2 mt-5 mr-8 text-gray-500 bg-gray-100 rounded shadow">
-        <template v-if="editorReadonly">
-          <heroicons-outline-lock-closed aria-label="The configuration can not be modified" class="text-xl" />
+        <div class="absolute top-0 right-0 flex items-center p-2 mt-5 mr-8 text-gray-500 bg-gray-100 rounded shadow">
+          <template v-if="editorReadonly">
+            <heroicons-outline-lock-closed aria-label="The configuration can not be modified" class="text-xl" />
 
-          <span class="ml-1 text-sm font-medium">
-            {{ t('read-only') }}
-          </span>
-        </template>
-        <template v-else>
-          <heroicons-outline-lock-open aria-label="The configuration can be modified" class="text-xl" />
+            <span class="ml-1 text-sm font-medium">
+              {{ t('read-only') }}
+            </span>
+          </template>
+          <template v-else>
+            <heroicons-outline-lock-open aria-label="The configuration can be modified" class="text-xl" />
 
-          <span class="ml-1 text-sm font-medium">
-            {{ t('read-write') }}
-          </span>
-        </template>
+            <span class="ml-1 text-sm font-medium">
+              {{ t('read-write') }}
+            </span>
+          </template>
+        </div>
       </div>
     </div>
   </AppLayout>
