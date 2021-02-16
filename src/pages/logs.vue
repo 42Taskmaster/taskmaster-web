@@ -15,12 +15,16 @@
       </AppButton>
     </template>
 
-    <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
-      {{ alert.message }}
-    </AppAlert>
+    <div class="flex flex-col h-full">
+      <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
+        {{ alert.message }}
+      </AppAlert>
 
-    <div class="h-full p-4 bg-white border rounded-lg shadow-sm">
-      <pre id="logs" class="h-full p-3 overflow-y-auto text-gray-600 whitespace-pre-wrap bg-gray-100 border">{{ logsText }}</pre>
+      <div class="relative flex-grow max-h-full">
+        <div class="h-full max-h-full p-4 bg-white border rounded-lg shadow-sm">
+          <pre id="logs" class="h-full p-3 overflow-y-auto text-gray-600 whitespace-pre-wrap bg-gray-100 border">{{ logsText }}</pre>
+        </div>
+      </div>
     </div>
   </AppLayout>
 </template>
