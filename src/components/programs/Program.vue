@@ -1,5 +1,5 @@
 <template>
-  <router-link class="flex p-10 bg-white border border-solid shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
+  <router-link class="flex p-10 bg-white border border-solid rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
     <div class="flex items-center w-full">
       <div class="flex items-center justify-between w-full">
         <div class="flex flex-col">
@@ -7,12 +7,10 @@
             {{ id }}
           </div>
           <div class="text-gray-500">
-            3/3 processes
+            {{ runningProcesses }}/{{ processes.length }} {{ t('process', processes.length) }}
           </div>
         </div>
-        <Badge class="text-sm" :class="stateBadgeBg">
-          {{ state }}
-        </Badge>
+        <StatusBadge :status="state" />
       </div>
       <heroicons-outline-arrow-right class="ml-16 text-2xl text-gray-500" />
     </div>
@@ -20,8 +18,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Process, ProgramState } from '/~/types/index'
 
 export default defineComponent({
   props: {
@@ -29,9 +28,12 @@ export default defineComponent({
       type: String,
       required: true,
     },
-
     state: {
       type: String,
+      required: true,
+    },
+    processes: {
+      type: Array as PropType<Process[]>,
       required: true,
     },
   },
@@ -40,29 +42,15 @@ export default defineComponent({
     const { t } = useI18n()
 
     const programUrl = computed(() => `/programs/${props.id}`)
-    const stateBadgeBg = computed(() => {
-      switch (props.state) {
-        case 'STARTING':
-          return 'bg-blue-500'
-        case 'STOPPING':
-          return 'bg-blue-500'
-        case 'RUNNING':
-          return 'bg-green-500'
-        case 'UNKNOWN':
-        case 'FATAL':
-          return 'bg-red-500'
-        case 'BACKOFF':
-        case 'EXITED':
-          return 'bg-yellow-500'
-        default:
-          return 'bg-gray-500'
-      }
+
+    const runningProcesses = computed(() => {
+      return props.processes.filter(process => process.state === ProgramState.RUNNING).length
     })
 
     return {
       t,
       programUrl,
-      stateBadgeBg,
+      runningProcesses,
     }
   },
 })
@@ -71,13 +59,11 @@ export default defineComponent({
 <i18n>
 {
   "en": {
-    "process": "process",
-    "processes": "processes"
+    "process": "process | processes",
   },
 
   "fr": {
     "process": "processus",
-    "processes": "processus"
   }
 }
 </i18n>
