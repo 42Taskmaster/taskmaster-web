@@ -170,9 +170,9 @@ export default defineComponent({
 
 <i18n>
 {
-  "fr": {
-    "read-only": "Mode lecture",
-    "read-write": "Mode édition",
+  "en": {
+    "read-only": "Read only",
+    "read-write": "Edit mode",
     "edit": "Edit",
     "save": "Save",
     "cancel": "Cancel",
@@ -180,9 +180,9 @@ export default defineComponent({
     "configuration-update-failed": "An error occured while trying to update the configuration.",
   },
 
-  "en": {
-    "read-only": "Read only",
-    "read-write": "Edit mode",
+  "fr": {
+    "read-only": "Mode lecture",
+    "read-write": "Mode édition",
     "edit": "Modifier",
     "save": "Enregistrer",
     "cancel": "Annuler",

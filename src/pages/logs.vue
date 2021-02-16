@@ -112,14 +112,14 @@ export default defineComponent({
 
 <i18n>
 {
-  "fr": {
+  "en": {
     "clear": "Clear",
     "confirm_clear": "Are you sure you want to clear the logs ?",
     "logs_cleared": "Logs have been successfully cleared.",
     "logs_clear_error": "An error occured while trying to clear logs."
   },
 
-  "en": {
+  "fr": {
     "clear": "Effacer",
     "confirm_clear": "Êtes-vous sûr de vouloir effacer les logs ?",
     "logs_cleared": "Les logs ont été effacés avec succès.",
