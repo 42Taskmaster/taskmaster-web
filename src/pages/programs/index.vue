@@ -5,7 +5,7 @@
 
   <AppLayout>
     <template #title>
-      Programs
+      {{ t('programs') }}
     </template>
 
     <template #actions>
@@ -71,10 +71,10 @@
     <div v-else class="flex items-center justify-center flex-grow">
       <p class="px-2 py-4 text-lg text-center text-gray-500">
         <template v-if="searchQuery !== ''">
-          No program matches the query "{{ searchQuery }}".
+          {{ t('search_no_program') }} "{{ searchQuery }}".
         </template>
         <template v-else>
-          There is no program to show. Create one by clicking the '+' button !
+          {{ t('no_program') }}
         </template>
       </p>
     </div>
@@ -147,17 +147,23 @@ export default defineComponent({
 <i18n>
 {
   "en": {
+    "programs": "Programs",
     "start_all": "Start all",
     "stop_all": "Stop all",
     "restart_all": "Restart all",
+    "no_program": "There is no program to show. Create one by clicking the '+' button !",
     "search_program": "Search for a program",
+    "search_no_program" : "No program matches the query",
   },
 
   "fr": {
+    "programs": "Programmes",
     "start_all": "Tout démarrer",
     "stop_all": "Tout arrêter",
     "restart_all": "Tout redémarrer",
+    "no_program": "Aucun programme pour le moment. Créez-en un en cliquant sur le bouton '+' !",
     "search_program": "Rechercher un programme",
+    "search_no_program" : "Aucun programme trouvé pour la requête",
   }
 }
 </i18n>
