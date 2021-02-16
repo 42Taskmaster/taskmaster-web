@@ -20,9 +20,11 @@
         {{ alert.message }}
       </AppAlert>
 
-      <div class="relative flex-grow max-h-full">
-        <div class="h-full max-h-full p-4 bg-white border rounded-lg shadow-sm">
-          <pre id="logs" class="h-full p-3 overflow-y-auto text-gray-600 whitespace-pre-wrap bg-gray-100 border">{{ logsText }}</pre>
+      <div class="flex-grow">
+        <div class="h-full p-4 bg-white border rounded-lg shadow-sm">
+          <div class="relative h-full">
+            <pre id="logs" class="absolute inset-0 h-full p-3 overflow-y-auto text-gray-600 whitespace-pre-wrap bg-gray-100 border">{{ logsText }}</pre>
+          </div>
         </div>
       </div>
     </div>
