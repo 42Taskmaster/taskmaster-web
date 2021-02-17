@@ -4,9 +4,19 @@ import { getConfiguration } from '../api/configuration'
 import { createFetcher } from '/~/api/index'
 import { Fetcher } from '/~/types/index'
 
-type FetcherContext = Ref<Fetcher | null>
+interface FetcherWithUrl {
+  url: string,
+  fetcher: Fetcher,
+}
+
+type FetcherContext = Ref<FetcherWithUrl | null>
+
 interface SetFetcherContext {
   (url: string): Promise<Fetcher>
+}
+
+interface ResetFetcherContext {
+  (): void
 }
 
 export function useFetcherProvider() {
@@ -19,12 +29,20 @@ export function useFetcherProvider() {
 
     await getConfiguration(fetcher)
 
-    context.value = fetcher
+    context.value = {
+      url: url,
+      fetcher: fetcher,
+    }
 
     return fetcher
   }
 
+  function resetFetcher() {
+    context.value = null
+  }
+
   provide<SetFetcherContext>('set-fetcher', setFetcher)
+  provide<ResetFetcherContext>('reset-fetcher', resetFetcher)
 
   return {
     fetcher: context,
@@ -47,4 +65,13 @@ export function useFetcherSetter() {
     throw new Error('useFetcherProvider must be called before useFetcherSetter')
 
   return fetcher as SetFetcherContext
+}
+
+export function useFetcherResetter() {
+  const fetcher = inject('reset-fetcher')
+
+  if (fetcher === undefined)
+    throw new Error('useFetcherProvider must be called before useFetcherResetter')
+
+  return fetcher as ResetFetcherContext
 }

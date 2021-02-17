@@ -1,10 +1,29 @@
 <template>
-  <div class="absolute z-10 flex items-center justify-center w-full h-full text-2xl bg-white bg-opacity-80">
+  <div v-if="hasFetcher" class="absolute z-10 flex items-center justify-center w-full h-full text-2xl bg-white bg-opacity-80">
     <div class="lds-ellipsis">
       <div /><div /><div /><div />
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { computed, defineComponent } from 'vue'
+import { useFetcher } from '/~/composables/fetcher'
+
+export default defineComponent({
+  setup() {
+    const fetcher = useFetcher()
+
+    const hasFetcher = computed(() => {
+      return fetcher.value !== null
+    })
+
+    return {
+      hasFetcher,
+    }
+  },
+})
+</script>
 
 <style scoped>
 .lds-ellipsis {

@@ -1,5 +1,5 @@
 <template>
-  <button :class="[buttonClasses, sizeClasses, 'inline-flex items-center border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2']">
+  <button :class="[buttonClasses, sizeClasses, 'inline-flex items-center border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2']" :disabled="disabled">
     <span v-if="$slots['prepend-icon']" :class="iconClasses">
       <slot name="prepend-icon" />
     </span>
@@ -60,6 +60,11 @@ export default defineComponent({
       type: String as PropType<Size>,
       default: 'base',
       validator: (size: string): size is Size => Reflect.has(Size, size),
+    },
+
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 

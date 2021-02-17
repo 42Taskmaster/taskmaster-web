@@ -7,7 +7,7 @@ import { getConfiguration } from '/~/api/configuration'
 export function useConfiguration() {
   const fetcher = useFetcher()
 
-  const { data, error, mutate } = useSWRV('/configuration', () => getConfiguration(fetcher))
+  const { data, error, mutate } = useSWRV('/configuration', () => getConfiguration(fetcher.value?.fetcher))
 
   const configuration = computed<string | undefined>(() => {
     if (error.value || data.value === undefined)

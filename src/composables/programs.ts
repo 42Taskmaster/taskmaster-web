@@ -8,7 +8,7 @@ import { Program } from '/~/types/index'
 export function usePrograms() {
   const fetcher = useFetcher()
 
-  const { data, error } = useSWRV('/status', () => getAllPrograms(fetcher), {
+  const { data, error } = useSWRV('/status', () => getAllPrograms(fetcher.value.fetcher), {
     refreshInterval: 1_000,
   })
 

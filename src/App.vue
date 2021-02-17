@@ -25,7 +25,7 @@ export default defineComponent({
     })
 
     const isConnected = computed(() => {
-      return fetcher.value !== undefined
+      return fetcher.value !== null
     })
 
     return {
