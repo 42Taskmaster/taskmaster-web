@@ -12,10 +12,12 @@
 import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { useFetcherAvailable } from '/~/composables/fetcher'
+import { useFetcherProvider } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
+    const { fetcher } = useFetcherProvider()
+
     const router = useRouter()
 
     const isHomepage = computed(() => {
@@ -23,7 +25,7 @@ export default defineComponent({
     })
 
     const isConnected = computed(() => {
-      return useFetcherAvailable()
+      return fetcher.value !== undefined
     })
 
     return {

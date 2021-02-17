@@ -30,14 +30,13 @@
 import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { useFetcherProvider, useFetcherSetValid } from '/~/composables/fetcher'
-import { getConfiguration } from '/~/api/configuration'
+import { useFetcherSetter } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
     const { t } = useI18n()
 
-    const { setFetcher } = useFetcherProvider()
+    const setFetcher = useFetcherSetter()
 
     const inputRef = ref<HTMLInputElement>()
     const btnRef = ref<HTMLElement>()
@@ -45,7 +44,7 @@ export default defineComponent({
     const statusClass = ref('text-red-500')
     const apiUrl = ref(inputRef.value?.value as string)
 
-    const connect = function() {
+    async function connect() {
       inputRef.value?.setAttribute('disabled', 'true')
       apiUrl.value = inputRef.value?.value as string
       statusClass.value = 'text-blue-500'
@@ -53,14 +52,11 @@ export default defineComponent({
 
       // const fetcher = useFetcherProvider(apiUrl.value)
 
-      const fetcher = setFetcher(apiUrl.value)
-
       try {
-        getConfiguration(fetcher)
-        useFetcherSetValid(true)
+        await setFetcher(apiUrl.value)
       }
-      catch (e) {
-        useFetcherSetValid(false)
+      catch (err) {
+        console.error('could not set the fetcher:', err)
       }
     }
 
