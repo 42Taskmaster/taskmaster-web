@@ -90,7 +90,7 @@ export default defineComponent({
 <i18n>
 {
   "en": {
-    "dashboard": "Dashboard",
+    "dashboard": "Home",
     "programs": "Programs",
     "configuration": "Configuration",
     "logs": "Logs",
@@ -101,7 +101,7 @@ export default defineComponent({
   },
 
   "fr": {
-    "dashboard": "Tableau de bord",
+    "dashboard": "Accueil",
     "programs": "Programmes",
     "configuration": "Configuration",
     "logs": "Logs",

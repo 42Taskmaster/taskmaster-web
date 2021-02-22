@@ -1,10 +1,18 @@
 import { computed } from 'vue'
 import useSWRV from 'swrv'
 
+import { useFetcher } from './fetcher'
 import { getLogs } from '/~/api/logs'
 
 export function useLogs() {
-  const { data, error, mutate } = useSWRV('/logs', getLogs)
+  const fetcher = useFetcher()
+
+  const { data, error, mutate } = useSWRV('/logs', async() => {
+    if (fetcher.value?.fetcher === undefined)
+      throw new Error('Invalid fetcher')
+
+    return await getLogs(fetcher.value.fetcher)
+  })
 
   const logs = computed<string | undefined>(() => {
     if (error.value || data.value === undefined)

@@ -1,7 +1,9 @@
 import redaxios from 'redaxios'
 
-import { API_URL } from '/~/constants/env'
+import { Fetcher } from '/~/types/index'
 
-export const fetcher: typeof redaxios = redaxios.create({
-  baseURL: API_URL,
-})
+export function createFetcher(url: string): Fetcher {
+  return redaxios.create({
+    baseURL: url,
+  })
+}

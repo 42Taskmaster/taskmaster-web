@@ -1,7 +1,6 @@
-import { fetcher } from './index'
-import { isStartProgramResponse, isStopProgramResponse, isRestartProgramResponse } from '/~/types/index'
+import { isStartProgramResponse, isStopProgramResponse, isRestartProgramResponse, Fetcher } from '/~/types/index'
 
-export async function startProgram(programId: string): Promise<void> {
+export async function startProgram(programId: string, fetcher: Fetcher): Promise<void> {
   const { data } = await fetcher.post('/start', {
     program_id: programId,
   })
@@ -11,7 +10,7 @@ export async function startProgram(programId: string): Promise<void> {
     throw new Error(`Received error for POST /start endpoint: ${data.error}`)
 }
 
-export async function stopProgram(programId: string): Promise<void> {
+export async function stopProgram(programId: string, fetcher: Fetcher): Promise<void> {
   const { data } = await fetcher.post('/stop', {
     program_id: programId,
   })
@@ -21,7 +20,7 @@ export async function stopProgram(programId: string): Promise<void> {
     throw new Error(`Received error for POST /stop endpoint: ${data.error}`)
 }
 
-export async function restartProgram(programId: string): Promise<void> {
+export async function restartProgram(programId: string, fetcher: Fetcher): Promise<void> {
   const { data } = await fetcher.post('/restart', {
     program_id: programId,
   })

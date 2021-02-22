@@ -1,8 +1,6 @@
-import { fetcher } from './index'
+import { isGetConfigurationResponse, isPutConfigurationResponse, Fetcher } from '/~/types/index'
 
-import { isGetConfigurationResponse, isPutConfigurationResponse } from '/~/types/index'
-
-export async function getConfiguration(): Promise<string> {
+export async function getConfiguration(fetcher: Fetcher): Promise<string> {
   const { data } = await fetcher.get('/configuration')
   if (!isGetConfigurationResponse(data))
     throw new Error('Received invalid response for GET /configuration endpoint')
@@ -10,7 +8,7 @@ export async function getConfiguration(): Promise<string> {
   return data.result.data
 }
 
-export async function putConfiguration(updatedConfiguration: string): Promise<void> {
+export async function putConfiguration(updatedConfiguration: string, fetcher: Fetcher): Promise<void> {
   const { data } = await fetcher.put('/configuration', {
     data: updatedConfiguration,
   })
