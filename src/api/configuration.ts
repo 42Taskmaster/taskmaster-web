@@ -1,6 +1,4 @@
-import { isGetConfigurationResponse, isPutConfigurationResponse } from '/~/types/index'
-
-import { Fetcher } from '/~/types/index'
+import { isGetConfigurationResponse, isPutConfigurationResponse, Fetcher } from '/~/types/index'
 
 export async function getConfiguration(fetcher: Fetcher): Promise<string> {
   const { data } = await fetcher.get('/configuration')
