@@ -137,3 +137,13 @@ export interface RestartProgramResponse extends ResponseWithError {
 export function isRestartProgramResponse(input: unknown): input is RestartProgramResponse {
   return isResponseWithError(input)
 }
+
+interface VersionResponse {
+  result: string
+}
+
+export function isVersionResponse(input: unknown): input is VersionResponse {
+  return (
+    typeof input === 'object' && typeof (input as VersionResponse).result === 'string'
+  )
+}

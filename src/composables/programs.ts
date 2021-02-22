@@ -8,7 +8,12 @@ import { Program } from '/~/types/index'
 export function usePrograms() {
   const fetcher = useFetcher()
 
-  const { data, error } = useSWRV('/status', () => getAllPrograms(fetcher.value.fetcher), {
+  const { data, error } = useSWRV('/status', async() => {
+    if (fetcher.value?.fetcher === undefined)
+      throw new Error('Invalid fetcher')
+
+    return await getAllPrograms(fetcher.value.fetcher)
+  }, {
     refreshInterval: 1_000,
   })
 
@@ -30,7 +35,12 @@ export function usePrograms() {
 export function useProgram(programId: string) {
   const fetcher = useFetcher()
 
-  const { data, error } = useSWRV('/status', () => getAllPrograms(fetcher), {
+  const { data, error } = useSWRV('/status', async() => {
+    if (fetcher.value?.fetcher === undefined)
+      throw new Error('Invalid fetcher')
+
+    return await getAllPrograms(fetcher.value.fetcher)
+  }, {
     refreshInterval: 1_000,
   })
 

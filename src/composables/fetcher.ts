@@ -1,12 +1,14 @@
-import { provide, inject, ref, readonly, Ref } from 'vue'
-import { getConfiguration } from '../api/configuration'
+import { provide, inject, ref, readonly, Ref, watchEffect } from 'vue'
+import { useIntervalFn } from '@vueuse/core'
 
+import { getConfiguration } from '/~/api/configuration'
+import { getVersion } from '/~/api/version'
 import { createFetcher } from '/~/api/index'
 import { Fetcher } from '/~/types/index'
 
 interface FetcherWithUrl {
-  url: string,
-  fetcher: Fetcher,
+  url: string
+  fetcher: Fetcher
 }
 
 type FetcherContext = Ref<FetcherWithUrl | null>
@@ -30,8 +32,8 @@ export function useFetcherProvider() {
     await getConfiguration(fetcher)
 
     context.value = {
-      url: url,
-      fetcher: fetcher,
+      url,
+      fetcher,
     }
 
     return fetcher
@@ -43,6 +45,32 @@ export function useFetcherProvider() {
 
   provide<SetFetcherContext>('set-fetcher', setFetcher)
   provide<ResetFetcherContext>('reset-fetcher', resetFetcher)
+
+  async function ping() {
+    const fetcher = context.value?.fetcher
+    if (fetcher === undefined)
+      return
+
+    try {
+      await getVersion(fetcher)
+    }
+    catch (err) {
+      console.error(err)
+
+      resetFetcher()
+    }
+  }
+
+  const { resume, pause } = useIntervalFn(ping, 1_000)
+
+  watchEffect(() => {
+    if (context.value?.fetcher === undefined) {
+      pause()
+      return
+    }
+
+    resume()
+  })
 
   return {
     fetcher: context,
