@@ -13,19 +13,19 @@
       <div class="flex mb-10 border-b border-solid w-96">
         <heroicons-outline-link class="mt-0.5 ml-1 mr-2 text-xl text-gray-500" />
         <input
-          ref="inputRef"
+          v-model="apiUrl"
           class="w-full mb-2 bg-white bg-opacity-0 outline-none"
           :placeholder="t('taskmaster_url')"
-          :value="apiUrl"
           required
           :disabled="tryingToConnectTo !== '' || connected"
         >
       </div>
-      <AppButton ref="btnRef" :disabled="tryingToConnectTo !== '' || connected" @click="connect">
+      <AppButton :disabled="tryingToConnectTo !== '' || connected" @click="connect">
         <heroicons-outline-arrow-circle-right class="mr-1" />
         {{ t('connect') }}
       </AppButton>
     </template>
+
     <div v-else class="flex gap-4">
       <AppButton @click="disconnect">
         <heroicons-outline-arrow-circle-left class="mr-1" />
@@ -59,9 +59,7 @@ export default defineComponent({
     const tryingToConnectTo = ref('')
     const failedToConnectTo = ref('')
 
-    const inputRef = ref<HTMLInputElement>()
-    const btnRef = ref<HTMLElement>()
-    const apiUrl = ref(inputRef.value?.value as string)
+    const apiUrl = ref('')
 
     const statusLabel = computed(() => {
       if (connected.value)
@@ -84,15 +82,15 @@ export default defineComponent({
     })
 
     async function connect() {
-      apiUrl.value = inputRef.value?.value as string
-      tryingToConnectTo.value = apiUrl.value
+      const connectionURL = apiUrl.value
+      tryingToConnectTo.value = connectionURL
 
       try {
-        await setFetcher(apiUrl.value)
+        await setFetcher(connectionURL)
       }
       catch (err) {
         console.error('could not set the fetcher:', err)
-        failedToConnectTo.value = apiUrl.value
+        failedToConnectTo.value = connectionURL
       }
 
       tryingToConnectTo.value = ''
@@ -108,14 +106,12 @@ export default defineComponent({
 
     return {
       t,
-      inputRef,
-      btnRef,
+      apiUrl,
       connect,
       disconnect,
       shutdown,
       connected,
       tryingToConnectTo,
-      apiUrl,
       statusLabel,
       statusClass,
     }
