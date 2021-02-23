@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-full bg-white">
+  <div class="flex flex-col items-center justify-center h-full p-4 text-center bg-white">
     <span class="px-5 py-2 mb-10 text-2xl border-b">
       {{ t("welcome") }}
     </span>
@@ -42,7 +42,6 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Fetcher } from '../types/index'
 
 import { useFetcher, useFetcherSetter, useFetcherResetter } from '/~/composables/fetcher'
 

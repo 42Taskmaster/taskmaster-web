@@ -1,27 +1,27 @@
 <template>
-  <div class="w-full">
-    <AppLayout>
-      <template #title>
-        <router-link to="/programs" :title="t('button.back')">
-          <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
-        </router-link>
-        {{ t('add_new_program') }}
-      </template>
+  <AppLayout>
+    <template #title>
+      <router-link to="/programs" :title="t('button.back')">
+        <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
+      </router-link>
+      {{ t('add_new_program') }}
+    </template>
 
-      <template #actions>
-        <AppButton size="large" color="green" @click="saveProgram">
-          <heroicons-outline-plus-circle class="mr-2" />
-          {{ t('button.save') }}
-        </AppButton>
-      </template>
+    <template #actions>
+      <AppButton size="large" color="green" @click="saveProgram">
+        <heroicons-outline-plus-circle class="mr-2" />
+        {{ t('button.save') }}
+      </AppButton>
+    </template>
 
-      <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
-        {{ alert.message }}
-      </AppAlert>
+    <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
+      {{ alert.message }}
+    </AppAlert>
 
+    <div class="pb-8">
       <ProgramForm :configuration="configuration" />
-    </AppLayout>
-  </div>
+    </div>
+  </AppLayout>
 </template>
 
 <script lang="ts">

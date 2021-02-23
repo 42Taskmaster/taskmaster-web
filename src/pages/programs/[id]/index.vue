@@ -149,7 +149,7 @@
                 <tr v-for="process in processes" :key="process.id" class="bg-white">
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <span class="font-medium text-gray-900">
-                      {{ process.pid != "0" ? process.pid : "" }}
+                      {{ process.pid !== "0" ? process.pid : "" }}
                     </span>
                   </td>
                   <td class="w-full px-6 py-4 text-sm text-left text-gray-500 max-w-0 whitespace-nowrap">

@@ -33,7 +33,7 @@
         >
       </div>
 
-      <button class="flex items-center justify-center p-2 mb-5 ml-3 text-4xl text-gray-500 bg-white rounded-md shadow cursor-pointer hover:text-gray-600 hover:bg-opacity-50" @click="toggleLayout">
+      <button class="flex items-center justify-center p-2 mb-5 ml-3 text-4xl text-gray-500 bg-white rounded-md shadow outline-none cursor-pointer hover:text-gray-600 hover:bg-opacity-50" @click="toggleLayout">
         <ViewGridIcon v-if="gridMode" class="w-6 h-6 transform-none" />
         <MenuIcon v-else class="w-6 h-6 transform-none" />
       </button>

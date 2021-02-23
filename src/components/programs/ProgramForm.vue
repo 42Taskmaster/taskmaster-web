@@ -55,6 +55,7 @@
     <AppNumberInput
       v-model.number="configurationComputed.startretries"
       :title="t('startretries')"
+      :min="0"
     />
     <AppNumberInput
       v-model.number="configurationComputed.starttime"
