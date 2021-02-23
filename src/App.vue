@@ -19,13 +19,11 @@ export default defineComponent({
   setup() {
     const { fetcher, setFetcher } = useFetcherProvider()
 
-    onMounted(() => {
+    onMounted(async() => {
       const apiUrl = localStorage.getItem('apiUrl')
       if (apiUrl) {
         try {
-          (async function() {
-            await setFetcher(apiUrl)
-          })()
+          await setFetcher(apiUrl)
         }
         catch (err) {
         }
