@@ -3,7 +3,7 @@
     <div class="flex flex-col justify-between h-full">
       <div class="flex flex-col">
         <div class="p-4 mt-5 text-2xl font-bold text-center">
-          TASKMASTER
+          <span class="text-3xl"><span class="inline-block text-gray-600">></span>T</span>ASKMASTER
         </div>
         <div class="p-3">
           <div v-for="link in links" :key="link.title">
