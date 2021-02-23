@@ -101,6 +101,8 @@ export default defineComponent({
       if (configuration === undefined)
         return
       configurationText.value = configuration
+    }, {
+      immediate: true,
     })
 
     const editorReadOnly = ref<boolean>(true)

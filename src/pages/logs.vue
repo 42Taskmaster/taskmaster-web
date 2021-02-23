@@ -77,6 +77,8 @@ export default defineComponent({
 
       if (logsPre.value && wasAtBottomScroll)
         logsPre.value.scrollTop = logsPre.value.scrollHeight
+    }, {
+      immediate: true,
     })
     async function clearLogs() {
       if (!confirm(t('confirm_clear')))
