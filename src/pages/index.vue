@@ -87,6 +87,7 @@ export default defineComponent({
 
       try {
         await setFetcher(connectionURL)
+        localStorage.setItem('apiUrl', connectionURL)
       }
       catch (err) {
         console.error('could not set the fetcher:', err)
@@ -98,6 +99,7 @@ export default defineComponent({
 
     async function disconnect() {
       await resetFetcher()
+      localStorage.removeItem('apiUrl')
     }
 
     function shutdown() {

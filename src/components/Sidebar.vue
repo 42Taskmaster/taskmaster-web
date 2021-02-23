@@ -51,6 +51,7 @@ export default defineComponent({
 
     const toggleLocales = () => {
       i18n.global.locale.value = i18n.global.locale.value === 'en' ? 'fr' : 'en'
+      localStorage.setItem('locale', i18n.global.locale.value)
     }
 
     const links = computed(() => {

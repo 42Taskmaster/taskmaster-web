@@ -74,6 +74,7 @@ export function useFetcherProvider() {
 
   return {
     fetcher: context,
+    setFetcher,
   }
 }
 

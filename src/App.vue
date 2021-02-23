@@ -11,12 +11,28 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { i18n } from './modules/i18n'
 
 import { useFetcherProvider } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
-    const { fetcher } = useFetcherProvider()
+    const { fetcher, setFetcher } = useFetcherProvider()
+
+    const apiUrl = localStorage.getItem('apiUrl')
+    if (apiUrl) {
+      try {
+        (async function() {
+          await setFetcher(apiUrl)
+        })()
+      }
+      catch (err) {
+      }
+    }
+
+    const locale = localStorage.getItem('locale')
+    if (locale)
+      i18n.global.locale.value = locale
 
     const router = useRouter()
 
