@@ -1,6 +1,6 @@
 <template>
-  <div v-if="loading">
-    <Loading />
+  <div v-if="isLoading">
+    <AppLoadingOverlay />
   </div>
 
   <AppLayout>
@@ -37,13 +37,16 @@ import { defineComponent, watch, ref, nextTick } from 'vue'
 import { useLogs } from '/~/composables/logs'
 import { useI18n } from 'vue-i18n'
 import { deleteLogs } from '../api/logs'
-import { Alert, AlertType } from '../types/index'
+import { Alert, AlertType, Fetcher } from '../types/index'
+import { useFetcher } from '../composables/fetcher'
 
 export default defineComponent({
   setup() {
     const { t } = useI18n()
 
-    const { logs } = useLogs()
+    const fetcher = useFetcher()
+
+    const { logs, isLoading } = useLogs()
 
     const logsPre = ref<HTMLPreElement>()
     const logsText = ref<string>('')
@@ -63,7 +66,6 @@ export default defineComponent({
         wasAtBottomScroll = logsPre.value.scrollTop >= logsPre.value.scrollHeight - logsPre.value.offsetHeight
 
       logsText.value = logs
-      loading.value = false
 
       await nextTick()
 
@@ -75,7 +77,7 @@ export default defineComponent({
       alert.value.show = false
     }
 
-    function showAlert(type: string, message: string) {
+    function showAlert(type: AlertType, message: string) {
       alert.value.type = type
       alert.value.show = true
       alert.value.message = message
@@ -87,12 +89,15 @@ export default defineComponent({
       loading.value = true
 
       try {
-        await deleteLogs()
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await deleteLogs(fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
 
-        showAlert('success', t('logs_cleared'))
+        showAlert(AlertType.SUCCESS, t('logs_cleared'))
       }
       catch (err) {
-        showAlert('warning', t('logs_clear_error'))
+        showAlert(AlertType.DANGER, t('logs_clear_error'))
       }
       finally {
         loading.value = false
@@ -101,6 +106,7 @@ export default defineComponent({
 
     return {
       t,
+      isLoading,
       logsPre,
       logsText,
       clearLogs,

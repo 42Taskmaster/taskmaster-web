@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div v-if="isLoading">
-      Loading...
+      <AppLoadingOverlay />
     </div>
 
     <div v-else-if="program === undefined">
@@ -188,6 +188,7 @@ import { programMachine, ProgramMachineActions, ProgramMachineMeta } from '/~/ma
 import { mergeMeta } from '/~/machines/utils'
 import { Program } from '/~/types/index'
 import { useRouter } from 'vue-router'
+import { useFetcher } from '/~/composables/fetcher'
 
 export default defineComponent({
   components: {
@@ -205,6 +206,7 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n()
     const router = useRouter()
+    const fetcher = useFetcher()
     const { program, isLoading } = useProgram(props.id)
     const programTitle = computed(() => {
       if (program === undefined)
@@ -247,7 +249,10 @@ export default defineComponent({
         return
 
       try {
-        await startProgram(programId)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await startProgram(programId, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
       }
       catch (err) {
         console.error(err)
@@ -261,7 +266,10 @@ export default defineComponent({
         return
 
       try {
-        await stopProgram(programId)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await stopProgram(programId, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
       }
       catch (err) {
         console.error(err)
@@ -275,7 +283,10 @@ export default defineComponent({
         return
 
       try {
-        await restartProgram(programId)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await restartProgram(programId, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
       }
       catch (err) {
         console.error(err)

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="loading">
-    <Loading />
+  <div v-if="isLoading">
+    <AppLoadingOverlay />
   </div>
 
   <AppLayout>
@@ -98,8 +98,6 @@ export default defineComponent({
   setup() {
     const { t } = useI18n()
 
-    const loading = ref(true)
-
     const alert = ref<Alert>({
       show: false,
       type: AlertType.PRIMARY,
@@ -120,11 +118,6 @@ export default defineComponent({
       if (found)
         return false
       return true
-    })
-    watch(isLoading, (isLoading) => {
-      loading.value = isLoading
-    }, {
-      immediate: true,
     })
 
     const searchQuery = ref('')
@@ -147,7 +140,7 @@ export default defineComponent({
     return {
       t,
 
-      loading,
+      isLoading,
 
       alert,
       closeAlert,

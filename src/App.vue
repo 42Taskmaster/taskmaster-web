@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-row h-full font-sans col">
     <TheSidebar />
-    <div class="relative w-full h-full bg-gray-100">
+    <div class="relative w-full h-full overflow-y-auto bg-gray-100">
       <NotConnected v-if="!isHomepage && !isConnected" />
       <router-view />
     </div>

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="loading">
-    <Loading />
+  <div v-if="isLoading">
+    <AppLoadingOverlay />
   </div>
 
   <AppLayout>
@@ -71,6 +71,7 @@ import { putConfiguration } from '/~/api/configuration'
 import { useConfiguration } from '/~/composables/configuration'
 import { useI18n } from 'vue-i18n'
 import { Alert, AlertType } from '/~/types/index'
+import { useFetcher } from '/~/composables/fetcher'
 
 export default defineComponent({
   components: {
@@ -79,8 +80,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n()
 
-    const loading = ref(false)
-
+    const fetcher = useFetcher()
     const alert = ref<Alert>({
       show: false,
       type: AlertType.PRIMARY,
@@ -95,14 +95,12 @@ export default defineComponent({
       alert.value.show = false
     }
 
-    const { configuration, reload } = useConfiguration()
+    const { configuration, reload, isLoading } = useConfiguration()
     const configurationText = ref<string>('')
     watch(configuration, (configuration) => {
       if (configuration === undefined)
         return
-
       configurationText.value = configuration
-      loading.value = false
     })
 
     const editorReadOnly = ref<boolean>(true)
@@ -124,12 +122,15 @@ export default defineComponent({
       reload()
     }
     async function saveEditing() {
-      loading.value = true
+      showAlert(AlertType.PRIMARY, t('updating_configuration'))
 
       try {
         disableEditing()
 
-        await putConfiguration(configurationText.value)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await putConfiguration(configurationText.value, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
 
         editing.value = false
         showAlert(AlertType.SUCCESS, t('configuration-update-succeed'))
@@ -138,15 +139,12 @@ export default defineComponent({
         enableEditing()
         showAlert(AlertType.DANGER, t('configuration-update-failed'))
       }
-      finally {
-        loading.value = false
-      }
     }
 
     return {
       t,
 
-      loading,
+      isLoading,
 
       alert,
       closeAlert,
@@ -172,6 +170,7 @@ export default defineComponent({
     "read-write": "Edit mode",
     "configuration-update-succeed": "Configuration updated with success.",
     "configuration-update-failed": "An error occured while trying to update the configuration.",
+    "updating_configuration": "Updating configuration..."
   },
 
   "fr": {
@@ -179,6 +178,7 @@ export default defineComponent({
     "read-write": "Mode édition",
     "configuration-update-succeed": "La configuration a été mise à jour avec succès.",
     "configuration-update-failed": "Une erreur est survenue lors de la mise à jour de la configuration.",
+    "updating_configuration": "Mise à jour de la configuration..."
   }
 }
 </i18n>

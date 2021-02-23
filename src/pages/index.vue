@@ -42,6 +42,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Fetcher } from '../types/index'
 
 import { useFetcher, useFetcherSetter, useFetcherResetter } from '/~/composables/fetcher'
 
@@ -102,8 +103,8 @@ export default defineComponent({
       localStorage.removeItem('apiUrl')
     }
 
-    function shutdown() {
-
+    async function shutdown() {
+      await fetcher.value?.fetcher.delete('/shutdown')
     }
 
     return {
