@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="flex mb-5 text-2xl justify-evenly">
-        <button class="mx-2 icon-btn focus:outline-none" :title="t('buttons.toggle_lang')" @click="toggleLocales">
+        <button class="mx-2 icon-btn focus:outline-none" :title="t('button.toggle_lang')" @click="toggleLocales">
           <carbon-language />
         </button>
 
@@ -96,7 +96,7 @@ export default defineComponent({
     "configuration": "Configuration",
     "logs": "Logs",
 
-    "buttons": {
+    "button": {
       "toggle_lang": "Toggle language",
     },
   },
@@ -107,7 +107,7 @@ export default defineComponent({
     "configuration": "Configuration",
     "logs": "Logs",
 
-    "buttons": {
+    "button": {
       "toggle_lang": "Changer de langue",
     },
   }

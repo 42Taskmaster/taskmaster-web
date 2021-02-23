@@ -19,7 +19,7 @@
       </AppButton>
     </template>
 
-    <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
+    <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
       {{ alert.message }}
     </AppAlert>
 
@@ -38,14 +38,14 @@
         <MenuIcon v-else class="w-6 h-6 transform-none" />
       </button>
 
-      <button class="flex items-center justify-center p-2 mb-5 ml-3 text-4xl text-white bg-white bg-green-500 rounded-full shadow cursor-pointer hover:bg-opacity-80">
+      <router-link class="flex items-center justify-center p-2 mb-5 ml-3 text-4xl text-white bg-white bg-green-500 rounded-full shadow cursor-pointer hover:bg-opacity-80" to="/new" :title="t('add_a_program')">
         <heroicons-solid-plus class="w-6 h-6 transform-none" />
-      </button>
+      </router-link>
     </div>
 
     <div
       v-if="filteredPrograms.length > 0"
-      class="relative"
+      class="relative mb-8"
     >
       <transition-group
         tag="div"
@@ -64,12 +64,12 @@
         leave-to-class="transform translate-y-6 opacity-0"
         move-class="transition duration-300 ease"
       >
-        <Program v-for="program in filteredPrograms" :key="program.id" v-bind="program" class="w-full" />
+        <Program v-for="program in filteredPrograms" :key="program.id" v-bind="program" :tiled="gridMode" class="w-full" />
       </transition-group>
     </div>
 
-    <div v-else class="flex items-center justify-center flex-grow">
-      <p class="px-2 py-4 text-lg text-center text-gray-500">
+    <div v-else class="flex items-center justify-center flex-grow mb-8">
+      <p class="px-2 py-4 mt-10 text-lg text-center text-gray-500">
         <template v-if="searchQuery !== ''">
           {{ t('search_no_program') }} "{{ searchQuery }}".
         </template>
@@ -87,7 +87,9 @@ import { usePrograms } from '/~/composables/programs'
 import { useI18n } from 'vue-i18n'
 import ViewGridIcon from '/@vite-icons/heroicons-outline/view-grid.vue'
 import MenuIcon from '/@vite-icons/heroicons-outline/menu.vue'
+import { Alert, AlertType } from '/~/types/index'
 
+import { useRouter } from 'vue-router'
 export default defineComponent({
   components: {
     ViewGridIcon,
@@ -95,48 +97,67 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n()
-    const searchQuery = ref('')
+
     const loading = ref(true)
-    const { programs, isLoading } = usePrograms()
-    const alert = ref({
+
+    const alert = ref<Alert>({
       show: false,
-      type: 'primary',
+      type: AlertType.PRIMARY,
       message: '',
     })
-    const gridMode = ref(false)
+    function showAlert(type: AlertType, message: string) {
+      alert.value.type = type
+      alert.value.show = true
+      alert.value.message = message
+    }
+    function closeAlert() {
+      alert.value.show = false
+    }
+
+    const { programs, isLoading } = usePrograms()
     const allProgramsAreStopped = computed(() => {
       const found = programs.value.find(program => program.state !== 'STOPPED' && program.state !== 'EXITED' && program.state !== 'FATAL')
       if (found)
         return false
       return true
     })
-
     watch(isLoading, (isLoading) => {
       loading.value = isLoading
     }, {
       immediate: true,
     })
 
+    const searchQuery = ref('')
     const filteredPrograms = computed(() => {
       if (searchQuery.value === '')
         return programs.value
 
       return programs.value.filter(({ id }) => id.startsWith(searchQuery.value))
     })
+
+    const gridMode = ref(false)
     function toggleLayout() {
       gridMode.value = !gridMode.value
     }
 
+    const router = useRouter()
+    if (router.currentRoute.value.query.new !== undefined)
+      showAlert(AlertType.SUCCESS, t('program_created'))
+
     return {
       t,
 
-      searchQuery,
       loading,
 
+      alert,
+      closeAlert,
+
+      programs,
+      allProgramsAreStopped,
+
+      searchQuery,
       filteredPrograms,
 
-      alert,
-      allProgramsAreStopped,
       gridMode,
       toggleLayout,
     }
@@ -154,6 +175,8 @@ export default defineComponent({
     "no_program": "There is no program to show. Create one by clicking the '+' button !",
     "search_program": "Search for a program",
     "search_no_program" : "No program matches the query",
+    "add_a_program" : "Add a new program",
+    "program_created": "New program successfully created.",
   },
 
   "fr": {
@@ -164,6 +187,8 @@ export default defineComponent({
     "no_program": "Aucun programme pour le moment. Créez-en un en cliquant sur le bouton '+' !",
     "search_program": "Rechercher un programme",
     "search_no_program" : "Aucun programme trouvé pour la requête",
+    "add_a_program" : "Ajouter un nouveau programme",
+    "program_created": "Le nouveau programme a été créé avec succès.",
   }
 }
 </i18n>

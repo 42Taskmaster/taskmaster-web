@@ -77,7 +77,7 @@ export interface ProgramConfiguration {
   stoptime: number
   stdout: string
   stderr: string
-  env: string[]
+  env: Record<string, string>
 }
 
 export interface Program {
@@ -146,4 +146,15 @@ export function isVersionResponse(input: unknown): input is VersionResponse {
   return (
     typeof input === 'object' && typeof (input as VersionResponse).result === 'string'
   )
+export enum AlertType {
+  PRIMARY = 'PRIMARY',
+  SUCCESS = 'SUCCESS',
+  WARNING = 'WARNING',
+  DANGER = 'DANGER',
+}
+
+export interface Alert {
+  show: boolean
+  type: AlertType
+  message: string
 }

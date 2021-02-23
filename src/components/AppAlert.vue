@@ -34,10 +34,11 @@ import CheckCircleIcon from '/@vite-icons/heroicons-solid/check-circle.vue'
 import InformationCircleIcon from '/@vite-icons/heroicons-solid/information-circle.vue'
 import ExclamationIcon from '/@vite-icons/heroicons-solid/exclamation.vue'
 import XCircleIcon from '/@vite-icons/heroicons-solid/x-circle.vue'
+import { AlertType } from '../types/index'
 
 const types = [
   {
-    type: 'primary',
+    type: AlertType.PRIMARY,
     color: 'blue',
     icon: InformationCircleIcon,
     alertClasses: 'bg-blue-50 border-blue-200',
@@ -46,7 +47,7 @@ const types = [
     buttonClasses: 'text-blue-500 bg-blue-50 hover:bg-blue-100 focus:ring-offset-blue-50 focus:ring-blue-600',
   },
   {
-    type: 'success',
+    type: AlertType.SUCCESS,
     color: 'green',
     icon: CheckCircleIcon,
     alertClasses: 'bg-green-50 border-green-200',
@@ -55,7 +56,7 @@ const types = [
     buttonClasses: 'text-green-500 bg-green-50 hover:bg-green-100 focus:ring-offset-green-50 focus:ring-green-600',
   },
   {
-    type: 'warning',
+    type: AlertType.WARNING,
     color: 'yellow',
     icon: ExclamationIcon,
     alertClasses: 'bg-yellow-50 border-yellow-200',
@@ -64,7 +65,7 @@ const types = [
     buttonClasses: 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100 focus:ring-offset-yellow-50 focus:ring-yellow-600',
   },
   {
-    type: 'danger',
+    type: AlertType.DANGER,
     color: 'red',
     icon: XCircleIcon,
     alertClasses: 'bg-red-50 border-red-200',

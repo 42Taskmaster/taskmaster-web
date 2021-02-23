@@ -1,7 +1,7 @@
 <template>
-  <router-link class="flex p-10 bg-white border border-solid rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" :to="programUrl">
-    <div class="flex items-center w-full">
-      <div class="flex items-center justify-between w-full">
+  <router-link class="flex p-10 bg-white rounded-lg shadow cursor-pointer hover:bg-gray-50" :to="programUrl">
+    <div class="flex items-center w-full" :class="{'flex-col gap-6': tiled}">
+      <div class="flex items-center justify-between w-full" :class="{'flex-col gap-5 text-center': tiled}">
         <div class="flex flex-col">
           <div class="text-xl">
             {{ id }}
@@ -10,9 +10,9 @@
             {{ runningProcesses }}/{{ processes.length }} {{ t('process', processes.length) }}
           </div>
         </div>
-        <StatusBadge :status="state" />
+        <AppStatusBadge :status="state" />
       </div>
-      <heroicons-outline-arrow-right class="ml-16 text-2xl text-gray-500" />
+      <heroicons-outline-arrow-right v-if="!tiled" class="ml-16 text-2xl text-gray-500" />
     </div>
   </router-link>
 </template>
@@ -35,6 +35,10 @@ export default defineComponent({
     processes: {
       type: Array as PropType<Process[]>,
       required: true,
+    },
+    tiled: {
+      type: Boolean,
+      default: false,
     },
   },
 

@@ -1,6 +1,6 @@
 <template>
   <main class="flex flex-row h-full font-sans col">
-    <Sidebar />
+    <TheSidebar />
     <div class="relative w-full h-full bg-gray-100">
       <NotConnected v-if="!isHomepage && !isConnected" />
       <router-view />

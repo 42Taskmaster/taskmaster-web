@@ -6,14 +6,14 @@ export enum AvailableAction {
   start = 'start',
   stop = 'stop',
   restart = 'restart',
-  modify = 'modify',
+  EDIT = 'EDIT',
 }
 
 export enum ProgramMachineActions {
   START = 'START',
   STOP = 'STOP',
   RESTART = 'RESTART',
-  MODIFY = 'MODIFY',
+  EDIT = 'EDIT',
 }
 
 export interface ProgramMachineMeta {
@@ -46,7 +46,7 @@ type ProgramMachineEvent =
     type: AvailableAction.restart
   }
   | {
-    type: AvailableAction.modify
+    type: AvailableAction.EDIT
   }
   | {
     type: ProgramState
@@ -60,7 +60,7 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
       meta: {
         actions: [
           AvailableAction.stop,
-          AvailableAction.modify,
+          AvailableAction.EDIT,
         ],
       },
 
@@ -68,8 +68,8 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
         [AvailableAction.stop]: {
           actions: ProgramMachineActions.STOP,
         },
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.EDIT]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },
@@ -79,7 +79,7 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
         actions: [
           AvailableAction.restart,
           AvailableAction.stop,
-          AvailableAction.modify,
+          AvailableAction.EDIT,
         ],
       },
 
@@ -90,8 +90,8 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
         [AvailableAction.stop]: {
           actions: ProgramMachineActions.STOP,
         },
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.EDIT]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },
@@ -99,13 +99,13 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
     [ProgramState.STOPPING]: {
       meta: {
         actions: [
-          AvailableAction.modify,
+          AvailableAction.EDIT,
         ],
       },
 
       on: {
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.EDIT]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },
@@ -114,7 +114,7 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
       meta: {
         actions: [
           AvailableAction.start,
-          AvailableAction.modify,
+          AvailableAction.EDIT,
         ],
       },
 
@@ -122,8 +122,8 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
         [AvailableAction.start]: {
           actions: ProgramMachineActions.START,
         },
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.EDIT]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },
@@ -131,13 +131,13 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
     [ProgramState.BACKOFF]: {
       meta: {
         actions: [
-          AvailableAction.modify,
+          AvailableAction.EDIT,
         ],
       },
 
       on: {
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.EDIT]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },
@@ -146,7 +146,7 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
       meta: {
         actions: [
           AvailableAction.start,
-          AvailableAction.modify,
+          AvailableAction.EDIT,
         ],
       },
 
@@ -154,8 +154,8 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
         [AvailableAction.start]: {
           actions: ProgramMachineActions.START,
         },
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.EDIT]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },
@@ -164,7 +164,7 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
       meta: {
         actions: [
           AvailableAction.start,
-          AvailableAction.modify,
+          AvailableAction.EDIT,
         ],
       },
 
@@ -172,8 +172,8 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
         [AvailableAction.start]: {
           actions: ProgramMachineActions.START,
         },
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.EDIT]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },
@@ -181,13 +181,13 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
     [ProgramState.UNKNOWN]: {
       meta: {
         actions: [
-          AvailableAction.modify,
+          AvailableAction.edit,
         ],
       },
 
       on: {
-        [AvailableAction.modify]: {
-          actions: ProgramMachineActions.MODIFY,
+        [AvailableAction.edit]: {
+          actions: ProgramMachineActions.EDIT,
         },
       },
     },

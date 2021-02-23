@@ -37,6 +37,7 @@ import { defineComponent, watch, ref, nextTick } from 'vue'
 import { useLogs } from '/~/composables/logs'
 import { useI18n } from 'vue-i18n'
 import { deleteLogs } from '../api/logs'
+import { Alert, AlertType } from '../types/index'
 
 export default defineComponent({
   setup() {
@@ -47,9 +48,9 @@ export default defineComponent({
     const logsPre = ref<HTMLPreElement>()
     const logsText = ref<string>('')
     const loading = ref(false)
-    const alert = ref({
+    const alert = ref<Alert>({
       show: false,
-      type: 'primary',
+      type: AlertType.PRIMARY,
       message: '',
     })
 

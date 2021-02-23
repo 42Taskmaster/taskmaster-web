@@ -1,4 +1,5 @@
 dependencies:
+  '@tailwindcss/forms': 0.2.1
   '@vueuse/core': 4.1.1_vue@3.0.5
   '@vueuse/head': 0.2.3_vue@3.0.5
   '@xstate/vue': 0.4.0_vue@3.0.5+xstate@4.16.2
@@ -1465,6 +1466,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-yBMPqmd1yEJo/280PAMkychuaALyQ9Lkb5q1ck3mjJrFuEobIfhnQ4J3mbvBoISmR3SWMWV+cGB/I0lCQee79A==
+  /@tailwindcss/forms/0.2.1:
+    dependencies:
+      mini-svg-data-uri: 1.2.3
+    dev: false
+    resolution:
+      integrity: sha512-czfvEdY+J2Ogfd6RUSr/ZSUmDxTujr34M++YLnp2cCPC3oJ4kFvFMaRXA6cEXKw7F1hJuapdjXRjsXIEXGgORg==
   /@tailwindcss/typography/0.4.0_tailwindcss@2.0.3:
     dependencies:
       lodash.castarray: 4.4.0
@@ -4438,6 +4445,10 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==
+  /mini-svg-data-uri/1.2.3:
+    dev: false
+    resolution:
+      integrity: sha512-zd6KCAyXgmq6FV1mR10oKXYtvmA9vRoB6xPSTUJTbFApCtkefDnYueVR1gkof3KcdLZo1Y8mjF2DFmQMIxsHNQ==
   /minimatch/3.0.4:
     dependencies:
       brace-expansion: 1.1.11
@@ -6792,6 +6803,7 @@ specifiers:
   '@commitlint/config-conventional': ^11.0.0
   '@iconify/json': ^1.1.303
   '@intlify/vite-plugin-vue-i18n': ^1.0.0-beta.16
+  '@tailwindcss/forms': ^0.2.1
   '@tailwindcss/typography': ^0.4.0
   '@types/nprogress': ^0.2.0
   '@typescript-eslint/eslint-plugin': ^4.15.0
