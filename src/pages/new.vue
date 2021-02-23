@@ -29,11 +29,12 @@ import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { Alert, AlertType, ProgramConfiguration } from '../types/index'
-import { fetcher } from '../api/index'
+import { useFetcher } from '../composables/fetcher'
 
 export default defineComponent({
   setup() {
     const { t } = useI18n()
+    const fetcher = useFetcher()
     const router = useRouter()
     const configuration = ref<ProgramConfiguration>({
       name: '',
@@ -68,11 +69,13 @@ export default defineComponent({
     }
 
     async function saveProgram() {
-      const { data } = await fetcher.post('/programs', configuration.value)
-      if (data.error !== undefined)
-        showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
-      else
-        router.push('/programs?new')
+      if (fetcher.value !== undefined && fetcher.value !== null) {
+        const { data } = await fetcher.value.fetcher.post('/programs', configuration.value)
+        if (data.error !== undefined)
+          showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
+        else
+          router.push('/programs?new')
+      }
     }
 
     return {
