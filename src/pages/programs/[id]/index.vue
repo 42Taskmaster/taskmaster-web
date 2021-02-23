@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div v-if="isLoading">
-      Loading...
+      <AppLoadingOverlay />
     </div>
 
     <div v-else-if="program === undefined">
@@ -10,7 +10,7 @@
 
     <AppLayout v-else>
       <template #title>
-        <router-link to="/programs" :title="t('buttons.back')">
+        <router-link to="/programs" :title="t('button.back')">
           <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
         </router-link>
         {{ programTitle }}
@@ -41,7 +41,7 @@
                     </dt>
                     <dd>
                       <div class="inline-block font-medium text-gray-900">
-                        <StatusBadge :status="program.state" />
+                        <AppStatusBadge :status="program.state" />
                       </div>
                     </dd>
                   </dl>
@@ -149,7 +149,7 @@
                 <tr v-for="process in processes" :key="process.id" class="bg-white">
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <span class="font-medium text-gray-900">
-                      {{ process.pid != 0 ? process.pid : "" }}
+                      {{ process.pid !== "0" ? process.pid : "" }}
                     </span>
                   </td>
                   <td class="w-full px-6 py-4 text-sm text-left text-gray-500 max-w-0 whitespace-nowrap">
@@ -158,7 +158,7 @@
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
-                    <StatusBadge :status="process.state" :light="true" class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium" />
+                    <AppStatusBadge :status="process.state" :light="true" class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium" />
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <!-- FIXME: use real uptime -->
@@ -186,7 +186,9 @@ import { restartProgram, startProgram, stopProgram } from '/~/api/program'
 import { useProgram } from '/~/composables/programs'
 import { programMachine, ProgramMachineActions, ProgramMachineMeta } from '/~/machines/program'
 import { mergeMeta } from '/~/machines/utils'
-import { Program } from '/~/types'
+import { Program } from '/~/types/index'
+import { useRouter } from 'vue-router'
+import { useFetcher } from '/~/composables/fetcher'
 
 export default defineComponent({
   components: {
@@ -203,7 +205,8 @@ export default defineComponent({
 
   setup(props) {
     const { t } = useI18n()
-
+    const router = useRouter()
+    const fetcher = useFetcher()
     const { program, isLoading } = useProgram(props.id)
     const programTitle = computed(() => {
       if (program === undefined)
@@ -215,7 +218,7 @@ export default defineComponent({
         [ProgramMachineActions.START]: handleStartProgram,
         [ProgramMachineActions.STOP]: handleStopProgram,
         [ProgramMachineActions.RESTART]: handleRestartProgram,
-        [ProgramMachineActions.MODIFY]: handleModifyProgram,
+        [ProgramMachineActions.EDIT]: handleModifyProgram,
       },
     })
 
@@ -235,7 +238,7 @@ export default defineComponent({
       const { actions } = mergeMeta<ProgramMachineMeta>(currentStateMeta)
 
       return actions.map(action => ({
-        text: t(`actions.${action}`),
+        text: t(`button.${action}`),
         action: () => send(action),
       }))
     })
@@ -246,7 +249,10 @@ export default defineComponent({
         return
 
       try {
-        await startProgram(programId)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await startProgram(programId, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
       }
       catch (err) {
         console.error(err)
@@ -260,7 +266,10 @@ export default defineComponent({
         return
 
       try {
-        await stopProgram(programId)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await stopProgram(programId, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
       }
       catch (err) {
         console.error(err)
@@ -274,7 +283,10 @@ export default defineComponent({
         return
 
       try {
-        await restartProgram(programId)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await restartProgram(programId, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
       }
       catch (err) {
         console.error(err)
@@ -287,15 +299,19 @@ export default defineComponent({
       if (programId === undefined)
         return
 
-      // redirect to page to modify program configuration
-      console.log('update configuration')
+      router.push(`/programs/${programId}/edit`)
     }
+
+    const processesCount = computed(() => {
+      if (!program.value)
+        return 0
+
+      return program.value.processes.length
+    })
 
     const statistics = computed(() => {
       if (program.value === undefined)
         return []
-
-      const processesCount = program.value.processes.length
 
       return [
         {
@@ -304,7 +320,7 @@ export default defineComponent({
           icon: ChartBarIcon,
         },
         {
-          text: t('process', processesCount),
+          text: t('process', processesCount.value),
           value: processesCount,
           icon: ChipIcon,
         },
@@ -335,6 +351,7 @@ export default defineComponent({
 
       statistics,
       processes,
+      processesCount,
     }
   },
 })
@@ -355,21 +372,16 @@ export default defineComponent({
     "status": "Status",
     "uptime": "Uptime",
 
-    "actions": {
+    "button": {
       "start": "Start",
       "stop": "Stop",
       "restart": "Restart",
-      "modify": "Edit",
     },
 
     "titles": {
       "dashboard": "Dashboard",
       "programs": "Programs",
     },
-
-    "buttons": {
-      "back": "Back",
-    }
   },
 
   "fr": {
@@ -385,16 +397,11 @@ export default defineComponent({
     "status": "Statut",
     "uptime": "Disponibilité",
 
-    "actions": {
+    "button": {
       "start": "Lancer",
       "stop": "Stopper",
       "restart": "Redémarrer",
-      "modify": "Modifier",
     },
-
-    "buttons": {
-      "back": "Retour",
-    }
   }
 }
 </i18n>

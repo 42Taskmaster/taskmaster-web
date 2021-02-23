@@ -1,6 +1,6 @@
 <template>
-  <div v-if="loading">
-    <Loading />
+  <div v-if="isLoading">
+    <AppLoadingOverlay />
   </div>
 
   <AppLayout>
@@ -11,24 +11,24 @@
     <template #actions>
       <AppButton v-if="!editing" @click="startEditing">
         <heroicons-outline-pencil class="mr-2" />
-        {{ t('edit') }}
+        {{ t('button.edit') }}
       </AppButton>
       <template
         v-else
       >
         <AppButton color="green" outlined="false" class="mr-2" @click="saveEditing">
           <heroicons-outline-save class="mr-2" />
-          {{ t('save') }}
+          {{ t('button.save') }}
         </AppButton>
         <AppButton color="red" @click="cancelEditing">
           <heroicons-outline-x class="mr-2" />
-          {{ t('cancel') }}
+          {{ t('button.cancel') }}
         </AppButton>
       </template>
     </template>
 
     <div class="flex flex-col h-full">
-      <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlertCallback">
+      <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
         {{ alert.message }}
       </AppAlert>
 
@@ -36,12 +36,12 @@
         <VAceEditor
           v-model:value="configurationText"
           lang="yaml"
-          :readonly="editorReadonly"
+          :readonly="editorReadOnly"
           class="h-full shadow"
         />
 
         <div class="absolute top-0 right-0 flex items-center p-2 mt-5 mr-8 text-gray-500 bg-gray-100 rounded shadow">
-          <template v-if="editorReadonly">
+          <template v-if="editorReadOnly">
             <heroicons-outline-lock-closed aria-label="The configuration can not be modified" class="text-xl" />
 
             <span class="ml-1 text-sm font-medium">
@@ -70,6 +70,8 @@ import 'ace-builds/src-noconflict/theme-chrome'
 import { putConfiguration } from '/~/api/configuration'
 import { useConfiguration } from '/~/composables/configuration'
 import { useI18n } from 'vue-i18n'
+import { Alert, AlertType } from '/~/types/index'
+import { useFetcher } from '/~/composables/fetcher'
 
 export default defineComponent({
   components: {
@@ -78,91 +80,84 @@ export default defineComponent({
   setup() {
     const { t } = useI18n()
 
-    const { configuration, reload } = useConfiguration()
-
-    const configurationText = ref<string>('')
-    const editorReadonly = ref<boolean>(true)
-
-    const editing = ref(false)
-    const loading = ref(false)
-    const alert = ref({
+    const fetcher = useFetcher()
+    const alert = ref<Alert>({
       show: false,
-      type: 'primary',
+      type: AlertType.PRIMARY,
       message: '',
     })
+    function showAlert(type: AlertType, message: string) {
+      alert.value.type = type
+      alert.value.show = true
+      alert.value.message = message
+    }
+    function closeAlert() {
+      alert.value.show = false
+    }
 
+    const { configuration, reload, isLoading } = useConfiguration()
+    const configurationText = ref<string>('')
     watch(configuration, (configuration) => {
       if (configuration === undefined)
         return
-
       configurationText.value = configuration
-      loading.value = false
     })
 
+    const editorReadOnly = ref<boolean>(true)
+    const editing = ref(false)
     function enableEditing() {
-      editorReadonly.value = false
+      editorReadOnly.value = false
     }
-
     function disableEditing() {
-      editorReadonly.value = true
+      editorReadOnly.value = true
     }
-
     function startEditing() {
       enableEditing()
       editing.value = true
     }
-
     function cancelEditing() {
       disableEditing()
       editing.value = false
       configurationText.value = configuration.value as string
       reload()
     }
-
-    function closeAlertCallback() {
-      alert.value.show = false
-    }
-
-    function showAlert(type: string, message: string) {
-      alert.value.type = type
-      alert.value.show = true
-      alert.value.message = message
-    }
-
     async function saveEditing() {
-      loading.value = true
+      showAlert(AlertType.PRIMARY, t('updating_configuration'))
 
       try {
         disableEditing()
 
-        await putConfiguration(configurationText.value)
+        if (fetcher.value !== undefined && fetcher.value !== null)
+          await putConfiguration(configurationText.value, fetcher.value.fetcher)
+        else
+          throw new Error('Fetcher is undefined or null')
 
         editing.value = false
-        showAlert('success', t('configuration-update-succeed'))
+        showAlert(AlertType.SUCCESS, t('configuration-update-succeed'))
       }
       catch (err) {
         enableEditing()
-        showAlert('warning', t('configuration-update-failed'))
-      }
-      finally {
-        loading.value = false
+        showAlert(AlertType.DANGER, t('configuration-update-failed'))
       }
     }
 
     return {
       t,
 
+      isLoading,
+
+      alert,
+      closeAlert,
+
+      configuration,
       configurationText,
-      editorReadonly,
-      loading,
 
       editing,
+      editorReadOnly,
       startEditing,
       cancelEditing,
       saveEditing,
 
-      alert,
-      closeAlertCallback,
     }
   },
 })
@@ -173,21 +168,17 @@ export default defineComponent({
   "en": {
     "read-only": "Read only",
     "read-write": "Edit mode",
-    "edit": "Edit",
-    "save": "Save",
-    "cancel": "Cancel",
     "configuration-update-succeed": "Configuration updated with success.",
     "configuration-update-failed": "An error occured while trying to update the configuration.",
+    "updating_configuration": "Updating configuration..."
   },
 
   "fr": {
     "read-only": "Mode lecture",
     "read-write": "Mode édition",
-    "edit": "Modifier",
-    "save": "Enregistrer",
-    "cancel": "Annuler",
     "configuration-update-succeed": "La configuration a été mise à jour avec succès.",
     "configuration-update-failed": "Une erreur est survenue lors de la mise à jour de la configuration.",
+    "updating_configuration": "Mise à jour de la configuration..."
   }
 }
 </i18n>

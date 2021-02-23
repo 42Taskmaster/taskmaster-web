@@ -1,10 +1,10 @@
 <template>
-  <Badge
+  <AppBadge
     :class="[backgroundClass, textClass]"
     class="capitalize"
   >
     {{ statusLocale }}
-  </Badge>
+  </AppBadge>
 </template>
 
 <script lang="ts">

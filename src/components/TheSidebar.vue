@@ -3,7 +3,7 @@
     <div class="flex flex-col justify-between h-full">
       <div class="flex flex-col">
         <div class="p-4 mt-5 text-2xl font-bold text-center">
-          TASKMASTER
+          <span class="text-3xl"><span class="inline-block text-gray-600">></span>T</span>ASKMASTER
         </div>
         <div class="p-3">
           <div v-for="link in links" :key="link.title">
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="flex mb-5 text-2xl justify-evenly">
-        <button class="mx-2 icon-btn focus:outline-none" :title="t('buttons.toggle_lang')" @click="toggleLocales">
+        <button class="mx-2 icon-btn focus:outline-none" :title="t('button.toggle_lang')" @click="toggleLocales">
           <carbon-language />
         </button>
 
@@ -96,7 +96,7 @@ export default defineComponent({
     "configuration": "Configuration",
     "logs": "Logs",
 
-    "buttons": {
+    "button": {
       "toggle_lang": "Toggle language",
     },
   },
@@ -107,7 +107,7 @@ export default defineComponent({
     "configuration": "Configuration",
     "logs": "Logs",
 
-    "buttons": {
+    "button": {
       "toggle_lang": "Changer de langue",
     },
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-full bg-white">
+  <div class="flex flex-col items-center justify-center h-full p-4 text-center bg-white">
     <span class="px-5 py-2 mb-10 text-2xl border-b">
       {{ t("welcome") }}
     </span>
@@ -102,8 +102,8 @@ export default defineComponent({
       localStorage.removeItem('apiUrl')
     }
 
-    function shutdown() {
-
+    async function shutdown() {
+      await fetcher.value?.fetcher.delete('/shutdown')
     }
 
     return {

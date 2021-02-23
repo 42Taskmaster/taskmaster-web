@@ -25,7 +25,7 @@ module.exports = {
     opacity: ['dark', 'hover', 'active', 'focus', 'disabled'],
   },
   darkMode: 'class',
-  plugins: [typography],
+  plugins: [typography, require('@tailwindcss/forms')],
   theme: {
     extend: {
       fontFamily: {
