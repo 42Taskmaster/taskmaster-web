@@ -146,6 +146,8 @@ export function isVersionResponse(input: unknown): input is VersionResponse {
   return (
     typeof input === 'object' && typeof (input as VersionResponse).result === 'string'
   )
+}
+
 export enum AlertType {
   PRIMARY = 'PRIMARY',
   SUCCESS = 'SUCCESS',
