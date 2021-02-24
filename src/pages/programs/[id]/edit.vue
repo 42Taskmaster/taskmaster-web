@@ -4,9 +4,9 @@
       <AppLoadingOverlay />
     </div>
 
-    <div v-else-if="program === undefined">
-      {{ t('program-unknown') }}
-    </div>
+    <AppAlert v-else-if="program === undefined || programCopy === undefined" class="m-5" type="WARNING">
+      {{ t('program_unknown') }}
+    </AppAlert>
 
     <AppLayout v-else>
       <template #title>
@@ -27,16 +27,23 @@
         </AppButton>
       </template>
 
-      <ProgramForm :configuration="program.configuration" />
+      <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
+        {{ alert.message }}
+      </AppAlert>
+
+      <ProgramForm :configuration="programCopy.configuration" />
     </AppLayout>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, capitalize } from 'vue'
+import { defineComponent, computed, capitalize, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { useFetcher } from '/~/composables/fetcher'
 
 import { useProgram } from '/~/composables/programs'
+import { Alert, AlertType } from '/~/types/index'
 
 export default defineComponent({
   props: {
@@ -49,7 +56,27 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n()
 
+    const fetcher = useFetcher()
+
+    const alert = ref<Alert>({
+      show: false,
+      type: AlertType.PRIMARY,
+      message: '',
+    })
+    function showAlert(type: AlertType, message: string) {
+      alert.value.type = type
+      alert.value.show = true
+      alert.value.message = message
+    }
+    function closeAlert() {
+      alert.value.show = false
+    }
+
+    const router = useRouter()
+
     const { program, isLoading } = useProgram(props.id, false)
+
+    const programCopy = ref(program)
 
     const programTitle = computed(() => {
       if (program.value === undefined)
@@ -65,19 +92,38 @@ export default defineComponent({
       return `/programs/${program.value.id}`
     })
 
-    function saveProgram() {
-
+    async function saveProgram() {
+      if (fetcher.value && program.value && programCopy.value) {
+        const { data } = await fetcher.value.fetcher.put('/programs', {
+          id: program.value.id,
+          configuration: programCopy.value.configuration,
+        })
+        if (data.error !== undefined)
+          showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
+        else
+          router.push(`/programs/${program.value.id}?saved`)
+      }
     }
 
-    function deleteProgram() {
-      // if (!confirm(t('delete_confirm'))) {
-      //   return
-      // }
+    async function deleteProgram() {
+      if (fetcher.value && program.value) {
+        const { data } = await fetcher.value.fetcher.post('/programs', {
+          action: 'DELETE',
+          id: program.value.id,
+        })
+        if (data.error !== undefined)
+          showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
+        else
+          router.push('/programs?deleted')
+      }
     }
 
     return {
       t,
+      alert,
+      closeAlert,
       program,
+      programCopy,
       programTitle,
       programUrl,
       isLoading,

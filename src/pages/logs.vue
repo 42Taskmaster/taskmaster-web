@@ -37,7 +37,7 @@ import { defineComponent, watch, ref, nextTick } from 'vue'
 import { useLogs } from '/~/composables/logs'
 import { useI18n } from 'vue-i18n'
 import { deleteLogs } from '../api/logs'
-import { Alert, AlertType, Fetcher } from '../types/index'
+import { Alert, AlertType } from '../types/index'
 import { useFetcher } from '../composables/fetcher'
 
 export default defineComponent({

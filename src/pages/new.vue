@@ -51,7 +51,7 @@ export default defineComponent({
       stoptime: 5,
       stdout: '',
       stderr: '',
-      env: { awfawf: 'fggsegseg' },
+      env: {},
     })
 
     const alert = ref<Alert>({
@@ -70,7 +70,10 @@ export default defineComponent({
 
     async function saveProgram() {
       if (fetcher.value !== undefined && fetcher.value !== null) {
-        const { data } = await fetcher.value.fetcher.post('/programs', configuration.value)
+        const { data } = await fetcher.value.fetcher.post('/programs', {
+          action: 'CREATE',
+          configuration: configuration.value,
+        })
         if (data.error !== undefined)
           showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
         else
@@ -96,12 +99,10 @@ export default defineComponent({
 {
   "en": {
     "add_new_program": "Add a new program",
-    "error_occured": "An error occured",
   },
 
   "fr": {
     "add_new_program": "Ajouter un nouveau programme",
-    "error_occured": "Une erreur est survenue",
   }
 }
 </i18n>

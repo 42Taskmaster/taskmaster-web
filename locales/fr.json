@@ -5,5 +5,8 @@
     "save": "Enregister",
     "edit": "Modifier",
     "cancel": "Annuler"
-  }
+  },
+
+  "error_occured": "Une erreur est survenue",
+  "program_unknown": "Ce programme n'a pas pu être trouvé."
 }

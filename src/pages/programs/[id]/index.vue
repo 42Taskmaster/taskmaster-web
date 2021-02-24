@@ -4,9 +4,9 @@
       <AppLoadingOverlay />
     </div>
 
-    <div v-else-if="program === undefined">
-      {{ t('program-unknown') }}
-    </div>
+    <AppAlert v-else-if="program === undefined" class="m-5" type="WARNING">
+      {{ t('program_unknown') }}
+    </AppAlert>
 
     <AppLayout v-else>
       <template #title>
@@ -21,6 +21,10 @@
           {{ text }}
         </AppButton>
       </template>
+
+      <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
+        {{ alert.message }}
+      </AppAlert>
 
       <h2 class="text-lg font-medium leading-6 text-gray-900">
         {{ t('overview') }}
@@ -175,7 +179,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, watch, capitalize } from 'vue'
+import { defineComponent, computed, watch, capitalize, ref } from 'vue'
 import { useMachine } from '@xstate/vue'
 import { useI18n } from 'vue-i18n'
 import ChartBarIcon from '/@vite-icons/heroicons-outline/chart-bar.vue'
@@ -186,7 +190,7 @@ import { restartProgram, startProgram, stopProgram } from '/~/api/program'
 import { useProgram } from '/~/composables/programs'
 import { programMachine, ProgramMachineActions, ProgramMachineMeta } from '/~/machines/program'
 import { mergeMeta } from '/~/machines/utils'
-import { Program } from '/~/types/index'
+import { Alert, AlertType, Program } from '/~/types/index'
 import { useRouter } from 'vue-router'
 import { useFetcher } from '/~/composables/fetcher'
 
@@ -205,8 +209,23 @@ export default defineComponent({
 
   setup(props) {
     const { t } = useI18n()
-    const router = useRouter()
+
     const fetcher = useFetcher()
+
+    const alert = ref<Alert>({
+      show: false,
+      type: AlertType.PRIMARY,
+      message: '',
+    })
+    function showAlert(type: AlertType, message: string) {
+      alert.value.type = type
+      alert.value.show = true
+      alert.value.message = message
+    }
+    function closeAlert() {
+      alert.value.show = false
+    }
+
     const { program, isLoading } = useProgram(props.id)
     const programTitle = computed(() => {
       if (program === undefined)
@@ -377,8 +396,15 @@ export default defineComponent({
       return uptimeString
     }
 
+    const router = useRouter()
+    if (router.currentRoute.value.query.saved !== undefined)
+      showAlert(AlertType.SUCCESS, t('program_saved'))
+
     return {
       t,
+
+      alert,
+      closeAlert,
 
       program,
       programTitle,
@@ -430,6 +456,8 @@ export default defineComponent({
       "minute": "minute | minutes",
       "second": "second | seconds"
     },
+
+    "program_saved": "Your modifications have been saved.",
   },
 
   "fr": {
@@ -459,6 +487,8 @@ export default defineComponent({
       "minute": "minute | minutes",
       "second": "seconde | secondes"
     },
+
+    "program_saved": "Les modifications ont été enregistrées.",
   }
 }
 </i18n>
