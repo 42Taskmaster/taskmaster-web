@@ -1,5 +1,11 @@
 <template>
-  <AppInputBase v-bind="$props" type="text" />
+  <AppInputBase
+    :title="title"
+    :placeholder="placeholder"
+    :model-value="modelValue"
+    type="text"
+    @update:model-value="$emit('update:modelValue', $event)"
+  />
 </template>
 
 <script lang="ts">

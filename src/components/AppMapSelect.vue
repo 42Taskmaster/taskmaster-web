@@ -90,11 +90,11 @@ export default defineComponent({
       <p>{{ label }}</p>
     </div>
 
-    <div class="space-y-4 font-mono">
+    <div class="mt-2 space-y-4 font-mono">
       <div v-for="(value, key) in map" :key="key" class="grid items-center grid-cols-1 gap-2 md:grid-cols-2">
-        <div>
+        <p class="sm:text-sm">
           {{ key }}
-        </div>
+        </p>
 
         <div class="flex items-stretch">
           <AppInput :model-value="value" class="flex-grow" @update:model-value="updateEntryValue(key, $event)" />

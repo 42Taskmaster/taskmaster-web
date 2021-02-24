@@ -1,5 +1,13 @@
 <template>
-  <AppInputBase v-bind="$props" type="number" @update:model-value="$emit('update:modelValue', Number($event))" />
+  <AppInputBase
+    :title="title"
+    :placeholder="placeholder"
+    :model-value="modelValue"
+    :min="min"
+    :max="max"
+    type="number"
+    @update:model-value="$emit('update:modelValue', Number($event))"
+  />
 </template>
 
 <script lang="ts">

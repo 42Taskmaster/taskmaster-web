@@ -82,7 +82,7 @@ export default defineComponent({
         :type="type"
         :value="modelValue"
         :placeholder="placeholder"
-        class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm outline-none text-md text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
+        class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm outline-none sm:text-sm text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
         @input="handleInput"
       >
     </label>

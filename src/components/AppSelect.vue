@@ -54,7 +54,7 @@ export default defineComponent({
 
       <select
         :value="modelValue"
-        class="w-full px-3 py-2 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm outline-none text-md text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
+        class="w-full px-3 py-2 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm outline-none sm:text-sm text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
         @change="handleChange"
       >
         <option v-for="{ title: optionTitle, value: optionValue } in options" :key="optionValue" :value="optionValue">
