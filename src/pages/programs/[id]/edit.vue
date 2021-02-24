@@ -4,7 +4,7 @@
       <AppLoadingOverlay />
     </div>
 
-    <AppAlert v-else-if="program === undefined || programCopy === undefined" class="m-5" type="WARNING">
+    <AppAlert v-else-if="program === undefined" class="m-5" type="WARNING">
       {{ t('program_unknown') }}
     </AppAlert>
 
@@ -13,7 +13,7 @@
         <router-link :to="programUrl" :title="t('button.back')">
           <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
         </router-link>
-        {{ t('editing') }} {{ program.configuration.name }}
+        {{ t('editing') }} {{ program.id }}
       </template>
 
       <template #actions>
@@ -31,7 +31,7 @@
         {{ alert.message }}
       </AppAlert>
 
-      <ProgramForm :configuration="programCopy.configuration" />
+      <ProgramForm :configuration="program.configuration" />
     </AppLayout>
   </div>
 </template>
@@ -76,8 +76,6 @@ export default defineComponent({
 
     const { program, isLoading } = useProgram(props.id, false)
 
-    const programCopy = ref(program)
-
     const programTitle = computed(() => {
       if (program.value === undefined)
         return 'undefined'
@@ -93,10 +91,10 @@ export default defineComponent({
     })
 
     async function saveProgram() {
-      if (fetcher.value && program.value && programCopy.value) {
+      if (fetcher.value && program.value) {
         const { data } = await fetcher.value.fetcher.put('/programs', {
           id: program.value.id,
-          configuration: programCopy.value.configuration,
+          configuration: program.value.configuration,
         })
         if (data.error !== undefined)
           showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
@@ -123,7 +121,6 @@ export default defineComponent({
       alert,
       closeAlert,
       program,
-      programCopy,
       programTitle,
       programUrl,
       isLoading,
