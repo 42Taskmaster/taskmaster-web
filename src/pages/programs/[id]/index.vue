@@ -103,24 +103,24 @@
       </h2>
 
       <!-- Activity list (smallest breakopoint only) -->
-      <div class="shadow sm:hidden">
-        <ul class="mt-2 overflow-hidden divide-y divide-gray-200 shadow sm:hidden">
-          <li>
-            <a href="#" class="block px-4 py-4 text-sm text-gray-500 truncate bg-white hover:bg-gray-50">
+      <div class="rounded-lg shadow sm:hidden">
+        <ul class="mt-2 overflow-auto divide-y divide-gray-200 rounded-lg shadow-sm sm:hidden">
+          <li v-for="process in processes" :key="process.id">
+            <div class="block px-4 py-4 text-sm text-gray-500 truncate bg-white hover:bg-gray-50">
               <div class="flex flex-col">
                 <div class="flex items-center justify-between">
-                  <span class="font-medium text-gray-900">10232</span>
-
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                    success
+                  <span class="font-medium text-gray-900">
+                    {{ t('pid') }} : {{ process.pid !== 0 ? process.pid : "-" }}
                   </span>
+
+                  <AppStatusBadge :status="process.state" :light="true" class="inline-flex items-center px-2.5 py-0.5 text-xs font-medium" />
                 </div>
 
-                <span class="font-medium text-gray-900">Vogsphere-2</span>
+                <span class="font-medium text-gray-900">{{ t('identifier') }} : {{ process.id }}</span>
 
-                <span>July 11, 2020</span>
+                <span>{{ t('uptime') }} : {{ uptimeString(process.startedAt, process.endedAt) }}</span>
               </div>
-            </a>
+            </div>
           </li>
         </ul>
       </div>
@@ -149,7 +149,7 @@
                 <tr v-for="process in processes" :key="process.id" class="bg-white">
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <span class="font-medium text-gray-900">
-                      {{ process.pid !== "0" ? process.pid : "" }}
+                      {{ process.pid !== 0 ? process.pid : "-" }}
                     </span>
                   </td>
                   <td class="w-full px-6 py-4 text-sm text-left text-gray-500 max-w-0 whitespace-nowrap">
@@ -162,7 +162,7 @@
                   </td>
                   <td class="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     <!-- FIXME: use real uptime -->
-                    July 11, 2020
+                    {{ uptimeString(process.startedAt, process.endedAt) }}
                   </td>
                 </tr>
               </tbody>
@@ -340,6 +340,43 @@ export default defineComponent({
       return program.value.processes
     })
 
+    function uptimeString(startedAt: string, endedAt: string): string {
+      const startDate = new Date(startedAt)
+      if (startDate.getFullYear() <= 1)
+        return '-'
+      const endDate = new Date(endedAt)
+      let duration = (endDate.getFullYear() > 1 ? endDate.getTime() : new Date().getTime()) - startDate.getTime()
+      duration /= 1000
+      const days = Math.floor(duration / 86400)
+      duration -= days * 86400
+      const hours = Math.floor(duration / 3600) % 24
+      duration -= hours * 3600
+      const minutes = Math.floor(duration / 60) % 60
+      duration -= minutes * 60
+      const seconds = Math.floor(duration % 60)
+
+      const array = []
+      if (days !== 0)
+        array.push(`${days} ${t('date.day', days)}`)
+      if (hours !== 0)
+        array.push(`${hours} ${t('date.hour', hours)}`)
+      if (minutes !== 0)
+        array.push(`${minutes} ${t('date.minute', minutes)}`)
+      if (seconds !== 0)
+        array.push(`${seconds} ${t('date.second', seconds)}`)
+
+      let uptimeString = ''
+      array.forEach((str, i) => {
+        uptimeString += str
+        if (i === array.length - 2)
+          uptimeString += ` ${t('and')} `
+        else if (i !== array.length - 1)
+          uptimeString += ', '
+      })
+
+      return uptimeString
+    }
+
     return {
       t,
 
@@ -352,6 +389,8 @@ export default defineComponent({
       statistics,
       processes,
       processesCount,
+
+      uptimeString,
     }
   },
 })
@@ -382,6 +421,15 @@ export default defineComponent({
       "dashboard": "Dashboard",
       "programs": "Programs",
     },
+
+    "and": "and",
+
+    "date": {
+      "day": "day | days",
+      "hour": "hour | hours",
+      "minute": "minute | minutes",
+      "second": "second | seconds"
+    },
   },
 
   "fr": {
@@ -401,6 +449,15 @@ export default defineComponent({
       "start": "Lancer",
       "stop": "Stopper",
       "restart": "Redémarrer",
+    },
+
+    "and": "et",
+
+    "date": {
+      "day": "jour | jours",
+      "hour": "heure | heures",
+      "minute": "minute | minutes",
+      "second": "seconde | secondes"
     },
   }
 }
