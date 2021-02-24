@@ -54,13 +54,16 @@ export default defineComponent({
         })),
     )
 
-    const newEntry = ref<string>()
+    const newEntry = ref<string>('')
 
     function clearNewEntry() {
       newEntry.value = ''
     }
 
     function addEntry() {
+      if (newEntry.value === '')
+        return
+
       const valueAsNumber = Number(newEntry.value)
 
       console.log('value as number', valueAsNumber, [...inputArray.value])

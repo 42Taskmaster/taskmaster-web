@@ -55,6 +55,9 @@ export default defineComponent({
     function addEntry() {
       const { key, value } = newEntry
 
+      if (key === '')
+        return
+
       emit('update:modelValue', {
         ...map.value,
         [key]: value,
