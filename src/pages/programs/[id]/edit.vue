@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div v-if="isLoading">
-      Loading...
+      <AppLoadingOverlay />
     </div>
 
     <div v-else-if="program === undefined">
