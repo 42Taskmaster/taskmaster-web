@@ -8,7 +8,6 @@
   >
     <div class="flex">
       <div class="flex-shrink-0">
-        <!-- Heroicon name: solid/check-circle -->
         <component :is="alertType.icon" class="w-5 h-5 " :class="alertType.iconClasses" />
       </div>
       <div class="ml-3">
