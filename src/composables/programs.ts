@@ -32,7 +32,7 @@ export function usePrograms() {
   }
 }
 
-export function useProgram(programId: string) {
+export function useProgram(programId: string, refresh = true) {
   const fetcher = useFetcher()
 
   const { data, error } = useSWRV('/status', async() => {
@@ -41,7 +41,7 @@ export function useProgram(programId: string) {
 
     return await getAllPrograms(fetcher.value.fetcher)
   }, {
-    refreshInterval: 1_000,
+    refreshInterval: refresh ? 1_000 : 0,
   })
 
   const program = computed<Program | undefined>(() => {
