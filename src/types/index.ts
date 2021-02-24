@@ -160,3 +160,16 @@ export interface Alert {
   type: AlertType
   message: string
 }
+
+export interface AppSelectOption {
+  title: string
+  value: string
+}
+
+export function isAppSelectOption(input: unknown): input is AppSelectOption {
+  return (
+    typeof input === 'object'
+    && typeof (input as AppSelectOption).title === 'string'
+    && typeof (input as AppSelectOption).title === 'string'
+  )
+}

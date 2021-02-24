@@ -4,7 +4,7 @@
       Loading...
     </div>
 
-    <div v-else-if="program === undefined || programCopy === undefined">
+    <div v-else-if="program === undefined">
       {{ t('program-unknown') }}
     </div>
 
@@ -13,7 +13,7 @@
         <router-link :to="programUrl" :title="t('button.back')">
           <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
         </router-link>
-        {{ t('editing') }} {{ programCopy.configuration.name }}
+        {{ t('editing') }} {{ program.configuration.name }}
       </template>
 
       <template #actions>
@@ -27,7 +27,7 @@
         </AppButton>
       </template>
 
-      <ProgramForm :configuration="programCopy.configuration" />
+      <ProgramForm :configuration="program.configuration" />
     </AppLayout>
   </div>
 </template>
@@ -37,7 +37,6 @@ import { defineComponent, computed, capitalize } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useProgram } from '/~/composables/programs'
-import { Program } from '/~/types/index'
 
 export default defineComponent({
   props: {
@@ -50,19 +49,21 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n()
 
-    const { program, isLoading } = useProgram(props.id)
+    const { program, isLoading } = useProgram(props.id, false)
+
     const programTitle = computed(() => {
-      if (program === undefined)
+      if (program.value === undefined)
         return 'undefined'
-      return capitalize((program.value as Program).id)
-    })
-    const programUrl = computed(() => {
-      if (program === undefined)
-        return 'undefined'
-      return `/programs/${(program.value as Program).id}`
+
+      return capitalize(program.value.id)
     })
 
-    const programCopy = program
+    const programUrl = computed(() => {
+      if (program.value === undefined)
+        return 'undefined'
+
+      return `/programs/${program.value.id}`
+    })
 
     function saveProgram() {
 
@@ -79,7 +80,6 @@ export default defineComponent({
       program,
       programTitle,
       programUrl,
-      programCopy,
       isLoading,
       saveProgram,
       deleteProgram,
