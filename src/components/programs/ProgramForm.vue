@@ -2,13 +2,14 @@
   <h2 class="text-xl font-medium leading-6 text-gray-900">
     Informations
   </h2>
-  <div class="p-5 mt-2 mb-6 bg-white rounded-lg shadow">
+  <div class="p-5 mt-2 mb-6 space-y-4 bg-white rounded-lg shadow">
     <AppInput
-      v-model="configurationComputed.name"
+      v-model="configurationWritable.name"
       :title="t('name')"
     />
+
     <AppInput
-      v-model="configurationComputed.cmd"
+      v-model="configurationWritable.cmd"
       :title="t('cmd')"
     />
   </div>
@@ -16,105 +17,67 @@
   <h2 class="text-xl font-medium leading-6 text-gray-900">
     Configuration
   </h2>
-  <div class="p-5 mt-2 mb-3 bg-white rounded-lg shadow">
+
+  <div class="p-5 mt-2 mb-3 space-y-4 bg-white rounded-lg shadow">
     <AppNumberInput
-      v-model.number="configurationComputed.numprocs"
+      v-model.number="configurationWritable.numprocs"
       :title="t('numprocs')"
     />
+
     <AppInput
-      v-model="configurationComputed.umask"
+      v-model="configurationWritable.umask"
       :title="t('umask')"
     />
+
     <AppInput
-      v-model="configurationComputed.workingdir"
+      v-model="configurationWritable.workingdir"
       :title="t('workingdir')"
     />
 
-    <h2 class="mb-1 font-medium leading-6 text-gray-800 text-md">
-      {{ t("autorestart.label") }} :
-    </h2>
-    <select
-      v-model="configurationComputed.autorestart"
-      class="w-full px-3 py-2 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm outline-none text-md text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
-    >
-      <option value="true">
-        {{ t("autorestart.true") }}
-      </option>
-      <option value="unexpected">
-        {{ t("autorestart.unexpected") }}
-      </option>
-      <option value="false">
-        {{ t("autorestart.false") }}
-      </option>
-    </select>
+    <AppSelect v-model="configurationWritable.autorestart" :title="t('autorestart.label')" :options="AutorestartOptions" />
 
-    <AppInput
-      v-model="configurationComputed.exitcodes"
-      :title="t('exitcodes')"
-    />
+    <AppListSelect v-model="configurationWritable.exitcodes" :label="t('exitcodes')" placeholder-new-value="New exitcode" :min="0" :max="255" />
+
     <AppNumberInput
-      v-model.number="configurationComputed.startretries"
+      v-model.number="configurationWritable.startretries"
       :title="t('startretries')"
       :min="0"
     />
+
     <AppNumberInput
-      v-model.number="configurationComputed.starttime"
+      v-model.number="configurationWritable.starttime"
       :title="t('starttime')"
-      min="0"
-      max="86400"
+      :min="0"
+      :max="86400"
     />
 
-    <h2 class="mb-1 font-medium leading-6 text-gray-800 text-md">
-      {{ t("stopsignal") }} :
-    </h2>
-    <select
-      v-model="configurationComputed.stopsignal"
-      class="w-full px-3 py-2 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm outline-none text-md text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
-    >
-      <option value="TERM">
-        TERM
-      </option>
-      <option value="HUP">
-        HUP
-      </option>
-      <option value="INT">
-        INT
-      </option>
-      <option value="QUIT">
-        QUIT
-      </option>
-      <option value="KILL">
-        KILL
-      </option>
-      <option value="USR1">
-        USR1
-      </option>
-      <option value="USR2">
-        USR2
-      </option>
-    </select>
+    <AppSelect v-model="configurationWritable.stopsignal" :title="t('stopsignal')" :options="SignalOptions" />
 
     <AppNumberInput
-      v-model.number="configurationComputed.stoptime"
+      v-model.number="configurationWritable.stoptime"
       :title="t('stoptime')"
-      min="0"
-      max="86400"
+      :min="0"
+      :max="86400"
     />
+
     <AppInput
-      v-model="configurationComputed.stdout"
+      v-model="configurationWritable.stdout"
       :title="t('stdout')"
     />
+
     <AppInput
-      v-model="configurationComputed.stderr"
+      v-model="configurationWritable.stderr"
       :title="t('stderr')"
     />
+
+    <AppMapSelect v-model="configurationWritable.env" label="Environment variables" placeholder-new-key="ENVIRONMENT_VARIABLE" placeholder-new-value="environment variable value" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { computed, defineComponent, PropType, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ProgramConfiguration } from '../types/index'
+import { AppSelectOption, ProgramConfiguration } from '/~/types/index'
 
 export default defineComponent({
   props: {
@@ -123,17 +86,35 @@ export default defineComponent({
       required: true,
     },
   },
+
   setup(props) {
     const { t } = useI18n()
 
-    const configurationComputed: ProgramConfiguration = computed(() => {
-      return props.configuration
-    })
+    const configurationWritable = reactive<ProgramConfiguration>(props.configuration)
+
+    const SignalOptions: AppSelectOption[] = [
+      { value: 'TERM', title: 'TERM' },
+      { value: 'HUP', title: 'HUP' },
+      { value: 'INT', title: 'INT' },
+      { value: 'QUIT', title: 'QUIT' },
+      { value: 'KILL', title: 'KILL' },
+      { value: 'USR1', title: 'USR1' },
+      { value: 'USR2', title: 'USR2' },
+    ]
+
+    const AutorestartOptions = computed<AppSelectOption[]>(() => [
+      { value: 'true', title: t('autorestart.true') },
+      { value: 'unexpected', title: t('autorestart.unexpected') },
+      { value: 'false', title: t('autorestart.false') },
+    ])
 
     return {
       t,
 
-      configurationComputed,
+      SignalOptions,
+      AutorestartOptions,
+
+      configurationWritable,
     }
   },
 })

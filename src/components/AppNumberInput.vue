@@ -1,16 +1,13 @@
 <template>
-  <h2 v-if="title != ''" class="mb-1 font-medium leading-6 text-gray-800 text-md">
-    {{ title }} :
-  </h2>
-  <input
-    type="number"
-    :value="modelValue"
+  <AppInputBase
+    :title="title"
     :placeholder="placeholder"
+    :model-value="modelValue"
     :min="min"
     :max="max"
-    class="w-full px-3 py-2 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm outline-none text-md text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
-    @input="onChanged"
-  >
+    type="number"
+    @update:model-value="$emit('update:modelValue', Number($event))"
+  />
 </template>
 
 <script lang="ts">
@@ -22,32 +19,32 @@ export default defineComponent({
       type: String,
       default: '',
     },
+
     placeholder: {
       type: String,
       default: '',
     },
+
+    modelValue: {
+      type: Number,
+      default: undefined,
+    },
+
     min: {
       type: Number,
       default: 1,
     },
+
     max: {
       type: Number,
       default: 100,
     },
-    modelValue: {
-      type: String,
-      default: '',
-    },
   },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    function onChanged(e) {
-      emit('update:modelValue', e.currentTarget.value)
-    }
 
-    return {
-      onChanged,
-    }
+  emits: {
+    'update:modelValue': (value: number) => {
+      return !Number.isNaN(value)
+    },
   },
 })
 </script>

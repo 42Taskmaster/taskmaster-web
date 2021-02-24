@@ -1,14 +1,11 @@
 <template>
-  <h2 v-if="title != ''" class="mb-1 font-medium leading-6 text-gray-800 text-md">
-    {{ title }} :
-  </h2>
-  <input
-    type="text"
-    :value="modelValue"
+  <AppInputBase
+    :title="title"
     :placeholder="placeholder"
-    class="w-full px-3 py-2 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm outline-none text-md text-grey-800 focus:ring-indigo-500 focus:border-indigo-500"
-    @input="onChanged"
-  >
+    :model-value="modelValue"
+    type="text"
+    @update:model-value="$emit('update:modelValue', $event)"
+  />
 </template>
 
 <script lang="ts">
@@ -20,24 +17,18 @@ export default defineComponent({
       type: String,
       default: '',
     },
+
     placeholder: {
       type: String,
       default: '',
     },
+
     modelValue: {
       type: String,
-      default: '',
+      default: undefined,
     },
   },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    function onChanged(e) {
-      emit('update:modelValue', e.currentTarget.value)
-    }
 
-    return {
-      onChanged,
-    }
-  },
+  emits: ['update:modelValue'],
 })
 </script>
