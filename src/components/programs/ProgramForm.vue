@@ -2,12 +2,12 @@
   <h2 class="text-xl font-medium leading-6 text-gray-900">
     Informations
   </h2>
-  <div class="p-5 mt-2 mb-6 bg-white rounded-lg shadow">
+  <div class="p-5 mt-2 mb-6 space-y-4 bg-white rounded-lg shadow">
     <AppInput
       v-model="configurationWritable.name"
       :title="t('name')"
-      class="mb-3"
     />
+
     <AppInput
       v-model="configurationWritable.cmd"
       :title="t('cmd')"
@@ -17,21 +17,19 @@
   <h2 class="text-xl font-medium leading-6 text-gray-900">
     Configuration
   </h2>
-  <div class="p-5 mt-2 mb-3 bg-white rounded-lg shadow">
+
+  <div class="p-5 mt-2 mb-3 space-y-4 bg-white rounded-lg shadow">
     <AppNumberInput
       v-model.number="configurationWritable.numprocs"
       :title="t('numprocs')"
-      class="mb-3"
     />
     <AppInput
       v-model="configurationWritable.umask"
       :title="t('umask')"
-      class="mb-3"
     />
     <AppInput
       v-model="configurationWritable.workingdir"
       :title="t('workingdir')"
-      class="mb-3"
     />
 
     <AppSelect v-model="configurationWritable.autorestart" :title="t('autorestart.label')" :options="AutorestartOptions" />
@@ -39,20 +37,17 @@
     <AppInput
       v-model="configurationWritable.exitcodes"
       :title="t('exitcodes')"
-      class="mb-3"
     />
     <AppNumberInput
       v-model.number="configurationWritable.startretries"
       :title="t('startretries')"
       :min="0"
-      class="mb-3"
     />
     <AppNumberInput
       v-model.number="configurationWritable.starttime"
       :title="t('starttime')"
       :min="0"
       :max="86400"
-      class="mb-3"
     />
 
     <AppSelect v-model="configurationWritable.stopsignal" :title="t('stopsignal')" :options="SignalOptions" />
@@ -62,17 +57,14 @@
       :title="t('stoptime')"
       :min="0"
       :max="86400"
-      class="mb-3"
     />
     <AppInput
       v-model="configurationWritable.stdout"
       :title="t('stdout')"
-      class="mb-3"
     />
     <AppInput
       v-model="configurationWritable.stderr"
       :title="t('stderr')"
-      class="mb-3"
     />
 
     <AppMapSelect v-model="configurationWritable.env" label="Environment variables" placeholder-new-key="ENVIRONMENT_VARIABLE" placeholder-new-value="environment variable value" />
