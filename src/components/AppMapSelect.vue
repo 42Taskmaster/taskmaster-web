@@ -2,6 +2,8 @@
 import { computed, defineComponent, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { KeyValueObject } from '/~/types/index'
+
 export default defineComponent({
   props: {
     label: {
@@ -31,6 +33,14 @@ export default defineComponent({
     const { t } = useI18n()
 
     const map = computed(() => props.modelValue)
+
+    const items = computed<KeyValueObject[]>(
+      () => Object.entries(map.value).map(
+        ([key, value]) => ({
+          key, value,
+        }),
+      ),
+    )
 
     const newEntry = reactive({
       key: '',
@@ -73,7 +83,7 @@ export default defineComponent({
     return {
       t,
 
-      map,
+      items,
       newEntry,
 
       deleteEntry,
@@ -85,13 +95,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
-    <div class="block text-sm font-medium text-gray-700">
-      <p>{{ label }}</p>
-    </div>
-
-    <div class="mt-2 space-y-4 font-mono">
-      <div v-for="(value, key) in map" :key="key" class="grid items-center grid-cols-1 gap-2 md:grid-cols-2">
+  <AppSelectBase :label="label" :items="items">
+    <template #item="{ item: { key, value } }">
+      <div class="grid items-center grid-cols-1 gap-2 md:grid-cols-2">
         <p class="sm:text-sm">
           {{ key }}
         </p>
@@ -108,7 +114,9 @@ export default defineComponent({
           </AppButton>
         </div>
       </div>
+    </template>
 
+    <template #add-form>
       <form class="grid items-center grid-cols-1 gap-2 md:grid-cols-2" @submit.prevent="addEntry">
         <AppInput v-model="newEntry.key" :placeholder="placeholderNewKey" />
 
@@ -124,8 +132,8 @@ export default defineComponent({
           </AppButton>
         </div>
       </form>
-    </div>
-  </div>
+    </template>
+  </AppSelectBase>
 </template>
 
 <i18n>

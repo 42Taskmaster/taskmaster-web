@@ -173,3 +173,16 @@ export function isAppSelectOption(input: unknown): input is AppSelectOption {
     && typeof (input as AppSelectOption).title === 'string'
   )
 }
+
+export interface KeyValueObject {
+  key: string | number
+  value: unknown
+}
+
+export function isKeyValueObject(input: unknown): input is KeyValueObject {
+  return (
+    typeof input === 'object'
+    && ['string', 'number'].includes(typeof (input as KeyValueObject).key)
+    && Reflect.has(input as KeyValueObject, 'value')
+  )
+}

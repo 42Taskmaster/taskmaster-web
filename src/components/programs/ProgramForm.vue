@@ -23,10 +23,12 @@
       v-model.number="configurationWritable.numprocs"
       :title="t('numprocs')"
     />
+
     <AppInput
       v-model="configurationWritable.umask"
       :title="t('umask')"
     />
+
     <AppInput
       v-model="configurationWritable.workingdir"
       :title="t('workingdir')"
@@ -34,15 +36,14 @@
 
     <AppSelect v-model="configurationWritable.autorestart" :title="t('autorestart.label')" :options="AutorestartOptions" />
 
-    <AppInput
-      v-model="configurationWritable.exitcodes"
-      :title="t('exitcodes')"
-    />
+    <AppListSelect v-model="configurationWritable.exitcodes" :label="t('exitcodes')" placeholder-new-value="New exitcode" :min="0" :max="255" />
+
     <AppNumberInput
       v-model.number="configurationWritable.startretries"
       :title="t('startretries')"
       :min="0"
     />
+
     <AppNumberInput
       v-model.number="configurationWritable.starttime"
       :title="t('starttime')"
@@ -58,10 +59,12 @@
       :min="0"
       :max="86400"
     />
+
     <AppInput
       v-model="configurationWritable.stdout"
       :title="t('stdout')"
     />
+
     <AppInput
       v-model="configurationWritable.stderr"
       :title="t('stderr')"
