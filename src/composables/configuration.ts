@@ -15,8 +15,6 @@ export function useConfiguration() {
   })
 
   const configuration = computed<string | undefined>(() => {
-    console.log('computed property configuration', error.value, data.value)
-
     if (error.value || data.value === undefined)
       return undefined
 
