@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import useSWRV from 'swrv'
 
 import { useFetcher } from './fetcher'
@@ -24,8 +24,16 @@ export function useLogs() {
   const isLoading = computed(() => data.value === undefined)
 
   function reload() {
-    mutate(getLogs)
+    const fetcherInstance = fetcher.value
+    if (fetcherInstance === null)
+      return
+
+    mutate(() => getLogs(fetcherInstance.fetcher))
   }
+
+  watch(fetcher, () => {
+    reload()
+  })
 
   return {
     logs,
