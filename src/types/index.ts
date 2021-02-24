@@ -87,7 +87,6 @@ export interface Program {
   state: ProgramState
   configuration: ProgramConfiguration
   processes: Process[]
-  startedAt: Date
 }
 
 export interface Programs {
