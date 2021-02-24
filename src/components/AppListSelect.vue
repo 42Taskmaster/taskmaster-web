@@ -66,8 +66,6 @@ export default defineComponent({
 
       const valueAsNumber = Number(newEntry.value)
 
-      console.log('value as number', valueAsNumber, [...inputArray.value])
-
       if (!inputArray.value.includes(valueAsNumber)) {
         emit('update:modelValue', [
           ...inputArray.value,

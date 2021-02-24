@@ -92,10 +92,6 @@ export default defineComponent({
 
     const configurationWritable = reactive<ProgramConfiguration>(props.configuration)
 
-    watch(configurationWritable, (configurationWritable) => {
-      console.log('configurationWritable', { ...configurationWritable })
-    })
-
     const SignalOptions: AppSelectOption[] = [
       { value: 'TERM', title: 'TERM' },
       { value: 'HUP', title: 'HUP' },
