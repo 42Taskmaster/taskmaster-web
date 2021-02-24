@@ -36,7 +36,7 @@
 
     <AppSelect v-model="configurationWritable.autorestart" :title="t('autorestart.label')" :options="AutorestartOptions" />
 
-    <AppListSelect v-model="configurationWritable.exitcodes" :label="t('exitcodes')" placeholder-new-value="New exitcode" :min="0" :max="255" />
+    <AppListSelect v-model="configurationWritable.exitcodes" :label="t('exitcodes')" :placeholder-new-value="t('new_exitcode')" :min="0" :max="255" />
 
     <AppNumberInput
       v-model.number="configurationWritable.startretries"
@@ -70,12 +70,12 @@
       :title="t('stderr')"
     />
 
-    <AppMapSelect v-model="configurationWritable.env" label="Environment variables" placeholder-new-key="ENVIRONMENT_VARIABLE" placeholder-new-value="environment variable value" />
+    <AppMapSelect v-model="configurationWritable.env" :label="t('env_vars')" :placeholder-new-key="t('env_var_name')" :placeholder-new-value="t('env_var_value')" />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive, watch } from 'vue'
+import { computed, defineComponent, PropType, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { AppSelectOption, ProgramConfiguration } from '/~/types/index'
 
@@ -143,6 +143,10 @@ export default defineComponent({
     "stdout": "Stdout file location",
     "stderr": "Stderr file location",
     "env": "Environment variables",
+    "new_exitcode": "New exit code",
+    "env_vars": "Environment variables",
+    "env_var_name": "ENVIRONMENT_VARIABLE",
+    "env_var_value": "value",
   },
 
   "fr": {
@@ -166,6 +170,10 @@ export default defineComponent({
     "stdout": "Chemin de Stdout",
     "stderr": "Chemin de Stderr",
     "env": "Variables d'environnement",
+    "new_exitcode": "Nouveau code de sortie",
+    "env_vars": "Variables d'environnement",
+    "env_var_name": "ENVIRONMENT_VARIABLE",
+    "env_var_value": "valeur",
   }
 }
 </i18n>

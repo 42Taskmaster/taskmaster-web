@@ -136,6 +136,8 @@ export default defineComponent({
     const router = useRouter()
     if (router.currentRoute.value.query.new !== undefined)
       showAlert(AlertType.SUCCESS, t('program_created'))
+    else if (router.currentRoute.value.query.deleted !== undefined)
+      showAlert(AlertType.SUCCESS, t('program_deleted'))
 
     return {
       t,
@@ -170,6 +172,7 @@ export default defineComponent({
     "search_no_program" : "No program matches the query",
     "add_a_program" : "Add a new program",
     "program_created": "New program successfully created.",
+    "program_deleted": "The program has been deleted.",
   },
 
   "fr": {
@@ -182,6 +185,7 @@ export default defineComponent({
     "search_no_program" : "Aucun programme trouvé pour la requête",
     "add_a_program" : "Ajouter un nouveau programme",
     "program_created": "Le nouveau programme a été créé avec succès.",
+    "program_deleted": "Le programme a été supprimé.",
   }
 }
 </i18n>

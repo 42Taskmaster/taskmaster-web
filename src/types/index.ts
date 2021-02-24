@@ -58,8 +58,10 @@ export enum ProgramState {
 
 export interface Process {
   id: string
-  pid: string
+  pid: number
   state: string
+  startedAt: string
+  endedAt: string
 }
 
 export interface ProgramConfiguration {
