@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import useSWRV from 'swrv'
 
 import { useFetcher } from './fetcher'
@@ -8,7 +8,7 @@ import { Program } from '/~/types/index'
 export function usePrograms() {
   const fetcher = useFetcher()
 
-  const { data, error } = useSWRV('/status', async() => {
+  const { data, error, mutate } = useSWRV('/status', async() => {
     if (fetcher.value?.fetcher === undefined)
       throw new Error('Invalid fetcher')
 
@@ -26,6 +26,18 @@ export function usePrograms() {
 
   const isLoading = computed(() => data.value === undefined)
 
+  function reload() {
+    const fetcherInstance = fetcher.value
+    if (fetcherInstance === null)
+      return
+
+    mutate(() => getAllPrograms(fetcherInstance.fetcher))
+  }
+
+  watch(fetcher, () => {
+    reload()
+  })
+
   return {
     programs,
     isLoading,
@@ -35,7 +47,7 @@ export function usePrograms() {
 export function useProgram(programId: string, refresh = true) {
   const fetcher = useFetcher()
 
-  const { data, error } = useSWRV('/status', async() => {
+  const { data, error, mutate } = useSWRV('/status', async() => {
     if (fetcher.value?.fetcher === undefined)
       throw new Error('Invalid fetcher')
 
@@ -54,6 +66,18 @@ export function useProgram(programId: string, refresh = true) {
   })
 
   const isLoading = computed(() => data.value === undefined)
+
+  function reload() {
+    const fetcherInstance = fetcher.value
+    if (fetcherInstance === null)
+      return
+
+    mutate(() => getAllPrograms(fetcherInstance.fetcher))
+  }
+
+  watch(fetcher, () => {
+    reload()
+  })
 
   return {
     program,

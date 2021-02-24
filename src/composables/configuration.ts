@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import useSWRV from 'swrv'
 
 import { useFetcher } from './fetcher'
@@ -15,6 +15,8 @@ export function useConfiguration() {
   })
 
   const configuration = computed<string | undefined>(() => {
+    console.log('computed property configuration', error.value, data.value)
+
     if (error.value || data.value === undefined)
       return undefined
 
@@ -24,8 +26,16 @@ export function useConfiguration() {
   const isLoading = computed(() => data.value === undefined)
 
   function reload() {
-    mutate(getConfiguration)
+    const fetcherInstance = fetcher.value
+    if (fetcherInstance === null)
+      return
+
+    mutate(() => getConfiguration(fetcherInstance.fetcher))
   }
+
+  watch(fetcher, () => {
+    reload()
+  })
 
   return {
     configuration,
