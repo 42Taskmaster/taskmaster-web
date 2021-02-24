@@ -11,12 +11,15 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { i18n } from './modules/i18n'
 
+import { useSidebarProvider } from './composables/sidebar'
+import { i18n } from './modules/i18n'
 import { useFetcherProvider } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
+    useSidebarProvider()
+
     const { fetcher, setFetcher } = useFetcherProvider()
 
     onMounted(async() => {
