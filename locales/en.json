@@ -4,9 +4,7 @@
     "close": "Close",
     "save": "Save",
     "edit": "Edit",
-    "cancel": "Cancel",
-    "open-sidebar": "Open sidebar",
-    "close-sidebar": "Close sidebar"
+    "cancel": "Cancel"
   },
 
   "error_occured": "An error occured",

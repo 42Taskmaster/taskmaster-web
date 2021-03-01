@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col w-full h-full min-h-screen">
     <header class="flex items-stretch bg-white shadow">
-      <button class="px-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden" @click="toggleIsOpen">
+      <button class="px-8 text-gray-500 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden" @click="toggleIsOpen">
         <span class="sr-only">
-          {{ t('button.open-sidebar') }}
+          {{ t('open-sidebar') }}
         </span>
         <!-- Heroicon name: outline/menu-alt-2 -->
         <svg
@@ -69,3 +69,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<i18n>
+{
+  "en": {
+    "open-sidebar": "Open sidebar",
+  },
+
+  "fr": {
+    "open-sidebar": "Ouvrir le menu",
+  }
+}
+</i18n>

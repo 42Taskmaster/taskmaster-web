@@ -22,6 +22,10 @@ export function useSidebarProvider() {
   provide<SidebarIsOpenProvided>(SidebarIsOpenSymbol, readonly(isOpen))
   provide<SidebarToggleIsOpenProvided>(SidebarToggleIsOpenSymbol, toggleIsOpen)
   provide<SidebarSetIsOpenProvided>(SidebarSetIsOpenSymbol, setIsOpen)
+
+  return {
+    setIsOpen
+  }
 }
 
 export function useSidebar() {

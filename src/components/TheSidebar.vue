@@ -48,7 +48,7 @@
             <div class="absolute top-0 right-0 pt-2 -mr-12">
               <button class="flex items-center justify-center w-10 h-10 ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="closeSidebar">
                 <span class="sr-only">
-                  {{ t('button.close-sidebar') }}
+                  {{ t('close-sidebar') }}
                 </span>
                 <!-- Heroicon name: outline/x -->
                 <svg
@@ -108,3 +108,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<i18n>
+{
+  "en": {
+    "close-sidebar": "Close sidebar"
+  },
+
+  "fr": {
+    "close-sidebar": "Fermer le menu"
+  }
+}
+</i18n>

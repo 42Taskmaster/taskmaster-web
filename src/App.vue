@@ -18,7 +18,7 @@ import { useFetcherProvider } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
-    useSidebarProvider()
+    const { setIsOpen } = useSidebarProvider()
 
     const { fetcher, setFetcher } = useFetcherProvider()
 
@@ -38,6 +38,11 @@ export default defineComponent({
     })
 
     const router = useRouter()
+
+    router.beforeEach((to, from, next) => {
+      setIsOpen(false)
+      next()
+    })
 
     const isHomepage = computed(() => {
       return router.currentRoute.value.path === '/'

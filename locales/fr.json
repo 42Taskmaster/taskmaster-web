@@ -4,9 +4,7 @@
     "close": "Fermer",
     "save": "Enregister",
     "edit": "Modifier",
-    "cancel": "Annuler",
-    "open-sidebar": "Ouvrir le menu",
-    "close-sidebar": "Fermer le menu"
+    "cancel": "Annuler"
   },
 
   "error_occured": "Une erreur est survenue",
