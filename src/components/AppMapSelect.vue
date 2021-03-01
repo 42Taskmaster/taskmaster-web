@@ -13,7 +13,7 @@ export default defineComponent({
 
     modelValue: {
       type: Object,
-      required: true,
+      default: undefined,
     },
 
     placeholderNewKey: {
@@ -32,7 +32,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const { t } = useI18n()
 
-    const map = computed(() => props.modelValue)
+    const map = computed(() => props.modelValue ?? {})
 
     const items = computed<KeyValueObject[]>(
       () => Object.entries(map.value).map(
