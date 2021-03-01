@@ -11,12 +11,15 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { i18n } from './modules/i18n'
 
+import { useSidebarProvider } from './composables/sidebar'
+import { i18n } from './modules/i18n'
 import { useFetcherProvider } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
+    const { setIsOpen } = useSidebarProvider()
+
     const { fetcher, setFetcher } = useFetcherProvider()
 
     onMounted(async() => {
@@ -35,6 +38,11 @@ export default defineComponent({
     })
 
     const router = useRouter()
+
+    router.beforeEach((to, from, next) => {
+      setIsOpen(false)
+      next()
+    })
 
     const isHomepage = computed(() => {
       return router.currentRoute.value.path === '/'

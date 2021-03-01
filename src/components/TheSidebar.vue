@@ -1,88 +1,109 @@
 <template>
-  <div class="h-full bg-white border-r border-solid w-80">
-    <div class="flex flex-col justify-between h-full">
-      <div class="flex flex-col">
-        <div class="p-4 mt-5 text-2xl font-bold text-center">
-          <span class="text-3xl"><span class="inline-block text-gray-600">></span>T</span>ASKMASTER
-        </div>
-        <div class="p-3">
-          <div v-for="link in links" :key="link.title">
-            <router-link
-              :to="link.url"
-              v-bind="link.url === '/' ? { exactActiveClass: 'bg-gray-100' } : { activeClass: 'bg-gray-100' }"
-              class="block py-2.5 pl-5 my-1 rounded-lg sidebar-link hover:bg-gray-100 text-gray-700 font-semibold"
-            >
-              <div class="flex items-center e">
-                <component :is="link.icon" class="text-lg" />
-                <div class="ml-4">
-                  {{ link.title }}
-                </div>
-              </div>
-            </router-link>
-          </div>
-        </div>
-      </div>
-      <div class="flex mb-5 text-2xl justify-evenly">
-        <button class="mx-2 icon-btn focus:outline-none" :title="t('button.toggle_lang')" @click="toggleLocales">
-          <carbon-language />
-        </button>
+  <transition :duration="300">
+    <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+    <div v-show="isOpen" class="md:hidden">
+      <div class="fixed inset-0 z-40 flex">
+        <!--
+          Off-canvas menu overlay, show/hide based on off-canvas menu state.
 
-        <a class="mx-2 icon-btn" rel="noreferrer" href="https://github.com/42Taskmaster" target="_blank" title="GitHub">
-          <carbon-logo-github />
-        </a>
+          Entering: "transition-opacity ease-linear duration-300"
+            From: "opacity-0"
+            To: "opacity-100"
+          Leaving: "transition-opacity ease-linear duration-300"
+            From: "opacity-100"
+            To: "opacity-0"
+        -->
+        <transition
+          enter-active-class="transition-opacity duration-300 ease-linear"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition-opacity duration-300 ease-linear"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <div v-show="isOpen" class="fixed inset-0" aria-hidden="true" @click="closeSidebar">
+            <div class="absolute inset-0 bg-gray-600 opacity-75" />
+          </div>
+        </transition>
+
+        <!--
+          Off-canvas menu, show/hide based on off-canvas menu state.
+
+          Entering: "transition ease-in-out duration-300 transform"
+            From: "-translate-x-full"
+            To: "translate-x-0"
+          Leaving: "transition ease-in-out duration-300 transform"
+            From: "translate-x-0"
+            To: "-translate-x-full"
+        -->
+        <transition
+          enter-active-class="transition duration-300 ease-in-out transform"
+          enter-from-class="-translate-x-full"
+          enter-to-class="translate-x-0"
+          leave-active-class="transition duration-300 ease-in-out transform"
+          leave-from-class="translate-x-0"
+          leave-to-class="-translate-x-full"
+        >
+          <div v-show="isOpen" class="relative flex flex-col flex-1 w-full max-w-xs">
+            <div class="absolute top-0 right-0 pt-2 -mr-12">
+              <button class="flex items-center justify-center w-10 h-10 ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="closeSidebar">
+                <span class="sr-only">
+                  {{ t('close-sidebar') }}
+                </span>
+                <!-- Heroicon name: outline/x -->
+                <svg
+                  class="w-6 h-6 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <TheSidebarCore />
+          </div>
+        </transition>
+
+        <div class="flex-shrink-0 w-14" aria-hidden="true">
+          <!-- Dummy element to force sidebar to shrink to fit close icon -->
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
+
+  <TheSidebarCore class="flex-shrink-0 hidden w-64 md:block" />
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { i18n } from '../modules/i18n'
+import { useEventListener } from '@vueuse/core'
 
-import ViewListIcon from '/@vite-icons/heroicons-outline/view-list.vue'
-import CogIcon from '/@vite-icons/heroicons-outline/cog.vue'
-import HomeIcon from '/@vite-icons/heroicons-outline/home.vue'
-import ClipboardListIcon from '/@vite-icons/heroicons-outline/clipboard-list.vue'
+import { useSidebar } from '/~/composables/sidebar'
 
 export default defineComponent({
   setup() {
     const { t } = useI18n()
 
-    const toggleLocales = () => {
-      i18n.global.locale.value = i18n.global.locale.value === 'en' ? 'fr' : 'en'
-      localStorage.setItem('locale', i18n.global.locale.value)
+    const { isOpen, setIsOpen } = useSidebar()
+
+    function closeSidebar() {
+      setIsOpen(false)
     }
 
-    const links = computed(() => {
-      return [
-        {
-          icon: HomeIcon,
-          title: t('dashboard'),
-          url: '/',
-        },
-        {
-          icon: ViewListIcon,
-          title: t('programs'),
-          url: '/programs',
-        },
-        {
-          icon: CogIcon,
-          title: t('configuration'),
-          url: '/configuration',
-        },
-        {
-          icon: ClipboardListIcon,
-          title: t('logs'),
-          url: '/logs',
-        },
-      ]
+    useEventListener(window, 'keydown', ({ key }) => {
+      if (key === 'Escape')
+        closeSidebar()
     })
 
     return {
       t,
-      toggleLocales,
-      links,
+      isOpen,
+      closeSidebar,
     }
   },
 })
@@ -91,25 +112,11 @@ export default defineComponent({
 <i18n>
 {
   "en": {
-    "dashboard": "Home",
-    "programs": "Programs",
-    "configuration": "Configuration",
-    "logs": "Logs",
-
-    "button": {
-      "toggle_lang": "Toggle language",
-    },
+    "close-sidebar": "Close sidebar"
   },
 
   "fr": {
-    "dashboard": "Accueil",
-    "programs": "Programmes",
-    "configuration": "Configuration",
-    "logs": "Logs",
-
-    "button": {
-      "toggle_lang": "Changer de langue",
-    },
+    "close-sidebar": "Fermer le menu"
   }
 }
 </i18n>
