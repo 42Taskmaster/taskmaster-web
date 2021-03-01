@@ -99,7 +99,7 @@ export default defineComponent({
         if (data.error !== undefined)
           showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
         else
-          router.push(`/programs/${program.value.id}?saved`)
+          router.push(`/programs/${program.value.configuration.name}?saved`)
       }
     }
 
