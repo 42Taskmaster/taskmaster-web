@@ -92,7 +92,7 @@ export default defineComponent({
 
     async function saveProgram() {
       if (fetcher.value && program.value) {
-        const { data } = await fetcher.value.fetcher.put('/programs', {
+        const { data } = await fetcher.value.fetcher.post('/programs/edit', {
           id: program.value.id,
           configuration: program.value.configuration,
         })
@@ -104,11 +104,10 @@ export default defineComponent({
     }
 
     async function deleteProgram() {
+      if (!confirm(t('delete_confirm')))
+        return
       if (fetcher.value && program.value) {
-        const { data } = await fetcher.value.fetcher.post('/programs', {
-          action: 'DELETE',
-          id: program.value.id,
-        })
+        const { data } = await fetcher.value.fetcher.post('/programs/delete', { id: program.value.id })
         if (data.error !== undefined)
           showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
         else

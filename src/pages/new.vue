@@ -70,10 +70,7 @@ export default defineComponent({
 
     async function saveProgram() {
       if (fetcher.value !== undefined && fetcher.value !== null) {
-        const { data } = await fetcher.value.fetcher.post('/programs', {
-          action: 'CREATE',
-          configuration: configuration.value,
-        })
+        const { data } = await fetcher.value.fetcher.post('/programs/create', configuration.value)
         if (data.error !== undefined)
           showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
         else
