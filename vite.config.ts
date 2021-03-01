@@ -104,6 +104,12 @@ export default defineConfig({
       'vue',
       'vue-router',
       '@vueuse/core',
+      'swrv',
+      'xstate',
+      '@xstate/vue',
+      'vue3-ace-editor',
+      'ace-builds/src-noconflict/mode-yaml',
+      'ace-builds/src-noconflict/theme-chrome',
     ],
     exclude: [
       'vue-demi',
