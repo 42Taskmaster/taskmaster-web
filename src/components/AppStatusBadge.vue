@@ -19,7 +19,7 @@ export default defineComponent({
       default: false,
     },
     status: {
-      type: Object as PropType<ProgramState>,
+      type: String as PropType<ProgramState>,
       default: ProgramState.UNKNOWN,
       validator: (status: ProgramState): status is ProgramState => Reflect.has(ProgramState, status),
     },

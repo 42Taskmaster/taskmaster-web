@@ -9,7 +9,7 @@
     </template>
 
     <template #actions>
-      <AppButton :color="allProgramsAreStopped ? 'green' : ''" @click="startPrograms">
+      <AppButton :color="allProgramsAreStopped ? 'green' : 'white'" @click="startPrograms">
         <heroicons-outline-arrow-circle-up class="mr-1" />
         {{ allProgramsAreStopped ? t('start_all') : t('restart_all') }}
       </AppButton>
