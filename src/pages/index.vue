@@ -1,42 +1,58 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-full p-4 text-center bg-white">
-    <span class="px-5 py-2 mb-10 text-2xl border-b">
-      {{ t("welcome") }}
-    </span>
-    <span class="mb-10">Status :
-      <i :class="[statusClass]">
-        {{ statusLabel }}
-      </i>
-    </span>
+  <AppLayout class="w-full">
+    <template #title>
+      {{ t('home') }}
+    </template>
 
-    <template v-if="!connected">
-      <div class="flex mb-10 border-b border-solid w-96">
-        <heroicons-outline-link class="mt-0.5 ml-1 mr-2 text-xl text-gray-500" />
-        <input
-          v-model="apiUrl"
-          class="w-full mb-2 bg-white bg-opacity-0 outline-none"
-          :placeholder="t('taskmaster_url')"
-          required
-          :disabled="tryingToConnectTo !== '' || connected"
-        >
-      </div>
-      <AppButton :disabled="tryingToConnectTo !== '' || connected" @click="connect">
-        <heroicons-outline-arrow-circle-right class="mr-1" />
-        {{ t('connect') }}
+    <template #actions>
+      <AppButton v-for="{text, action} in actions" :key="text" size="large" @click="action">
+        {{ text }}
       </AppButton>
     </template>
 
-    <div v-else class="flex gap-4">
-      <AppButton @click="disconnect">
-        <heroicons-outline-arrow-circle-left class="mr-1" />
-        {{ t('disconnect') }}
-      </AppButton>
-      <AppButton color="red" @click="shutdown">
-        <heroicons-outline-x-circle class="mr-1" />
-        {{ t('shutdown') }}
-      </AppButton>
+    <h2 class="text-xl font-medium leading-6 text-gray-900">
+      {{ t('heading') }}
+    </h2>
+
+    <div class="mt-2 p-10 flex flex-col justify-center items-center text-center bg-white rounded-lg shadow">
+      <span class="mb-10"><span class="font-semibold text-lg">Status : </span>
+        <AppBadge
+          :class="statusClass"
+          class="text-white text-md"
+        >
+          {{ statusLabel }}
+        </AppBadge>
+      </span>
+
+      <template v-if="!connected">
+        <div class="flex mb-10 border-b border-solid w-96">
+          <heroicons-outline-link class="mt-0.5 ml-1 mr-2 text-xl text-gray-500" />
+          <input
+            v-model="apiUrl"
+            class="w-full mb-2 bg-white bg-opacity-0 outline-none"
+            :placeholder="t('taskmaster_url')"
+            required
+            :disabled="tryingToConnectTo !== '' || connected"
+          >
+        </div>
+        <AppButton :disabled="tryingToConnectTo !== '' || connected" @click="connect">
+          <heroicons-outline-arrow-circle-right class="mr-1" />
+          {{ t('connect') }}
+        </AppButton>
+      </template>
+
+      <div v-else class="flex gap-4">
+        <AppButton @click="disconnect">
+          <heroicons-outline-arrow-circle-left class="mr-1" />
+          {{ t('disconnect') }}
+        </AppButton>
+        <AppButton color="red" @click="shutdown">
+          <heroicons-outline-x-circle class="mr-1" />
+          {{ t('shutdown') }}
+        </AppButton>
+      </div>
     </div>
-  </div>
+  </AppLayout>
 </template>
 
 <script lang="ts">
@@ -63,22 +79,22 @@ export default defineComponent({
 
     const statusLabel = computed(() => {
       if (connected.value)
-        return `${t('connected_to')} ${fetcher.value?.url}`
+        return `${t('connected_to')} '${fetcher.value?.url}'`
       else if (tryingToConnectTo.value !== '')
-        return `${t('connecting_to')} ${tryingToConnectTo.value}`
+        return `${t('connecting_to')} '${tryingToConnectTo.value}'`
       else if (failedToConnectTo.value !== '')
-        return `${t('could_not_connect_to')} ${failedToConnectTo.value}`
+        return `${t('could_not_connect_to')} '${failedToConnectTo.value}'`
 
       return t('not_connected')
     })
 
     const statusClass = computed(() => {
       if (tryingToConnectTo.value !== '')
-        return 'text-blue-500'
+        return 'bg-blue-500'
       else if (connected.value)
-        return 'text-green-500'
+        return 'bg-green-500'
 
-      return 'text-red-500'
+      return 'bg-red-500'
     })
 
     async function connect() {
@@ -124,11 +140,11 @@ export default defineComponent({
 <i18n>
 {
   "en": {
-    "welcome": "Welcome to our Taskmaster's Web UI",
-    "not_connected": "currently not connected",
-    "connecting_to": "connecting to",
-    "connected_to": "connected to",
-    "could_not_connect_to": "could not connect to",
+    "heading": "Taskmaster's API connection",
+    "not_connected": "Currently not connected",
+    "connecting_to": "Connecting to",
+    "connected_to": "Connected to",
+    "could_not_connect_to": "Could not connect to",
     "taskmaster_url": "http://localhost:8080",
     "connect": "Connect",
     "disconnect": "Disconnect",
@@ -136,11 +152,11 @@ export default defineComponent({
   },
 
   "fr": {
-    "welcome": "Bienvenue sur l'interface Web de notre Taskmaster",
-    "not_connected": "non connecté",
-    "connecting_to": "connexion à",
-    "connected_to": "connecté à",
-    "could_not_connect_to": "erreur de connexion à",
+    "heading": "Connexion à l'API du Taskmaster",
+    "not_connected": "Non connecté",
+    "connecting_to": "Connexion à",
+    "connected_to": "Connecté à",
+    "could_not_connect_to": "Erreur de connexion à",
     "taskmaster_url": "http://localhost:8080",
     "connect": "Se connecter",
     "disconnect": "Se déconnecter",

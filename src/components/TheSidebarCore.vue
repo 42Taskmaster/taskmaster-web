@@ -61,7 +61,7 @@ export default defineComponent({
       return [
         {
           icon: HomeIcon,
-          title: t('dashboard'),
+          title: t('home'),
           url: '/',
         },
         {
@@ -96,7 +96,6 @@ export default defineComponent({
 <i18n>
 {
   "en": {
-    "dashboard": "Home",
     "programs": "Programs",
     "configuration": "Configuration",
     "logs": "Logs",
@@ -107,7 +106,6 @@ export default defineComponent({
   },
 
   "fr": {
-    "dashboard": "Accueil",
     "programs": "Programmes",
     "configuration": "Configuration",
     "logs": "Logs",
