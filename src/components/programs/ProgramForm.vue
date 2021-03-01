@@ -34,6 +34,8 @@
       :title="t('workingdir')"
     />
 
+    <AppToggleInput v-model="configurationWritable.autostart" :title="t('autostart')" />
+
     <AppSelect v-model="configurationWritable.autorestart" :title="t('autorestart.label')" :options="AutorestartOptions" />
 
     <AppListSelect v-model="configurationWritable.exitcodes" :label="t('exitcodes')" :placeholder-new-value="t('new_exitcode')" :min="0" :max="255" />
