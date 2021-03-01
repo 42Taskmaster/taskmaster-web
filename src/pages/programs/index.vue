@@ -90,6 +90,7 @@ import MenuIcon from '/@vite-icons/heroicons-outline/menu.vue'
 import { Alert, AlertType } from '/~/types/index'
 
 import { useRouter } from 'vue-router'
+import { useFetcher } from '/~/composables/fetcher'
 export default defineComponent({
   components: {
     ViewGridIcon,
@@ -139,6 +140,42 @@ export default defineComponent({
     else if (router.currentRoute.value.query.deleted !== undefined)
       showAlert(AlertType.SUCCESS, t('program_deleted'))
 
+    const fetcher = useFetcher()
+
+    async function startPrograms() {
+      if (!allProgramsAreStopped.value) {
+        restartPrograms()
+        return
+      }
+      if (fetcher.value !== undefined && fetcher.value !== null) {
+        const { data } = await fetcher.value.fetcher.post('/start/all')
+        if (data.error !== undefined)
+          showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
+        else
+          showAlert(AlertType.SUCCESS, `${t('started_all_programs')}`)
+      }
+    }
+
+    async function stopPrograms() {
+      if (fetcher.value !== undefined && fetcher.value !== null) {
+        const { data } = await fetcher.value.fetcher.post('/stop/all')
+        if (data.error !== undefined)
+          showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
+        else
+          showAlert(AlertType.SUCCESS, `${t('stopped_all_programs')}`)
+      }
+    }
+
+    async function restartPrograms() {
+      if (fetcher.value !== undefined && fetcher.value !== null) {
+        const { data } = await fetcher.value.fetcher.post('/restart/all')
+        if (data.error !== undefined)
+          showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
+        else
+          showAlert(AlertType.SUCCESS, `${t('restarted_all_programs')}`)
+      }
+    }
+
     return {
       t,
 
@@ -155,6 +192,10 @@ export default defineComponent({
 
       gridMode,
       toggleLayout,
+
+      startPrograms,
+      stopPrograms,
+      restartPrograms,
     }
   },
 })
@@ -173,6 +214,9 @@ export default defineComponent({
     "add_a_program" : "Add a new program",
     "program_created": "New program successfully created.",
     "program_deleted": "The program has been deleted.",
+    "started_all_programs": "All programs have been started.",
+    "stopped_all_programs": "All programs have been stopped.",
+    "restarted_all_programs": "All programs have been restarted.",
   },
 
   "fr": {
@@ -186,6 +230,9 @@ export default defineComponent({
     "add_a_program" : "Ajouter un nouveau programme",
     "program_created": "Le nouveau programme a été créé avec succès.",
     "program_deleted": "Le programme a été supprimé.",
+    "started_all_programs": "Tous les programmes ont été démarrés.",
+    "stopped_all_programs": "Tous les programmes ont été arrêtés.",
+    "restarted_all_programs": "Tous les programmes ont été redémarrés.",
   }
 }
 </i18n>
