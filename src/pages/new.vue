@@ -19,7 +19,7 @@
     </AppAlert>
 
     <div class="pb-8">
-      <ProgramForm :configuration="configuration" />
+      <ProgramForm v-model:configuration="configuration" />
     </div>
   </AppLayout>
 </template>

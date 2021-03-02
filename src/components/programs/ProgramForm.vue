@@ -77,9 +77,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive } from 'vue'
+import { computed, defineComponent, PropType, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppSelectOption, ProgramConfiguration } from '/~/types/index'
+import { AppSelectOption, isProgramConfiguration, ProgramConfiguration } from '/~/types/index'
 
 export default defineComponent({
   props: {
@@ -89,10 +89,23 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  emits: {
+    'update:configuration': (configuration: ProgramConfiguration): configuration is ProgramConfiguration => {
+      return isProgramConfiguration(configuration)
+    },
+  },
+
+  setup(props, { emit }) {
     const { t } = useI18n()
 
-    const configurationWritable = reactive<ProgramConfiguration>(props.configuration)
+    const configurationWritable = reactive<ProgramConfiguration>(
+      { ...props.configuration },
+    )
+    watch(configurationWritable, (configurationWritable) => {
+      emit('update:configuration', configurationWritable)
+    }, {
+      deep: true,
+    })
 
     const SignalOptions: AppSelectOption[] = [
       { value: 'TERM', title: 'TERM' },
