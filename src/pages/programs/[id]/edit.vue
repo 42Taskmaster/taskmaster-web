@@ -31,19 +31,19 @@
         {{ alert.message }}
       </AppAlert>
 
-      <ProgramForm :configuration="program.configuration" />
+      <ProgramForm v-model:configuration="configuration" />
     </AppLayout>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, capitalize, ref } from 'vue'
+import { defineComponent, computed, capitalize, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useFetcher } from '/~/composables/fetcher'
 
 import { useProgram } from '/~/composables/programs'
-import { Alert, AlertType } from '/~/types/index'
+import { Alert, AlertType, ProgramConfiguration } from '/~/types/index'
 
 export default defineComponent({
   props: {
@@ -74,7 +74,14 @@ export default defineComponent({
 
     const router = useRouter()
 
+    const configuration = ref<ProgramConfiguration>()
+
     const { program, isLoading } = useProgram(props.id, false)
+    watch(program, (program) => {
+      configuration.value = program?.configuration
+    }, {
+      immediate: true,
+    })
 
     const programTitle = computed(() => {
       if (program.value === undefined)
@@ -91,16 +98,17 @@ export default defineComponent({
     })
 
     async function saveProgram() {
-      if (fetcher.value && program.value) {
-        const { data } = await fetcher.value.fetcher.post('/programs/edit', {
-          id: program.value.id,
-          configuration: program.value.configuration,
-        })
-        if (data.error !== undefined)
-          showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
-        else
-          router.push(`/programs/${program.value.configuration.name}?saved`)
-      }
+      if (!(fetcher.value && program.value && configuration.value))
+        return
+
+      const { data } = await fetcher.value.fetcher.post('/programs/edit', {
+        id: program.value.id,
+        configuration: configuration.value,
+      })
+      if (data.error !== undefined)
+        showAlert(AlertType.DANGER, `${t('error_occured')} : ${data.error}`)
+      else
+        router.push(`/programs/${configuration.value.name}?saved`)
     }
 
     async function deleteProgram() {
@@ -119,6 +127,7 @@ export default defineComponent({
       t,
       alert,
       closeAlert,
+      configuration,
       program,
       programTitle,
       programUrl,

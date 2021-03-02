@@ -82,6 +82,14 @@ export interface ProgramConfiguration {
   env: Record<string, string>
 }
 
+export function isProgramConfiguration(input: unknown): input is ProgramConfiguration {
+  return (
+    typeof input === 'object'
+    && input !== null
+    && typeof (input as ProgramConfiguration).name === 'string'
+  )
+}
+
 export interface Program {
   id: string
   state: ProgramState
