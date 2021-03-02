@@ -39,7 +39,7 @@ export default defineComponent({
   },
 
   "fr": {
-    "not_connected": "Vous n'êtes actuellement pas connécté à une API de Taskmaster.",
+    "not_connected": "Vous n'êtes actuellement pas connecté à une API de Taskmaster.",
     "please_go_to_homepage": "Veuillez vous rendre sur la page d'accueil pour renseigner une API.",
     "go_to_homepage": "Se rendre à la page d'accueil",
   }
