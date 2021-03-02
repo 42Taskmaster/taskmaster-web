@@ -4,18 +4,12 @@
       {{ t('home') }}
     </template>
 
-    <template #actions>
-      <AppButton v-for="{text, action} in actions" :key="text" size="large" @click="action">
-        {{ text }}
-      </AppButton>
-    </template>
-
     <h2 class="text-xl font-medium leading-6 text-gray-900">
       {{ t('heading') }}
     </h2>
 
-    <div class="mt-2 p-10 flex flex-col justify-center items-center text-center bg-white rounded-lg shadow">
-      <span class="mb-10"><span class="font-semibold text-lg">Status : </span>
+    <div class="flex flex-col items-center justify-center p-10 mt-2 text-center bg-white rounded-lg shadow">
+      <span class="mb-10"><span class="text-lg font-semibold">Status : </span>
         <AppBadge
           :class="statusClass"
           class="text-white text-md"
