@@ -59,12 +59,16 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
     [ProgramState.STARTING]: {
       meta: {
         actions: [
+          AvailableAction.restart,
           AvailableAction.stop,
           AvailableAction.edit,
         ],
       },
 
       on: {
+        [AvailableAction.restart]: {
+          actions: ProgramMachineActions.RESTART,
+        },
         [AvailableAction.stop]: {
           actions: ProgramMachineActions.STOP,
         },
