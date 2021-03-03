@@ -12,6 +12,8 @@ export function useLogs() {
       throw new Error('Invalid fetcher')
 
     return await getLogs(fetcher.value.fetcher)
+  }, {
+    refreshInterval: 1_000,
   })
 
   const logs = computed<string | undefined>(() => {
