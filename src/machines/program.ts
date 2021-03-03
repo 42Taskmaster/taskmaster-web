@@ -122,7 +122,7 @@ export const programMachine = Machine<ProgramMachineContext, ProgramMachineState
         [AvailableAction.start]: {
           actions: ProgramMachineActions.START,
         },
-        [AvailableAction.EDIT]: {
+        [AvailableAction.edit]: {
           actions: ProgramMachineActions.EDIT,
         },
       },
