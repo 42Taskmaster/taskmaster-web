@@ -1,17 +1,10 @@
 <template>
-  <AppLayout>
+  <AppLayout :actions="layoutActions">
     <template #title>
       <router-link to="/programs" :title="t('button.back')">
-        <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
+        <heroicons-outline-arrow-left class="inline mr-4 text-gray-500 hover:text-gray-700" />
       </router-link>
       {{ t('add_new_program') }}
-    </template>
-
-    <template #actions>
-      <AppButton size="large" color="green" @click="saveProgram">
-        <heroicons-outline-plus-circle class="mr-2" />
-        {{ t('button.save') }}
-      </AppButton>
     </template>
 
     <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
@@ -25,11 +18,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { Alert, AlertType, ProgramConfiguration } from '../types/index'
-import { useFetcher } from '../composables/fetcher'
+import PlusCircleIcon from '/@vite-icons/heroicons-outline/plus-circle.vue'
+
+import { Alert, AlertType, ProgramConfiguration, ActionOptions, AppButtonColors, AppButtonSize } from '/~/types/index'
+import { useFetcher } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
@@ -78,6 +73,16 @@ export default defineComponent({
       }
     }
 
+    const layoutActions = computed<ActionOptions[]>(() => [
+      {
+        size: AppButtonSize.large,
+        color: AppButtonColors.green,
+        icon: PlusCircleIcon,
+        text: t('button.save'),
+        onClick: saveProgram,
+      },
+    ])
+
     return {
       t,
 
@@ -87,6 +92,8 @@ export default defineComponent({
       closeAlert,
 
       saveProgram,
+
+      layoutActions,
     }
   },
 })

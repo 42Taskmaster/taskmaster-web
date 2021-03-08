@@ -14,24 +14,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue'
+import { AppButtonColors, AppButtonSize, AppButtonStyle } from '/~/types/index'
 
-type Style = 'primary' | 'secondary' | 'outlined'
-
-enum Colors {
-  white = 'white',
-  red = 'red',
-  green = 'green',
-}
-
-type ColorClasses = Record<Colors, string>
-
-enum Size {
-  'x-small' = 'x-small',
-  'small' = 'small',
-  'base' = 'base',
-  'large' = 'large',
-  'x-large' = 'x-large',
-}
+type ColorClasses = Record<AppButtonColors, string>
 
 export default defineComponent({
   props: {
@@ -51,15 +36,15 @@ export default defineComponent({
     },
 
     color: {
-      type: String as PropType<Colors>,
-      default: Colors.white,
-      validator: (color: string): color is Colors => Reflect.has(Colors, color),
+      type: String as PropType<AppButtonColors>,
+      default: AppButtonColors.white,
+      validator: (color: string): color is AppButtonColors => Reflect.has(AppButtonColors, color),
     },
 
     size: {
-      type: String as PropType<Size>,
+      type: String as PropType<AppButtonSize>,
       default: 'base',
-      validator: (size: string): size is Size => Reflect.has(Size, size),
+      validator: (size: string): size is AppButtonSize => Reflect.has(AppButtonSize, size),
     },
 
     disabled: {
@@ -69,7 +54,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const buttonStyle = computed<Style>(() => {
+    const buttonStyle = computed<AppButtonStyle>(() => {
       switch (true) {
         case props.primary:
           return 'primary'
@@ -81,7 +66,7 @@ export default defineComponent({
     })
 
     const buttonStyleClasses = computed<ColorClasses>(() => {
-      const classes = new Map<Style, ColorClasses>([
+      const classes = new Map<AppButtonStyle, ColorClasses>([
         [
           'primary',
           {
@@ -116,25 +101,25 @@ export default defineComponent({
     })
 
     const sizeClasses = computed<string>(() => {
-      const classes = new Map<Size, string>([
+      const classes = new Map<AppButtonSize, string>([
         [
-          Size['x-small'],
+          AppButtonSize['x-small'],
           'px-2.5 py-1.5 text-xs font-medium',
         ],
         [
-          Size.small,
+          AppButtonSize.small,
           'px-3 py-2 text-sm leading-4 font-medium',
         ],
         [
-          Size.base,
+          AppButtonSize.base,
           'px-4 py-2 text-sm font-medium',
         ],
         [
-          Size.large,
+          AppButtonSize.large,
           'px-4 py-2 text-base font-medium',
         ],
         [
-          Size['x-large'],
+          AppButtonSize['x-large'],
           'px-6 py-3 text-base font-medium',
         ],
       ])
@@ -153,25 +138,25 @@ export default defineComponent({
     })
 
     const iconClasses = computed(() => {
-      const classes = new Map<Size, string>([
+      const classes = new Map<AppButtonSize, string>([
         [
-          Size['x-small'],
+          AppButtonSize['x-small'],
           '-ml-0.5 mr-2 h-4 w-4',
         ],
         [
-          Size.small,
+          AppButtonSize.small,
           '-ml-1 mr-2 h-5 w-5',
         ],
         [
-          Size.base,
+          AppButtonSize.base,
           '-ml-1 mr-2 h-5 w-5',
         ],
         [
-          Size.large,
+          AppButtonSize.large,
           '-ml-1 mr-3 h-5 w-5',
         ],
         [
-          Size['x-large'],
+          AppButtonSize['x-large'],
           '-ml-1 mr-3 h-5 w-5',
         ],
       ])

@@ -196,3 +196,36 @@ export function isKeyValueObject(input: unknown): input is KeyValueObject {
     && Reflect.has(input as KeyValueObject, 'value')
   )
 }
+
+export type AppButtonStyle = 'primary' | 'secondary' | 'outlined'
+
+export enum AppButtonColors {
+  white = 'white',
+  red = 'red',
+  green = 'green',
+}
+
+export enum AppButtonSize {
+  'x-small' = 'x-small',
+  'small' = 'small',
+  'base' = 'base',
+  'large' = 'large',
+  'x-large' = 'x-large',
+}
+
+export interface ActionOptions {
+  text: string
+  icon?: string
+  size?: AppButtonSize
+  color?: AppButtonColors
+  disabled?: boolean
+  onClick: () => void
+}
+
+export function isActionOptions(input: unknown): input is ActionOptions {
+  return (
+    typeof input === 'object'
+    && input !== null
+    && typeof (input as ActionOptions).text === 'string'
+  )
+}

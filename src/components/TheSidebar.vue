@@ -46,7 +46,7 @@
         >
           <div v-show="isOpen" class="relative flex flex-col flex-1 w-full max-w-xs">
             <div class="absolute top-0 right-0 pt-2 -mr-12">
-              <button class="flex items-center justify-center w-10 h-10 ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="closeSidebar">
+              <button v-show="isOpen" class="flex items-center justify-center w-10 h-10 ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="closeSidebar">
                 <span class="sr-only">
                   {{ t('close-sidebar') }}
                 </span>

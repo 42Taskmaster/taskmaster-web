@@ -1,4 +1,5 @@
 dependencies:
+  '@headlessui/vue': 0.3.0_vue@3.0.5
   '@tailwindcss/forms': 0.2.1
   '@vueuse/core': 4.2.2_vue@3.0.5
   '@vueuse/head': 0.2.3_vue@3.0.5
@@ -1263,6 +1264,16 @@ packages:
     dev: true
     resolution:
       integrity: sha512-tAag0jEcjwH+P2quUfipd7liWCNX2F8NvYjQp2wtInsZxnMlypdw0FtAOLxtvvkO+GSRRbmNi8m/5y42PQJYCQ==
+  /@headlessui/vue/0.3.0_vue@3.0.5:
+    dependencies:
+      vue: 3.0.5
+    dev: false
+    engines:
+      node: '>=10'
+    peerDependencies:
+      vue: ^3.0.0-rc.13
+    resolution:
+      integrity: sha512-sNyfy1YTRTcertrsK14ZekEoIddbDxipoUw/VyO5DPGtHGo1kuozbSYi2WlU3MccDOwCv5pQc41koh4+bcnkmQ==
   /@iconify/json-tools/1.0.10:
     dev: true
     resolution:
@@ -1393,7 +1404,7 @@ packages:
     dependencies:
       '@nodelib/fs.stat': 2.0.4
       '@nodelib/fs.walk': 1.2.6
-      glob-parent: 5.1.1
+      glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.2
       picomatch: 2.2.2
@@ -3510,6 +3521,14 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-FnI+VGOpnlGHWZxthPGR+QhR78fuiK0sNLkHQv+bL9fQi57lNNdquIbna/WrfROrolq8GK5Ek6BiMwqL/voRYQ==
+  /glob-parent/5.1.2:
+    dependencies:
+      is-glob: 4.0.1
+    dev: true
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
   /glob-to-regexp/0.4.1:
     dev: true
     resolution:
@@ -6833,6 +6852,7 @@ specifiers:
   '@antfu/eslint-config': ^0.4.3
   '@commitlint/cli': ^11.0.0
   '@commitlint/config-conventional': ^11.0.0
+  '@headlessui/vue': ^0.3.0
   '@iconify/json': ^1.1.308
   '@intlify/vite-plugin-vue-i18n': ^1.0.0-beta.17
   '@tailwindcss/forms': ^0.2.1

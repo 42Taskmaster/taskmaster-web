@@ -8,23 +8,12 @@
       {{ t('program_unknown') }}
     </AppAlert>
 
-    <AppLayout v-else>
+    <AppLayout v-else :actions="layoutActions">
       <template #title>
         <router-link :to="programUrl" :title="t('button.back')">
-          <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
+          <heroicons-outline-arrow-left class="inline mr-4 text-gray-500 hover:text-gray-700" />
         </router-link>
         {{ t('editing') }} {{ program.id }}
-      </template>
-
-      <template #actions>
-        <AppButton size="large" color="green" @click="saveProgram">
-          <heroicons-outline-save class="mr-2" />
-          {{ t('save') }}
-        </AppButton>
-        <AppButton size="large" color="red" @click="deleteProgram">
-          <heroicons-outline-trash class="mr-2" />
-          {{ t('delete') }}
-        </AppButton>
       </template>
 
       <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
@@ -40,10 +29,12 @@
 import { defineComponent, computed, capitalize, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useFetcher } from '/~/composables/fetcher'
+import SaveIcon from '/@vite-icons/heroicons-outline/save.vue'
+import TrashIcon from '/@vite-icons/heroicons-outline/trash.vue'
 
+import { useFetcher } from '/~/composables/fetcher'
 import { useProgram } from '/~/composables/programs'
-import { Alert, AlertType, ProgramConfiguration } from '/~/types/index'
+import { Alert, AlertType, ProgramConfiguration, ActionOptions, AppButtonColors } from '/~/types/index'
 
 export default defineComponent({
   props: {
@@ -123,17 +114,37 @@ export default defineComponent({
       }
     }
 
+    const layoutActions = computed<ActionOptions[]>(() => [
+      {
+        color: AppButtonColors.green,
+        icon: SaveIcon,
+        text: t('save'),
+        onClick: saveProgram,
+      },
+      {
+        color: AppButtonColors.red,
+        icon: TrashIcon,
+        text: t('delete'),
+        onClick: deleteProgram,
+      },
+    ])
+
     return {
       t,
+
       alert,
       closeAlert,
+
       configuration,
+
       program,
       programTitle,
       programUrl,
       isLoading,
       saveProgram,
       deleteProgram,
+
+      layoutActions,
     }
   },
 })

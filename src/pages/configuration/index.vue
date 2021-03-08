@@ -3,28 +3,9 @@
     <AppLoadingOverlay />
   </div>
 
-  <AppLayout>
+  <AppLayout :actions="layoutActions">
     <template #title>
       Configuration
-    </template>
-
-    <template #actions>
-      <AppButton v-if="!editing" @click="startEditing">
-        <heroicons-outline-pencil class="mr-2" />
-        {{ t('button.edit') }}
-      </AppButton>
-      <template
-        v-else
-      >
-        <AppButton color="green" outlined="false" class="mr-2" @click="saveEditing">
-          <heroicons-outline-save class="mr-2" />
-          {{ t('button.save') }}
-        </AppButton>
-        <AppButton color="red" @click="cancelEditing">
-          <heroicons-outline-x class="mr-2" />
-          {{ t('button.cancel') }}
-        </AppButton>
-      </template>
     </template>
 
     <div class="flex flex-col h-full">
@@ -65,15 +46,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref } from 'vue'
+import { defineComponent, watch, ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { VAceEditor } from 'vue3-ace-editor'
 import 'ace-builds/src-noconflict/mode-yaml'
 import 'ace-builds/src-noconflict/theme-chrome'
+import SaveIcon from '/@vite-icons/heroicons-outline/save.vue'
+import XIcon from '/@vite-icons/heroicons-outline/x.vue'
+import PencilIcon from '/@vite-icons/heroicons-outline/pencil.vue'
 
 import { putConfiguration } from '/~/api/configuration'
 import { useConfiguration } from '/~/composables/configuration'
-import { useI18n } from 'vue-i18n'
-import { Alert, AlertType } from '/~/types/index'
+import { Alert, AlertType, ActionOptions, AppButtonColors } from '/~/types/index'
 import { useFetcher } from '/~/composables/fetcher'
 
 export default defineComponent({
@@ -146,6 +130,27 @@ export default defineComponent({
       }
     }
 
+    const layoutActions = computed<ActionOptions[]>(() => editing.value === true ? [
+      {
+        color: AppButtonColors.green,
+        icon: SaveIcon,
+        text: t('button.save'),
+        onClick: saveEditing,
+      },
+      {
+        color: AppButtonColors.red,
+        icon: XIcon,
+        text: t('button.cancel'),
+        onClick: cancelEditing,
+      },
+    ] : [
+      {
+        icon: PencilIcon,
+        text: t('button.edit'),
+        onClick: startEditing,
+      },
+    ])
+
     return {
       t,
 
@@ -163,6 +168,7 @@ export default defineComponent({
       cancelEditing,
       saveEditing,
 
+      layoutActions,
     }
   },
 })
