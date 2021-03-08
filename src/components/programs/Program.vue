@@ -21,7 +21,7 @@
             'flex items-center justify-between flex-col text-center space-y-4': tiled,
             'flex flex-col items-start space-y-4 sm:items-center sm:space-y-0 sm:flex-row sm:justify-between': !tiled
           },
-          'w-full'
+          'w-full flex-grow'
         ]"
       >
         <div class="flex flex-col text-gray-900">
