@@ -37,6 +37,9 @@
           v-model:value="configurationText"
           lang="yaml"
           :readonly="editorReadOnly"
+          :options="{
+            tabSize: 2,
+          }"
           class="h-full shadow"
         />
 
