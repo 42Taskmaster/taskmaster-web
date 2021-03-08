@@ -17,7 +17,7 @@
         <heroicons-outline-search class="mt-1 ml-1 mr-4 text-xl text-gray-500" />
         <input
           v-model="searchQuery"
-          class="w-full mb-2 text-lg bg-white bg-opacity-0 outline-none"
+          class="w-full mb-2 bg-white bg-opacity-0 outline-none"
           :placeholder="t('search_program')"
         >
       </div>
@@ -34,17 +34,19 @@
 
     <div
       v-if="filteredPrograms.length > 0"
-      class="relative mb-8"
+      :class="[
+        {
+          '-mx-4 sm:mx-0': !gridMode
+        },
+        'relative mb-8'
+      ]"
     >
       <transition-group
         tag="div"
-        :class="[
-          'grid gap-4',
-          {
-            'grid-cols-1': !gridMode,
-            'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': gridMode,
-          }
-        ]"
+        :class="{
+          'grid grid-cols-1 sm:gap-4 divide-y sm:divide-y-0': !gridMode,
+          'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4': gridMode,
+        }"
         enter-active-class="transition duration-200 ease-out"
         enter-from-class="transform -translate-y-6 opacity-25"
         enter-to-class="transform translate-y-0 opacity-100"

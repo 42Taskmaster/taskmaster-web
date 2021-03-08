@@ -1,18 +1,48 @@
 <template>
-  <router-link class="flex p-10 bg-white rounded-lg shadow cursor-pointer hover:bg-gray-50" :to="programUrl">
-    <div class="flex items-center w-full" :class="{'flex-col gap-6': tiled}">
-      <div class="flex items-center justify-between w-full" :class="{'flex-col gap-5 text-center': tiled}">
-        <div class="flex flex-col">
-          <div class="text-xl">
+  <router-link
+    :class="[
+      {
+        'sm:shadow sm:rounded-lg': !tiled,
+        'shadow rounded-lg': tiled
+      },
+      'flex p-4 bg-white cursor-pointer sm:p-6 hover:bg-gray-50'
+    ]"
+    :to="programUrl"
+  >
+    <div
+      class="flex items-center w-full"
+      :class="{
+        'flex-col gap-6': tiled
+      }"
+    >
+      <div
+        :class="[
+          {
+            'flex items-center justify-between flex-col text-center space-y-4': tiled,
+            'flex flex-col items-start space-y-4 sm:items-center sm:space-y-0 sm:flex-row sm:justify-between': !tiled
+          },
+          'w-full'
+        ]"
+      >
+        <div class="flex flex-col text-gray-900">
+          <div class="font-medium">
             {{ id }}
           </div>
-          <div class="text-gray-500">
+          <div class="text-sm text-gray-500">
             {{ runningProcesses }}/{{ processes.length }} {{ t('process', processes.length) }}
           </div>
         </div>
         <AppStatusBadge :status="state" />
       </div>
-      <heroicons-outline-arrow-right v-if="!tiled" class="ml-16 text-2xl text-gray-500" />
+
+      <div v-if="!tiled" class="flex-shrink-0 ml-5">
+        <heroicons-outline-chevron-right
+          class="w-5 h-5 text-gray-400"
+          :style="{
+            'transform': 'unset'
+          }"
+        />
+      </div>
     </div>
   </router-link>
 </template>
