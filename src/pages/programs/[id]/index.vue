@@ -8,18 +8,12 @@
       {{ t('program_unknown') }}
     </AppAlert>
 
-    <AppLayout v-else>
+    <AppLayout v-else :actions="layoutActions">
       <template #title>
         <router-link to="/programs" :title="t('button.back')">
-          <heroicons-outline-arrow-left class="inline mr-4 text-2xl text-gray-500 hover:text-gray-700" />
+          <heroicons-outline-arrow-left class="inline mr-4 text-gray-500 hover:text-gray-700" />
         </router-link>
         {{ programTitle }}
-      </template>
-
-      <template #actions>
-        <AppButton v-for="{text, action} in actions" :key="text" size="large" @click="action">
-          {{ text }}
-        </AppButton>
       </template>
 
       <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
@@ -188,7 +182,7 @@ import { restartProgram, startProgram, stopProgram } from '/~/api/program'
 import { useProgram } from '/~/composables/programs'
 import { programMachine, ProgramMachineActions, ProgramMachineMeta } from '/~/machines/program'
 import { mergeMeta } from '/~/machines/utils'
-import { Alert, AlertType, Program } from '/~/types/index'
+import { Alert, AlertType, Program, ActionOptions, AppButtonSize } from '/~/types/index'
 import { useRouter } from 'vue-router'
 import { useFetcher } from '/~/composables/fetcher'
 
@@ -250,13 +244,14 @@ export default defineComponent({
       immediate: true,
     })
 
-    const actions = computed(() => {
+    const layoutActions = computed<ActionOptions[]>(() => {
       const currentStateMeta = state.value.meta
       const { actions } = mergeMeta<ProgramMachineMeta>(currentStateMeta)
 
       return actions.map(action => ({
+        size: AppButtonSize.large,
         text: t(`button.${action}`),
-        action: () => send(action),
+        onClick: () => send(action),
       }))
     })
 
@@ -343,7 +338,6 @@ export default defineComponent({
         },
         {
           text: t('command'),
-          // FIXME: replace with the real command
           value: program.value.configuration.cmd,
           icon: IdentificationIcon,
         },
@@ -408,7 +402,7 @@ export default defineComponent({
       programTitle,
       isLoading,
 
-      actions,
+      layoutActions,
 
       statistics,
       processes,

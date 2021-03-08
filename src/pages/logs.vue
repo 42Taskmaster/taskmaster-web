@@ -3,16 +3,9 @@
     <AppLoadingOverlay />
   </div>
 
-  <AppLayout>
+  <AppLayout :actions="layoutActions">
     <template #title>
       Logs
-    </template>
-
-    <template #actions>
-      <AppButton color="red" @click="clearLogs">
-        <heroicons-outline-trash class="mr-2" />
-        {{ t('clear') }}
-      </AppButton>
     </template>
 
     <div class="flex flex-col h-full">
@@ -32,13 +25,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref, nextTick } from 'vue'
+import { defineComponent, watch, ref, nextTick, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import TrashIcon from '/@vite-icons/heroicons-outline/trash.vue'
 
 import { useLogs } from '/~/composables/logs'
-import { useI18n } from 'vue-i18n'
-import { deleteLogs } from '../api/logs'
-import { Alert, AlertType } from '../types/index'
-import { useFetcher } from '../composables/fetcher'
+import { deleteLogs } from '/~/api/logs'
+import { Alert, AlertType, ActionOptions, AppButtonColors } from '/~/types/index'
+import { useFetcher } from '/~/composables/fetcher'
 
 export default defineComponent({
   setup() {
@@ -99,6 +93,15 @@ export default defineComponent({
       }
     }
 
+    const layoutActions = computed<ActionOptions[]>(() => [
+      {
+        color: AppButtonColors.red,
+        icon: TrashIcon,
+        text: t('clear'),
+        onClick: clearLogs,
+      },
+    ])
+
     return {
       t,
 
@@ -110,6 +113,8 @@ export default defineComponent({
       logsPre,
       logsText,
       clearLogs,
+
+      layoutActions,
     }
   },
 })

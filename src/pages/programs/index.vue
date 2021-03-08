@@ -3,20 +3,9 @@
     <AppLoadingOverlay />
   </div>
 
-  <AppLayout>
+  <AppLayout :actions="layoutActions">
     <template #title>
       {{ t('programs') }}
-    </template>
-
-    <template #actions>
-      <AppButton :color="allProgramsAreStopped ? 'green' : 'white'" @click="startPrograms">
-        <heroicons-outline-arrow-circle-up class="mr-1" />
-        {{ allProgramsAreStopped ? t('start_all') : t('restart_all') }}
-      </AppButton>
-      <AppButton color="red" :disabled="allProgramsAreStopped" @click="stopPrograms">
-        <heroicons-outline-x-circle class="mr-1" />
-        {{ t('stop_all') }}
-      </AppButton>
     </template>
 
     <AppAlert v-if="alert.show" :type="alert.type" :close-callback="closeAlert">
@@ -82,15 +71,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, computed } from 'vue'
-import { usePrograms } from '/~/composables/programs'
+import { defineComponent, ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import ViewGridIcon from '/@vite-icons/heroicons-outline/view-grid.vue'
 import MenuIcon from '/@vite-icons/heroicons-outline/menu.vue'
-import { Alert, AlertType } from '/~/types/index'
+import ArrowCircleUpIcon from '/@vite-icons/heroicons-outline/arrow-circle-up.vue'
+import XCircleIcon from '/@vite-icons/heroicons-outline/x-circle.vue'
 
-import { useRouter } from 'vue-router'
+import { usePrograms } from '/~/composables/programs'
 import { useFetcher } from '/~/composables/fetcher'
+import { ActionOptions, Alert, AlertType, AppButtonColors } from '/~/types/index'
+
 export default defineComponent({
   components: {
     ViewGridIcon,
@@ -176,6 +168,22 @@ export default defineComponent({
       }
     }
 
+    const layoutActions = computed<ActionOptions[]>(() => [
+      {
+        color: allProgramsAreStopped.value === true ? AppButtonColors.green : AppButtonColors.white,
+        icon: ArrowCircleUpIcon,
+        text: allProgramsAreStopped.value ? t('start_all') : t('restart_all'),
+        onClick: startPrograms,
+      },
+      {
+        color: AppButtonColors.red,
+        icon: XCircleIcon,
+        text: t('stop_all'),
+        disabled: allProgramsAreStopped.value,
+        onClick: stopPrograms,
+      },
+    ])
+
     return {
       t,
 
@@ -196,6 +204,8 @@ export default defineComponent({
       startPrograms,
       stopPrograms,
       restartPrograms,
+
+      layoutActions,
     }
   },
 })
