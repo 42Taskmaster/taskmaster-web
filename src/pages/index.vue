@@ -9,7 +9,11 @@
     </h2>
 
     <div class="flex flex-col items-center justify-center p-10 mt-2 text-center bg-white rounded-lg shadow">
-      <span class="mb-10"><span class="text-lg font-semibold">Status : </span>
+      <span class="mb-10">
+        <span class="text-lg font-semibold">
+          {{ t('status') }}
+        </span>
+
         <AppBadge
           :class="statusClass"
           class="text-white text-md"
@@ -135,6 +139,7 @@ export default defineComponent({
 {
   "en": {
     "heading": "Taskmaster's API connection",
+    "status": "Status:",
     "not_connected": "Currently not connected",
     "connecting_to": "Connecting to",
     "connected_to": "Connected to",
@@ -147,6 +152,7 @@ export default defineComponent({
 
   "fr": {
     "heading": "Connexion à l'API du Taskmaster",
+    "status": "Statut :",
     "not_connected": "Non connecté",
     "connecting_to": "Connexion à",
     "connected_to": "Connecté à",
