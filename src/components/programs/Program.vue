@@ -32,7 +32,7 @@
             {{ runningProcesses }}/{{ processes.length }} {{ t('process', processes.length) }}
           </div>
         </div>
-        <AppStatusBadge :status="state" />
+        <AppStatusBadge :status="state" class="text-sm" />
       </div>
 
       <div v-if="!tiled" class="flex-shrink-0 ml-5">
